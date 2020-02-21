@@ -1,0 +1,152 @@
+'''
+SUCCESS CRITERIA
+
+1. [complete] DRAW A FULL CHESSBOARD TO THE SCREEN
+2. ALLOW PLAYERS TO MANUALLY MOVE PIECES (WITHOUT RULES)
+3. ADD THE RULES OF CHESS TO THE GAME
+4. SHOW WHAT SPACES ARE POSSIBLE TO THE PLAYERS
+
+---Architecture required for Goal 2---
+[COMPLETE] Every tile is selectable
+Every piece has a faction (black or white)
+If a tile has a piece on it, and is clicked, that piece is selected
+If a tile is empty, and the player has selected a piece, the selected piece is moved to the new tile
+If a tile has an enemy, and the player has selected a piece, the enemy piece is destroyed, and the player's piece is moved.
+
+--- Architecture required for Goal 3 ---
+Every piece has a type.
+Each piece can move in different ways.
+Each piece can attack in different ways.
+
+Each player has a King.
+If the player's King is dead, the game is over.
+A player must be able to resign.
+--ADVANCED--If the player's King is threatened, a check becomes active.
+--ADVANCED--If a player's King has nowhere to move, that is checkmate.
+
+--- Architecture required for Goal 4 ---
+If a piece is selected, then suggested moves are printed to a layer above the board.
+All legal moves must be involved
+--ADVANCED-- if the player's King is in check, then the only moves shown must get the king out of check.
+'''
+
+#Every tile has a notation (a1, b3, c4)
+
+
+class Chessboard():
+	'''This class represents a chessboard'''
+	def __init__(self):
+		'''Create a chessboard'''
+
+		#Initialize Tiles
+		self.tiles = []
+		for y in range (0, 8):
+			row = []
+			for x in range(0, 8):
+				row.append(Tile())
+			self.tiles.append(row)
+
+		#Name Tiles
+		for y in range(0, 8):
+			for x in range(0, 8):
+				print(x, y)
+				self.tileAt(x,y).name = str(x) + "," + str(y)
+
+		#Insert Black Major Pieces
+		self.tileAt(0,0).piece = Piece("R")
+		self.tileAt(1,0).piece = Piece("N")
+		self.tileAt(2,0).piece = Piece("B")
+		self.tileAt(3,0).piece = Piece("Q")
+		self.tileAt(4,0).piece = Piece("K")
+		self.tileAt(5,0).piece = Piece("B")
+		self.tileAt(6,0).piece = Piece("N")
+		self.tileAt(7,0).piece = Piece("R")
+
+		#Insert Black Pawns
+		for x in range (0, 8):
+			self.tileAt(x, 1).piece = Piece("p")
+
+		#Insert White Pawns
+		for x in range (0, 8):
+			self.tileAt(x, 6).piece = Piece("p")
+
+		#Insert White Major Pieces
+		self.tileAt(0,7).piece = Piece("R")
+		self.tileAt(1,7).piece = Piece("N")
+		self.tileAt(2,7).piece = Piece("B")
+		self.tileAt(3,7).piece = Piece("Q")
+		self.tileAt(4,7).piece = Piece("K")
+		self.tileAt(5,7).piece = Piece("B")
+		self.tileAt(6,7).piece = Piece("N")
+		self.tileAt(7,7).piece = Piece("R")
+
+		#Color all the Pieces
+		for x in range(0,8): self.tileAt(x,0).piece.faction = "W"
+		for x in range(0,8): self.tileAt(x,1).piece.faction = "W"
+		for x in range(0,8): self.tileAt(x,6).piece.faction = "B"
+		for x in range(0,8): self.tileAt(x,7).piece.faction = "B"
+		
+	def tileAt(self, x, y):
+		return self.tiles[y][x]
+
+	def draw(self):
+		for y in range(0, 8):
+			rowString = ""
+			for x in range(0,8):
+				rowString += (str(self.tileAt(x,y)))
+			print(rowString)
+
+
+class Tile():
+	'''This class represents a tile on a chessboard'''
+	def __init__(self):
+		self.name = None
+		self.piece = None
+
+	def __repr__(self):
+		if self.piece == None: return "-"
+		else: return str(self.piece)
+	def __str__(self):
+		return self.__repr__()
+
+	def removePiece(self):
+		#Removes the piece from the tile
+		self.piece = None
+
+class Piece():
+	def __init__(self, label=None):
+		self.label = label
+		self.faction = None
+	def __str__(self):
+		return self.label or "?"
+
+
+
+
+def main():
+	#Initialize Chessboard
+	chessboard = Chessboard();
+	chessboard.draw();
+
+	#Ask for tile selection
+	x = int(input("What is the X Coordinate of the piece you want to select?\n"))
+	y = int(input("What is the Y Coordinate of the piece you want to select?\n"))
+	tile = chessboard.tileAt(x,y)
+	print("The Piece you selected is (%s) and is located in Tile (%s)" %(tile.piece, tile.name))
+
+	#Ask for destination selection
+	newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
+	newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
+	newTile = chessboard.tileAt(newX, newY)
+	print("The Tile you will replace is (%s) and is located in Tile (%s)" % (newTile.name, newTile.piece))
+
+	#Move piece from selection to destination
+	selectedPiece = tile.piece
+	newTile.piece = selectedPiece
+	tile.removePiece()
+
+	#Print resultant board
+	print("Final Board State")
+	chessboard.draw()
+
+main()
