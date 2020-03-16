@@ -45,46 +45,32 @@ class Chessboard():
 			for x in range(0, 8):
 				row.append(Tile())
 			self.tiles.append(row)
+    
+		def set_to_starter_chessboard(self):
+      self.tileAt(0,0).piece = Piece("R", "W")
+      self.tileAt(1,0).piece = Piece("N", "W")
+      self.tileAt(2,0).piece = Piece("B", "W")
+      self.tileAt(3,0).piece = Piece("Q", "W")
+      self.tileAt(4,0).piece = Piece("K", "W")
+      self.tileAt(5,0).piece = Piece("B", "W")
+      self.tileAt(6,0).piece = Piece("N", "W")
+      self.tileAt(7,0).piece = Piece("R", "W")
+    
+      for x in range (0, 8):
+        self.tileAt(x, 1).piece = Piece("p", "W")
 
-		#Name Tiles
-		for y in range(0, 8):
-			for x in range(0, 8):
-				print(x, y)
-				self.tileAt(x,y).name = str(x) + "," + str(y)
+      self.tileAt(0,7).piece = Piece("R", "B")
+      self.tileAt(1,7).piece = Piece("N", "B")
+      self.tileAt(2,7).piece = Piece("B", "B")
+      self.tileAt(3,7).piece = Piece("Q", "B")
+      self.tileAt(4,7).piece = Piece("K", "B")
+      self.tileAt(5,7).piece = Piece("B", "B")
+      self.tileAt(6,7).piece = Piece("N", "B")
+      self.tileAt(7,7).piece = Piece("R", "B")
 
-		#Insert Black Major Pieces
-		self.tileAt(0,0).piece = Piece("R")
-		self.tileAt(1,0).piece = Piece("N")
-		self.tileAt(2,0).piece = Piece("B")
-		self.tileAt(3,0).piece = Piece("Q")
-		self.tileAt(4,0).piece = Piece("K")
-		self.tileAt(5,0).piece = Piece("B")
-		self.tileAt(6,0).piece = Piece("N")
-		self.tileAt(7,0).piece = Piece("R")
-
-		#Insert Black Pawns
-		for x in range (0, 8):
-			self.tileAt(x, 1).piece = Piece("p")
-
-		#Insert White Pawns
-		for x in range (0, 8):
-			self.tileAt(x, 6).piece = Piece("p")
-
-		#Insert White Major Pieces
-		self.tileAt(0,7).piece = Piece("R")
-		self.tileAt(1,7).piece = Piece("N")
-		self.tileAt(2,7).piece = Piece("B")
-		self.tileAt(3,7).piece = Piece("Q")
-		self.tileAt(4,7).piece = Piece("K")
-		self.tileAt(5,7).piece = Piece("B")
-		self.tileAt(6,7).piece = Piece("N")
-		self.tileAt(7,7).piece = Piece("R")
-
-		#Color all the Pieces
-		for x in range(0,8): self.tileAt(x,0).piece.faction = "W"
-		for x in range(0,8): self.tileAt(x,1).piece.faction = "W"
-		for x in range(0,8): self.tileAt(x,6).piece.faction = "B"
-		for x in range(0,8): self.tileAt(x,7).piece.faction = "B"
+      for x in range (0, 8):
+        self.tileAt(x, 6).piece = Piece("p", "B")
+    set_to_starter_chessboard(self):
 		
 	def tileAt(self, x, y):
 		return self.tiles[y][x]
@@ -100,12 +86,12 @@ class Chessboard():
 class Tile():
 	'''This class represents a tile on a chessboard'''
 	def __init__(self):
-		self.name = None
 		self.piece = None
 
 	def __repr__(self):
 		if self.piece == None: return "-"
 		else: return str(self.piece)
+    
 	def __str__(self):
 		return self.__repr__()
 
@@ -114,7 +100,7 @@ class Tile():
 		self.piece = None
 
 class Piece():
-	def __init__(self, label=None):
+	def __init__(self, label=None, faction=None):
 		self.label = label
 		self.faction = None
 	def __str__(self):
@@ -132,13 +118,13 @@ def main():
 	x = int(input("What is the X Coordinate of the piece you want to select?\n"))
 	y = int(input("What is the Y Coordinate of the piece you want to select?\n"))
 	tile = chessboard.tileAt(x,y)
-	print("The Piece you selected is (%s) and is located in Tile (%s)" %(tile.piece, tile.name))
+	print("The Piece you selected is (%s)" %(tile.piece))
 
 	#Ask for destination selection
 	newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
 	newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
 	newTile = chessboard.tileAt(newX, newY)
-	print("The Tile you will replace is (%s) and is located in Tile (%s)" % (newTile.name, newTile.piece))
+	print("The Tile you will replace is (%s)" % (newTile.piece))
 
 	#Move piece from selection to destination
 	selectedPiece = tile.piece
