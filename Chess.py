@@ -34,19 +34,19 @@ All legal moves must be involved
 
 
 class Chessboard():
-	'''This class represents a chessboard'''
-	def __init__(self):
-		'''Create a chessboard'''
+  '''This class represents a chessboard'''
+  def __init__(self):
+    '''Create a chessboard'''
 
-		#Initialize Tiles
-		self.tiles = []
-		for y in range (0, 8):
-			row = []
-			for x in range(0, 8):
-				row.append(Tile())
-			self.tiles.append(row)
+    #Initialize Tiles
+    self.tiles = []
+    for y in range (0, 8):
+      row = []
+      for x in range(0, 8):
+        row.append(Tile())
+      self.tiles.append(row)
     
-		def set_to_starter_chessboard(self):
+    def set_to_starter_chessboard(self):
       self.tileAt(0,0).piece = Piece("R", "W")
       self.tileAt(1,0).piece = Piece("N", "W")
       self.tileAt(2,0).piece = Piece("B", "W")
@@ -70,69 +70,69 @@ class Chessboard():
 
       for x in range (0, 8):
         self.tileAt(x, 6).piece = Piece("p", "B")
-    set_to_starter_chessboard(self):
-		
-	def tileAt(self, x, y):
-		return self.tiles[y][x]
+    set_to_starter_chessboard(self)
+    
+  def tileAt(self, x, y):
+    return self.tiles[y][x]
 
-	def draw(self):
-		for y in range(0, 8):
-			rowString = ""
-			for x in range(0,8):
-				rowString += (str(self.tileAt(x,y)))
-			print(rowString)
+  def draw(self):
+    for y in range(0, 8):
+      rowString = ""
+      for x in range(0,8):
+        rowString += (str(self.tileAt(x,y)))
+      print(rowString)
 
 
 class Tile():
-	'''This class represents a tile on a chessboard'''
-	def __init__(self):
-		self.piece = None
+  '''This class represents a tile on a chessboard'''
+  def __init__(self):
+    self.piece = None
 
-	def __repr__(self):
-		if self.piece == None: return "-"
-		else: return str(self.piece)
+  def __repr__(self):
+    if self.piece == None: return "-"
+    else: return str(self.piece)
     
-	def __str__(self):
-		return self.__repr__()
+  def __str__(self):
+    return self.__repr__()
 
-	def removePiece(self):
-		#Removes the piece from the tile
-		self.piece = None
+  def removePiece(self):
+    #Removes the piece from the tile
+    self.piece = None
 
 class Piece():
-	def __init__(self, label=None, faction=None):
-		self.label = label
-		self.faction = None
-	def __str__(self):
-		return self.label or "?"
+  def __init__(self, label=None, faction=None):
+    self.label = label
+    self.faction = None
+  def __str__(self):
+    return self.label or "?"
 
 
 
 
 def main():
-	#Initialize Chessboard
-	chessboard = Chessboard();
-	chessboard.draw();
+  #Initialize Chessboard
+  chessboard = Chessboard();
+  chessboard.draw();
 
-	#Ask for tile selection
-	x = int(input("What is the X Coordinate of the piece you want to select?\n"))
-	y = int(input("What is the Y Coordinate of the piece you want to select?\n"))
-	tile = chessboard.tileAt(x,y)
-	print("The Piece you selected is (%s)" %(tile.piece))
+  #Ask for tile selection
+  x = int(input("What is the X Coordinate of the piece you want to select?\n"))
+  y = int(input("What is the Y Coordinate of the piece you want to select?\n"))
+  tile = chessboard.tileAt(x,y)
+  print("The Piece you selected is (%s)" %(tile.piece))
 
-	#Ask for destination selection
-	newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
-	newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
-	newTile = chessboard.tileAt(newX, newY)
-	print("The Tile you will replace is (%s)" % (newTile.piece))
+  #Ask for destination selection
+  newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
+  newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
+  newTile = chessboard.tileAt(newX, newY)
+  print("The Tile you will replace is (%s)" % (newTile.piece))
 
-	#Move piece from selection to destination
-	selectedPiece = tile.piece
-	newTile.piece = selectedPiece
-	tile.removePiece()
+  #Move piece from selection to destination
+  selectedPiece = tile.piece
+  newTile.piece = selectedPiece
+  tile.removePiece()
 
-	#Print resultant board
-	print("Final Board State")
-	chessboard.draw()
+  #Print resultant board
+  print("Final Board State")
+  chessboard.draw()
 
 main()
