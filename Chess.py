@@ -50,19 +50,19 @@ class Chessboard():
       self.tileAt(7,0).piece = Piece("R", "W")
     
       for tile in self.rowAt(1):
-        tile.piece = Piece("p", "W")
+        tile.piece = Piece("P", "W")
         
       for tile in self.rowAt(6):
         tile.piece = Piece("p", "B")
         
-      self.tileAt(0,7).piece = Piece("R", "B")
-      self.tileAt(1,7).piece = Piece("N", "B")
-      self.tileAt(2,7).piece = Piece("B", "B")
-      self.tileAt(3,7).piece = Piece("Q", "B")
-      self.tileAt(4,7).piece = Piece("K", "B")
-      self.tileAt(5,7).piece = Piece("B", "B")
-      self.tileAt(6,7).piece = Piece("N", "B")
-      self.tileAt(7,7).piece = Piece("R", "B")   
+      self.tileAt(0,7).piece = Piece("r", "B")
+      self.tileAt(1,7).piece = Piece("n", "B")
+      self.tileAt(2,7).piece = Piece("b", "B")
+      self.tileAt(3,7).piece = Piece("q", "B")
+      self.tileAt(4,7).piece = Piece("k", "B")
+      self.tileAt(5,7).piece = Piece("b", "B")
+      self.tileAt(6,7).piece = Piece("n", "B")
+      self.tileAt(7,7).piece = Piece("r", "B")   
     set_to_starter_chessboard(self)
     
   def tileAt(self, x, y):
@@ -71,6 +71,14 @@ class Chessboard():
   def rowAt(self, y):
     return self.tiles[y]
 
+  def swap(self, x1,y1, x2,y2):
+    tile_1 = self.tileAt(x1,y1)
+    tile_2 = self.tileAt(x2,y2)
+    tile_1.piece, tile_2.piece = tile_2.piece, tile_1.piece
+
+  def clear(self, x, y):
+    self.tileAt(x,y).piece = None
+    
   def draw(self):
     for row in self.tiles:
       rowString = ""
@@ -119,13 +127,10 @@ def main():
   #Ask for destination selection
   newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
   newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
-  newTile = chessboard.tileAt(newX, newY)
-  print("The Tile you will replace is (%s)" % (newTile.piece))
+  print("The Tile you will replace is (%s)" % (chessboard.tileAt(newX, newY)))
 
-  #Move piece from selection to destination
-  selectedPiece = tile.piece
-  newTile.piece = selectedPiece
-  tile.removePiece()
+  chessboard.clear(newX, newY)
+  chessboard.swap(x, y, newX, newY)
 
   #Print resultant board
   print("Final Board State")
