@@ -56,9 +56,12 @@ class Chessboard():
       self.tileAt(6,0).piece = Piece("N", "W")
       self.tileAt(7,0).piece = Piece("R", "W")
     
-      for x in range (0, 8):
-        self.tileAt(x, 1).piece = Piece("p", "W")
-
+      for tile in self.rowAt(1):
+        tile.piece = Piece("p", "W")
+        
+      for tile in self.rowAt(6):
+        tile.piece = Piece("p", "B")
+        
       self.tileAt(0,7).piece = Piece("R", "B")
       self.tileAt(1,7).piece = Piece("N", "B")
       self.tileAt(2,7).piece = Piece("B", "B")
@@ -68,12 +71,15 @@ class Chessboard():
       self.tileAt(6,7).piece = Piece("N", "B")
       self.tileAt(7,7).piece = Piece("R", "B")
 
-      for x in range (0, 8):
-        self.tileAt(x, 6).piece = Piece("p", "B")
+
+        
     set_to_starter_chessboard(self)
     
   def tileAt(self, x, y):
     return self.tiles[y][x]
+
+  def rowAt(self, y):
+    return self.tiles[y]
 
   def draw(self):
     for row in self.tiles:
