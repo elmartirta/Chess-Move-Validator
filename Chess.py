@@ -76,10 +76,10 @@ class Chessboard():
     return self.tiles[y][x]
 
   def draw(self):
-    for y in range(0, 8):
+    for row in self.tiles:
       rowString = ""
-      for x in range(0,8):
-        rowString += (str(self.tileAt(x,y)))
+      for piece in row:
+        rowString += str(piece)
       print(rowString)
 
 
