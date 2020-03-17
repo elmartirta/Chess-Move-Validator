@@ -37,14 +37,7 @@ class Chessboard():
   '''This class represents a chessboard'''
   def __init__(self):
     '''Create a chessboard'''
-
-    #Initialize Tiles
-    self.tiles = []
-    for y in range (0, 8):
-      row = []
-      for x in range(0, 8):
-        row.append(Tile())
-      self.tiles.append(row)
+    self.tiles = [[Tile() for x in range(8)] for y in range(8)]
     
     def set_to_starter_chessboard(self):
       self.tileAt(0,0).piece = Piece("R", "W")
@@ -69,10 +62,7 @@ class Chessboard():
       self.tileAt(4,7).piece = Piece("K", "B")
       self.tileAt(5,7).piece = Piece("B", "B")
       self.tileAt(6,7).piece = Piece("N", "B")
-      self.tileAt(7,7).piece = Piece("R", "B")
-
-
-        
+      self.tileAt(7,7).piece = Piece("R", "B")   
     set_to_starter_chessboard(self)
     
   def tileAt(self, x, y):
