@@ -64,7 +64,7 @@ class Chessboard():
       self.tileAt(6,7).piece = Piece("n", "B")
       self.tileAt(7,7).piece = Piece("r", "B")   
     set_to_starter_chessboard(self)
-    
+
   def tileAt(self, x, y):
     return self.tiles[y][x]
 
@@ -78,7 +78,11 @@ class Chessboard():
 
   def clear(self, x, y):
     self.tileAt(x,y).piece = None
-    
+
+  def move(self, x1,y1,x2,y2):
+    self.clear(x2,y2)
+    self.swap(x1,y1,x2,y2)
+  
   def draw(self):
     for row in self.tiles:
       rowString = ""
@@ -128,9 +132,8 @@ def main():
   newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
   newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
   print("The Tile you will replace is (%s)" % (chessboard.tileAt(newX, newY)))
-
-  chessboard.clear(newX, newY)
-  chessboard.swap(x, y, newX, newY)
+  
+  chessboard.move(x, y, newX, newY)
 
   #Print resultant board
   print("Final Board State")
