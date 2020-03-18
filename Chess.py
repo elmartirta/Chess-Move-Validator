@@ -80,9 +80,31 @@ class Chessboard():
     self.tileAt(x,y).piece = None
 
   def move(self, x1,y1,x2,y2):
-    self.clear(x2,y2)
-    self.swap(x1,y1,x2,y2)
-  
+    if self.isMoveLegal(x1,y1,x2,y2):
+      self.clear(x2,y2)
+      self.swap(x1,y1,x2,y2)
+      return {"result":True}
+    else:
+      return {"result":False}
+
+  def isMoveLegal(self,x1,y1,x2,y2):
+    """Returns whether or not moving a piece
+    from (x1,y1) to (x2,y2) is a legal move"""
+    #The piece must exist on the board
+
+    #The new location must exist on the board
+    
+    #A Piece must move to a different square
+
+    #A Piece may not move to a square occupied by an allied piece
+
+    #A Piece must move according to the piece's rules
+
+    #Spaces that need to be free for the move to be, must be free
+
+    #The final board state can not end with the king in check.
+
+    return True #stub
   def draw(self):
     for row in self.tiles:
       rowString = ""
