@@ -7,11 +7,10 @@ SUCCESS CRITERIA
 4. SHOW WHAT SPACES ARE POSSIBLE TO THE PLAYERS
 
 ---Architecture required for Goal 2---
-[COMPLETE] Every tile is selectable
-Every piece has a faction (black or white)
-If a tile has a piece on it, and is clicked, that piece is selected
-If a tile is empty, and the player has selected a piece, the selected piece is moved to the new tile
-If a tile has an enemy, and the player has selected a piece, the enemy piece is destroyed, and the player's piece is moved.
+[Complete] Every tile is selectable
+[Complete] Every piece has a faction (black or white)
+[In Progress] If a tile is empty, and the player has selected a piece, the selected piece is moved to the new tile
+[Complete] If a tile has an enemy, and the player has selected a piece, the enemy piece is destroyed, and the player's piece is moved.
 
 --- Architecture required for Goal 3 ---
 Every piece has a type.
