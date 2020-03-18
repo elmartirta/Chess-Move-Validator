@@ -80,21 +80,21 @@ class Chessboard():
     self.tileAt(x,y).piece = None
 
   def move(self, x1,y1,x2,y2):
-    if self.isMoveLegal(x1,y1,x2,y2):
+    moveIsLegal = self.isMoveLegal(x1,y1,x2,y2)
+    if moveIsLegal["result"]:
       self.clear(x2,y2)
       self.swap(x1,y1,x2,y2)
       return {"result":True}
     else:
+      print("Error: "+moveIsLegal["reason"])
       return {"result":False}
 
   def isMoveLegal(self,x1,y1,x2,y2):
     """Returns whether or not moving a piece
     from (x1,y1) to (x2,y2) is a legal move"""
-    #The piece must exist on the board
-
-    #The new location must exist on the board
-    
-    #A Piece must move to a different square
+    if(x1 < 0 or x1 > 8 or y1 < 0 or y1 > 8): return {"result":False, "reason": "The piece must exist on the board"}
+    if(x1 < 0 or x2 > 8 or y2 < 0 or y2 > 8): return {"result":False, "reason": "The destination location must exist on the board"}
+    if(x1 == x2 and y1 == y2): return {"result":False, "reason": "The piece must move to a different location than it started from"}
 
     #A Piece may not move to a square occupied by an allied piece
 
@@ -104,7 +104,7 @@ class Chessboard():
 
     #The final board state can not end with the king in check.
 
-    return True #stub
+    return {"result":True} #stub
   def draw(self):
     for row in self.tiles:
       rowString = ""
@@ -147,13 +147,10 @@ def main():
   #Ask for tile selection
   x = int(input("What is the X Coordinate of the piece you want to select?\n"))
   y = int(input("What is the Y Coordinate of the piece you want to select?\n"))
-  tile = chessboard.tileAt(x,y)
-  print("The Piece you selected is (%s)" %(tile.piece))
 
   #Ask for destination selection
   newX = int(input("Where would you like to move the piece to (X-Coordinate)?"))
   newY = int(input("Where would you like to move the piece to (Y-Coordinate)?"))
-  print("The Tile you will replace is (%s)" % (chessboard.tileAt(newX, newY)))
   
   chessboard.move(x, y, newX, newY)
 
