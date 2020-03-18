@@ -96,7 +96,12 @@ class Chessboard():
     if(x1 < 0 or x2 > 8 or y2 < 0 or y2 > 8): return {"result":False, "reason": "The destination location must exist on the board"}
     if(x1 == x2 and y1 == y2): return {"result":False, "reason": "The piece must move to a different location than it started from"}
 
-    #A Piece may not move to a square occupied by an allied piece
+    sourceTile = self.tileAt(x1,y1)
+    destTile = self.tileAt(x2,y2)
+
+    if(not sourceTile.hasPiece()): return {"result": False, "reason": "There must be a piece within the source tile."}
+    if(destTile.hasPiece() and sourceTile.piece.faction == destTile.piece.faction):
+      return {"result": False, "reason": "The piece may not move into the same square as an allied piece."}
 
     #A Piece must move according to the piece's rules
 
@@ -128,6 +133,9 @@ class Tile():
   def removePiece(self):
     #Removes the piece from the tile
     self.piece = None
+
+  def hasPiece(self):
+    return (self.piece != None)
 
 class Piece():
   def __init__(self, label=None, faction=None):
