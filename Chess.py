@@ -111,8 +111,6 @@ class Chessboard():
       path_coord = tuple(sum(x) for x in zip((x1,y1), path_tile))
       if (self.tileAt(*path_coord).hasPiece()): 
         return {"result": False, "reason": "There cannot be a piece in the path of the moving piece."}
-    
-    #Spaces that need to be free for the move to be, must be free
 
     #The final board state can not end with the king in check.
 
