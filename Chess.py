@@ -103,10 +103,15 @@ class Chessboard():
       return {"result": False, "reason": "The piece may not move into the same square as an allied piece."}
 
     move = (x2-x1, y2-y1)
-    piece_moves = sourceTile.piece.legalMoves()
-    if not(move in piece_moves):
+    legal_moves = sourceTile.piece.legalMoves()
+    if not(move in legal_moves):
       return {"result": False, "reason": "The piece must follow its own rules"}
     
+    for required_empty_space in legal_moves[move]["Requires"]:
+      required_empty_space_on_board = tuple(sum(x) for x in zip((x1,y1), required_empty_space))
+      if (self.tileAt(*required_empty_space_on_board).hasPiece()): 
+        return {"result": False, "reason": "There cannot be a piece in the path of the moving piece."}
+
     #A Piece must move according to the piece's rules
     
     #Spaces that need to be free for the move to be, must be free
