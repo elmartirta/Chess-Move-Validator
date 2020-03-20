@@ -335,4 +335,5 @@ def main():
   print("Final Board State")
   chessboard.draw()
 
-main()
+if (__name__ == "__main__"):
+  main()
