@@ -112,9 +112,16 @@ class Chessboard():
       if (self.tileAt(*path_coord).hasPiece()): 
         return {"result": False, "reason": "There cannot be a piece in the path of the moving piece."}
 
-    #The final board state can not end with the king in check.
+    if (self.isKingInCheck(sourceTile.piece.faction)):
+      return {"result": False, "reason": "The King cannot be in check."}
+    
+    #The final board state can not end with the allied king in check.
 
     return {"result":True} #stub
+  
+  def isKingInCheck(self, faction):
+    return False #stub
+    
   def draw(self):
     for row in self.tiles:
       rowString = ""
@@ -303,7 +310,7 @@ class Piece():
         (-7,-7):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4),(-5,-5),(-6,-6)]}
       }
     return {}
-    
+
 
     
 
