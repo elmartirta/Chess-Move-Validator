@@ -6,7 +6,7 @@ Chess.py correctly follows the FIDE rules of chess.
 """
 
 'FIDE Article [3.2] : A bishop may move to any square along a diagonal which it stands'
-def test_3_2_a():    
+def test_3_2_a():
     #Initialize black bishop at e4
     #Test moves Be4 -> a8, b7, c6, d5, e4, f3, g2, h1 == Legal
     #Test moves Be4 -> b1, c2, d3, f5, g6, h7 == Legal
@@ -47,7 +47,15 @@ def main():
     test_3_2_d()
     test_3_2_e()
     
-
+    def draw_test():
+        print ("Test M_1: Draw Test")
+        print ("")
+        board = Chessboard()
+        board.draw()
+        print ("")
+        print("Test M_1: Complete!")
+    draw_test()
+    
     print("")
     print("-----------------------------------------")
     print("Test Run Complete, press any key to exit.")
