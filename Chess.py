@@ -39,17 +39,17 @@ class Chessboard():
     self.tiles = [[Tile() for x in range(8)] for y in range(8)]
     
     def set_to_starter_chessboard(self):
-      self.tileAt(0,0).piece = Piece("R", "W")
-      self.tileAt(1,0).piece = Piece("N", "W")
-      self.tileAt(2,0).piece = Piece("B", "W")
-      self.tileAt(3,0).piece = Piece("Q", "W")
-      self.tileAt(4,0).piece = Piece("K", "W")
-      self.tileAt(5,0).piece = Piece("B", "W")
-      self.tileAt(6,0).piece = Piece("N", "W")
-      self.tileAt(7,0).piece = Piece("R", "W")
+      self.tileAt(0,0).piece = Piece("r", "W")
+      self.tileAt(1,0).piece = Piece("n", "W")
+      self.tileAt(2,0).piece = Piece("b", "W")
+      self.tileAt(3,0).piece = Piece("q", "W")
+      self.tileAt(4,0).piece = Piece("k", "W")
+      self.tileAt(5,0).piece = Piece("b", "W")
+      self.tileAt(6,0).piece = Piece("n", "W")
+      self.tileAt(7,0).piece = Piece("r", "W")
     
       for tile in self.rowAt(1):
-        tile.piece = Piece("P", "W")
+        tile.piece = Piece("p", "W")
         
       for tile in self.rowAt(6):
         tile.piece = Piece("p", "B")
@@ -154,18 +154,21 @@ class Piece():
     self.label = label
     self.faction = faction
   def __str__(self):
-    return self.label or "?"
+    if (self.faction == "W"):
+      return self.label
+    else:
+      return self.label.upper()
 
   def legalMoves(self):    
-    if self.label.lower() == "p" and self.faction == "W":
+    if self.label == "p" and self.faction == "W":
       return {
         (0,1):{"Path":[]}
       }
-    if self.label.lower() == "p" and self.faction == "B":
+    if self.label == "p" and self.faction == "B":
       return {
         (0,-1):{"Path":[]}
       }
-    if self.label.lower() == "r":
+    if self.label == "r":
       return {
         ( 0, 1):{"Path": []},
         ( 0, 2):{"Path": [(0,1)]},
@@ -196,7 +199,7 @@ class Piece():
         (-6, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0),(-5,0)]},
         (-7, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0),(-5,0),(-6,0)]}
       }
-    if self.label.lower() == "n":
+    if self.label == "n":
       return {
         ( 1, 2):{"Path":[]},
         ( 1,-2):{"Path":[]},
@@ -207,7 +210,7 @@ class Piece():
         (-2, 1):{"Path":[]},
         (-2,-1):{"Path":[]}
       }
-    if self.label.lower() == "b":
+    if self.label == "b":
       return {
         ( 1, 1):{"Path":[]},
         ( 2, 2):{"Path":[(1,1)]},
@@ -239,7 +242,7 @@ class Piece():
         (-7,-7):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4),(-5,-5),(-6,-6)]}
       }
 
-    if self.label.lower() == "k":
+    if self.label == "k":
       return {
         ( 1 ,0):{"Path":[]},
         (-1, 0):{"Path":[]},
@@ -250,7 +253,7 @@ class Piece():
         (-1, 1):{"Path":[]},
         (-1,-1):{"Path":[]}
       }
-    if self.label.lower() == "q":
+    if self.label == "q":
       return {
         ( 0, 1):{"Path": []},
         ( 0, 2):{"Path": [(0,1)]},
