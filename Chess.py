@@ -122,12 +122,14 @@ class Chessboard():
   def isKingInCheck(self, faction):
     return False #stub
     
-  def draw(self):
+  def toString(self):
+    output = ""
     for row in self.tiles:
       rowString = ""
       for piece in row:
         rowString += str(piece)
-      print(rowString)
+      output += rowString + "\n"
+    return output
 
 
 class Tile():
@@ -322,7 +324,7 @@ class Piece():
 def main():
   #Initialize Chessboard
   chessboard = Chessboard();
-  chessboard.draw();
+  print(chessboard.toString());
 
   #Ask for tile selection
   x = int(input("What is the X Coordinate of the piece you want to select?\n"))
