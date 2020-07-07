@@ -35,7 +35,7 @@ class ChessTests():
 
         #Initialize Chessboard
         chessboard = Chessboard()
-        actual_board = chessboard.toString()
+        actual_board = chessboard.toFEN_placement()
         
         return ChessTests.TestResult(
             expected_board,

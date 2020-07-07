@@ -131,6 +131,21 @@ class Chessboard():
       output += rowString + "\n"
     return output
 
+  def toFEN_placement(self):
+    output = ""
+    for row in self.tiles:
+      spaceCount=0
+      rowString = ""
+      for piece in row:
+        if str(piece) == "-":
+          spaceCount += 1
+        else:
+          rowString += str(piece)
+      if spaceCount != 0:
+        output += str(spaceCount)
+      output += rowString + "/"
+    return output[:-1]
+
 
 class Tile():
   '''This class represents a tile on a chessboard'''
