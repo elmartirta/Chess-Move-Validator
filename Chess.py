@@ -1,37 +1,3 @@
-'''
-Success Criteria
-
-1. [Complete] Draw a full chessboard to the screen.
-2. Allow players to manually move pieces (without rules).
-3. Implement the rules of chess to restrict possible moves.
-4. Show players, which squares a selected piece can move to.
-
----Architecture required for Goal 2---
-[Complete] Every tile is selectable.
-[Complete] Every piece has a faction (black or white).
-[In Progress] If a tile is empty, and the player has selected a piece, the selected piece is moved to the new tile.
-[Complete] If a tile has an enemy, and the player has selected a piece, the enemy piece is destroyed, and the player's piece is moved.
-
---- Architecture required for Goal 3 ---
-Every piece has a type.
-Each piece can move in different ways.
-Each piece can attack in different ways.
-
-Each player has a King.
-If the player's King is dead, the game is over.
-A player must be able to resign.
---Advanced--If the player's King is threatened, a check becomes active.
---Advanced--If a player's King has nowhere to move, that is checkmate.
-
---- Architecture required for Goal 4 ---
-If a piece is selected, then suggested moves are printed to a layer above the board.
-All legal moves must be involved.
---Advanced-- if the player's King is in check, then the only moves shown must get the king out of check.
-'''
-
-#Every tile has a notation (a1, b3, c4)
-
-
 class Chessboard():
   '''This class represents a chessboard'''
   def __init__(self):
