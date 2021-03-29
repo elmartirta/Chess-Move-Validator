@@ -3,8 +3,8 @@ import Chess
 
 def main():
   #Initialize Chessboard
-  chessboard = Chess.Chessboard();
-  print(chessboard.toString());
+  chessboard = Chess.Chessboard()
+  print(chessboard.toString())
 
   #Ask for tile selection
   x = int(input("What is the X Coordinate of the piece you want to select?\n"))
