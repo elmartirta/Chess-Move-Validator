@@ -1,45 +1,51 @@
 import Position
-from Position import AlgebraicNotation as AN
+from Position import CartesianCoordinate as Coord
 class PositionFactory():
     def fromFEN(fen):
-        pass;
-    def getStartingPosition():
-        pos = Position();
+        pass
+    def fromStartingPosition():
+        position = Position()
+        board = board
+        startingConfiguration = [
+            ("a1","r"),
+            ("b1","n"),
+            ("c1","b"),
+            ("d1","q"),
+            ("e1","k"),
+            ("f1","b"),
+            ("g1","n"),
+            ("h1","r"),
 
-        pos.boardState.addPiece(AN("a1"),"r");
-        pos.boardState.addPiece(AN("b1"),"n");
-        pos.boardState.addPiece(AN("c1"),"b");
-        pos.boardState.addPiece(AN("d1"),"q");
-        pos.boardState.addPiece(AN("e1"),"k");
-        pos.boardState.addPiece(AN("f1"),"b");
-        pos.boardState.addPiece(AN("g1"),"n");
-        pos.boardState.addPiece(AN("h1"),"r");
-
-        pos.boardState.addPiece(AN("a2"), "p");
-        pos.boardState.addPiece(AN("b2"), "p");
-        pos.boardState.addPiece(AN("c2"), "p");
-        pos.boardState.addPiece(AN("d2"), "p");
-        pos.boardState.addPiece(AN("e2"), "p");
-        pos.boardState.addPiece(AN("f2"), "p");
-        pos.boardState.addPiece(AN("g2"), "p");
-        pos.boardState.addPiece(AN("h2"), "p");
-        
-        pos.boardState.addPiece(AN("a7"), "p");
-        pos.boardState.addPiece(AN("b7"), "p");
-        pos.boardState.addPiece(AN("c7"), "p");
-        pos.boardState.addPiece(AN("d7"), "p");
-        pos.boardState.addPiece(AN("e7"), "p");
-        pos.boardState.addPiece(AN("f7"), "p");
-        pos.boardState.addPiece(AN("g7"), "p");
-        pos.boardState.addPiece(AN("h7"), "p");
-        
-        pos.boardState.addPiece(AN("a8"),"r");
-        pos.boardState.addPiece(AN("b8"),"n");
-        pos.boardState.addPiece(AN("c8"),"b");
-        pos.boardState.addPiece(AN("d8"),"q");
-        pos.boardState.addPiece(AN("e8"),"k");
-        pos.boardState.addPiece(AN("f8"),"b");
-        pos.boardState.addPiece(AN("g8"),"n");
-        pos.boardState.addPiece(AN("h8"),"r");
-
-        return pos
+            ("a2", "p"),
+            ("b2", "p"),
+            ("c2", "p"),
+            ("d2", "p"),
+            ("e2", "p"),
+            ("f2", "p"),
+            ("g2", "p"),
+            ("h2", "p"),
+            
+            ("a7", "p"),
+            ("b7", "p"),
+            ("c7", "p"),
+            ("d7", "p"),
+            ("e7", "p"),
+            ("f7", "p"),
+            ("g7", "p"),
+            ("h7", "p"),
+            
+            ("a8","r"),
+            ("b8","n"),
+            ("c8","b"),
+            ("d8","q"),
+            ("e8","k"),
+            ("f8","b"),
+            ("g8","n"),
+            ("h8","r")
+        ]
+        for (pieceLocation in startingConfiguration){
+            pieceType = pieceLocation[0];
+            location = pieceLocation[1];
+            board.addPiece.(Coord.fromAN(location), pieceType)
+        }
+        return position
