@@ -18,6 +18,7 @@ class Position():
             location = pieceLocation[0]
             pieceType = pieceLocation[1]
             self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
+        return self
     def fromStartingPosition():
         pos = Position()
         return pos.addPiecesFromList([
@@ -25,6 +26,9 @@ class Position():
             ("b1","n"),
             ("c1","b"),
             ("d1","q"),
+            ("e4","x"),
+            ("e3","x"),
+            ("e2","x"),
             ("e1","k"),
             ("f1","b"),
             ("g1","n"),
@@ -39,23 +43,23 @@ class Position():
             ("g2", "p"),
             ("h2", "p"),
             
-            ("a7", "p"),
-            ("b7", "p"),
-            ("c7", "p"),
-            ("d7", "p"),
-            ("e7", "p"),
-            ("f7", "p"),
-            ("g7", "p"),
-            ("h7", "p"),
+            ("a7", "P"),
+            ("b7", "P"),
+            ("c7", "P"),
+            ("d7", "P"),
+            ("e7", "P"),
+            ("f7", "P"),
+            ("g7", "P"),
+            ("h7", "P"),
             
-            ("a8","r"),
-            ("b8","n"),
-            ("c8","b"),
-            ("d8","q"),
-            ("e8","k"),
-            ("f8","b"),
-            ("g8","n"),
-            ("h8","r")
+            ("a8","R"),
+            ("b8","N"),
+            ("c8","B"),
+            ("d8","Q"),
+            ("e8","K"),
+            ("f8","B"),
+            ("g8","N"),
+            ("h8","R")
         ])
 
 
@@ -63,12 +67,20 @@ class BoardState():
     def __init__(self):
         self.squares = [[Square(x,y) for x in range(8)] for y in range(8)]
     def addPiece(self, coordinate, piece):
-        self.squares[coordinate.x - 1][coordinate.y - 1].piece = piece
+        self.squares[coordinate.y-1][coordinate.x - 1].piece = piece
+    def toString(self):
+        for rankIndex in range(len(self.squares)-1,-1,-1):
+            rank = self.squares[rankIndex]
+            printedLine = ""
+            for square in rank:
+                printedLine += square.piece + " "
+            print(printedLine)
+                
         
 class Square():
     def __init__(self,x,y,piece=None):
         self.coordinate = CartesianCoordinate(x,y)
-        self.piece = piece
+        self.piece = piece or "-"
 
 class GameStatus(Enum):
     WHITE_TO_MOVE = 1
@@ -93,7 +105,7 @@ class CartesianCoordinate():
     def fromAN(text):
         return CartesianCoordinate.fromAlgebreicNotation(text)
     def fromAlgebreicNotation(text):
-        return CartesianCoordinate(ord(text[0].lower()) - 96, int(text[1]) - 1)
+        return CartesianCoordinate(ord(text[0].lower()) - 96, int(text[1]))
     def fromNonExistent():
         return CartesianCoordinate(None, None)
 
