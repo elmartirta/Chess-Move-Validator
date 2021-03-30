@@ -1,28 +1,26 @@
 from enum import Enum
 class Position():
-    def init(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None):
-        self.boardState = boardState or emptyBoardState()
-        self.gameStatus = gameStatus or emptyGameStatus()
-        self.castlingRights = castlingRights or emptyCastlingRights()
-        self.enPassantPawn = enPassantPawn or emptyEnpassantPawn()
+    def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None):
+        self.boardState = boardState or Position.emptyBoardState()
+        self.gameStatus = gameStatus or Position.emptyGameStatus()
+        self.castlingRights = castlingRights or Position.emptyCastlingRights()
+        self.enPassantPawn = enPassantPawn or Position.emptyEnpassantPawn()
     def emptyBoardState():
-        self.boardState = BoardState.fromEmpty()
+        return BoardState()
     def emptyGameStatus():
-        self.gameStatus = GameStatus.WHITE_TO_MOVE
+        return GameStatus.WHITE_TO_MOVE
     def emptyCastlingRights():
-        self.castlingRights = CastlingRights.fromAllTrue()
+        return CastlingRights.fromAllTrue()
     def emptyEnpassantPawn():
-        self.enPassantPawn = CartesianCoordinate.NONEXISTANT
-    def addPiecesFromList(ANList):
-        pos = Position()
+        return CartesianCoordinate.fromNonExistent()
+    def addPiecesFromList(self, ANList):
         for pieceLocation in ANList:
-            pieceType = pieceLocation[0]
-            location = pieceLocation[1]
-            board.addPiece.(Coord.fromAN(location), pieceType)))
-        return pos
+            location = pieceLocation[0]
+            pieceType = pieceLocation[1]
+            self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
     def fromStartingPosition():
-        pos = Position.fromEmpty()
-        return Position.addPiecesFromList([
+        pos = Position()
+        return pos.addPiecesFromList([
             ("a1","r"),
             ("b1","n"),
             ("c1","b"),
@@ -63,16 +61,16 @@ class Position():
 
 class BoardState():
     def __init__(self):
-        self.squares = [[Square(x,y) for x in range(8)]] for y in range(8)]
+        self.squares = [[Square(x,y) for x in range(8)] for y in range(8)]
     def addPiece(self, coordinate, piece):
-        self.squares[x,y].piece = piece
+        self.squares[coordinate.x - 1][coordinate.y - 1].piece = piece
         
 class Square():
-    def __init__(self,x,y,piece=None)
-        self.coordinate = Coordinate(x,y)
+    def __init__(self,x,y,piece=None):
+        self.coordinate = CartesianCoordinate(x,y)
         self.piece = piece
 
-class GameStatus(enum):
+class GameStatus(Enum):
     WHITE_TO_MOVE = 1
     BLACK_TO_MOVE = 2
     WHITE_IN_MATE = 3
@@ -89,12 +87,14 @@ class CastlingRights():
         return CastlingRights()
 
 class CartesianCoordinate():
-    NONEXISTANT = Square(-1,-1)
     def __init__(self, x, y):
         self.x = x
         self.y = y
-    def fromAN(string):
-        self.x = string[0] - 94
-        self.y = string[1] - 1
+    def fromAN(text):
+        return CartesianCoordinate.fromAlgebreicNotation(text)
+    def fromAlgebreicNotation(text):
+        return CartesianCoordinate(ord(text[0].lower()) - 96, int(text[1]) - 1)
+    def fromNonExistent():
+        return CartesianCoordinate(None, None)
 
 

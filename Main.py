@@ -1,9 +1,11 @@
-import Chess
+from Position import Position
 
 
 def main():
   #Initialize Chessboard
-  chessboard = Chess.Chessboard()
+  chessboard = Position.fromStartingPosition()
+
+  """
   print(chessboard.toString())
 
   #Ask for tile selection
@@ -19,6 +21,7 @@ def main():
   #Print resultant board
   print("Final Board State")
   chessboard.draw()
+  """
 
 if (__name__ == "__main__"):
   main()
