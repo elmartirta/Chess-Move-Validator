@@ -66,14 +66,14 @@ class Position():
         ])
     
     def fromFEN(string):
-        return Position.fromForysthEdwardsNotation(string)
-    def fromForysthEdwardsNotation(string):
+        return Position.fromForsythEdwardsNotation(string)
+    def fromForsythEdwardsNotation(string):
         if not re.fullmatch("[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\s[\w]\s[\w-]+\s[\w-]+\s\d\s\d", string):
-            raise FENParsingError(string, "Forysh Edwards Notation must be in the format: \n\t[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#] a a a # #")
+            raise FENParsingError(string, "Forsyth Edwards Notation must be in the format: \n\t[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#] a a a # #")
         
         fields = string.split(" ")
         if len(fields) != 6: 
-            raise FENParsingError(string, "\Forysth-Edwards Notation must have 6 fields, separated by 6 spaces")
+            raise FENParsingError(string, "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces")
 
         pos = Position()
         piecePlacement = fields[0]
