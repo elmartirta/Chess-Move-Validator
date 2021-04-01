@@ -1,5 +1,7 @@
 from enum import Enum
 from CartesianCoordinate import CartesianCoordinate
+import re
+
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None):
         self.boardState = boardState or Position.emptyBoardState()
@@ -62,8 +64,50 @@ class Position():
             ("g8","N"),
             ("h8","R")
         ])
-            
+    
+    def fromFEN(string):
+        return Position.fromForysthEdwardsNotation(string)
+    def fromForysthEdwardsNotation(string):
+        if not re.fullmatch("[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\s[\w]\s[\w-]+\s[\w-]+\s\d\s\d", string):
+            raise FENParsingError(string, "Forysh Edwards Notation must be in the format: \n\t[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#] a a a # #")
+        
+        fields = string.split(" ")
+        if len(fields) != 6: 
+            raise FENParsingError(string, "\Forysth-Edwards Notation must have 6 fields, separated by 6 spaces")
 
+        pos = Position()
+        piecePlacement = fields[0]
+        activeColor = fields[1]
+        castling = fields[2]
+        enPassant = fields[3]
+        halfClock = fields[4]
+        fullMove = fields[5]
+
+        rows = piecePlacement.split("/")
+        for rowIndex in range(0, len(rows)):
+            row = rows[rowIndex]
+            
+            pieceIndex = 0
+            charIndex = 0
+            while(pieceIndex < 8 and charIndex < len(row)):
+                currentChar = row[charIndex]
+                if currentChar.isalpha():
+                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex+1, rowIndex+1), currentChar)
+                    pieceIndex += 1
+                    charIndex += 1
+                elif currentChar.isdigit():
+                    pieceIndex += int(currentChar)
+                    charIndex += 1
+                else:
+                    raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % currentChar)
+
+        print(fields)
+        print(pos.boardState.toString())
+        return pos
+
+class FENParsingError(ValueError):
+    def __init__(self, FENString, message):
+        super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
 
 class BoardState():
     def __init__(self):

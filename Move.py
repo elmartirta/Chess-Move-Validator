@@ -50,4 +50,4 @@ class Move():
 
 class MoveParsingError(ValueError):
     def __init__(self, message, moveString):
-        super.__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))
+        super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))
