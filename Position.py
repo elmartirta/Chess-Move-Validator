@@ -62,6 +62,7 @@ class Position():
             ("g8","N"),
             ("h8","R")
         ])
+            
 
 
 class BoardState():
