@@ -3,11 +3,13 @@ from CartesianCoordinate import CartesianCoordinate
 import re
 
 class Position():
-    def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None):
+    def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
         self.boardState = boardState or Position.emptyBoardState()
         self.gameStatus = gameStatus or Position.emptyGameStatus()
         self.castlingRights = castlingRights or Position.emptyCastlingRights()
         self.enPassantPawn = enPassantPawn or Position.emptyEnpassantPawn()
+        self.halfClock = halfClock or 0
+        self.fullClock = fullClock or 1
     def emptyBoardState():
         return BoardState()
     def emptyGameStatus():
@@ -23,48 +25,7 @@ class Position():
             self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
         return self
     def fromStartingPosition():
-        pos = Position()
-        return pos.addPiecesFromList([
-            ("a1","r"),
-            ("b1","n"),
-            ("c1","b"),
-            ("d1","q"),
-            ("e4","x"),
-            ("e3","x"),
-            ("e2","x"),
-            ("e1","k"),
-            ("f1","b"),
-            ("g1","n"),
-            ("h1","r"),
-
-            ("a2", "p"),
-            ("b2", "p"),
-            ("c2", "p"),
-            ("d2", "p"),
-            ("e2", "p"),
-            ("f2", "p"),
-            ("g2", "p"),
-            ("h2", "p"),
-            
-            ("a7", "P"),
-            ("b7", "P"),
-            ("c7", "P"),
-            ("d7", "P"),
-            ("e7", "P"),
-            ("f7", "P"),
-            ("g7", "P"),
-            ("h7", "P"),
-            
-            ("a8","R"),
-            ("b8","N"),
-            ("c8","B"),
-            ("d8","Q"),
-            ("e8","K"),
-            ("f8","B"),
-            ("g8","N"),
-            ("h8","R")
-        ])
-    
+        return Position.fromFEN("rnbqkbnr/pppppppp/8/3p4/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
@@ -74,33 +35,34 @@ class Position():
         fields = string.split(" ")
         if len(fields) != 6: 
             raise FENParsingError(string, "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces")
-
         pos = Position()
-        piecePlacement = fields[0]
-        activeColor = fields[1]
-        castling = fields[2]
-        enPassant = fields[3]
-        halfClock = fields[4]
-        fullMove = fields[5]
+        piecePlacementField = fields[0]
+        activeColorField = fields[1]
+        castlingRightsField = fields[2]
+        enPassantField = fields[3]
+        halfClockField = fields[4]
+        fullMoveField = fields[5]
 
-        rows = piecePlacement.split("/")
+        rows = piecePlacementField.split("/")
         for rowIndex in range(0, len(rows)):
             row = rows[rowIndex]
-            
             pieceIndex = 0
-            charIndex = 0
-            while(pieceIndex < 8 and charIndex < len(row)):
-                currentChar = row[charIndex]
-                if currentChar.isalpha():
-                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex+1, rowIndex+1), currentChar)
+            for char in row:
+                if pieceIndex >= 8: 
+                    break
+                if char.isdigit():
+                    pieceIndex += int(char)
+                elif char.isalpha():
+                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex+1, rowIndex+1),char)
                     pieceIndex += 1
-                    charIndex += 1
-                elif currentChar.isdigit():
-                    pieceIndex += int(currentChar)
-                    charIndex += 1
                 else:
-                    raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % currentChar)
+                    raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
 
+        pos.gameStatus = GameStatus.WHITE_TO_MOVE if activeColorField == "w" else GameStatus.BLACK_TO_MOVE
+        pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
+        pos.enPassantPawn = CartesianCoordinate.fromAN(enPassantField) if enPassantField != "-" else CartesianCoordinate.fromNonExistent()
+        pos.halfClock = int(halfClockField) 
+        pos.fullMove = int(fullMoveField)
         print(fields)
         print(pos.boardState.toString())
         return pos
@@ -121,8 +83,7 @@ class BoardState():
             for square in rank:
                 printedLine += square.piece + " "
             print(printedLine)
-                
-        
+                        
 class Square():
     def __init__(self,x,y,piece=None):
         self.coordinate = CartesianCoordinate(x,y)
@@ -136,13 +97,20 @@ class GameStatus(Enum):
     STALEMATE = 5
 
 class CastlingRights():
-    def __init__(self, blackKingSide=True,blackQueenSide=True,whiteKingSide=True,whiteQueenSide=True):
-        self.blackKingSide = blackKingSide
-        self.blackQueenSide = blackQueenSide
+    def __init__(self, whiteKingSide=True,whiteQueenSide=True,blackKingSide=True,blackQueenSide=True):
         self.whiteKingSide = whiteKingSide
         self.whiteQueenSide = whiteQueenSide
+        self.blackKingSide = blackKingSide
+        self.blackQueenSide = blackQueenSide
     def fromAllTrue():
         return CastlingRights()
+    def fromFEN(string):
+        return CastlingRights(
+            "K" in string,
+            "Q" in string,
+            "k" in string,
+            "q" in string
+        )
 
 
 
