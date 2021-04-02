@@ -1,4 +1,4 @@
-from CartesianCoordinate import CartesianCoordinate
+from cartesian_coordinate import CartesianCoordinate
 import re
 
 class Move():

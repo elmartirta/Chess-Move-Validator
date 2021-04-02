@@ -1,7 +1,7 @@
 import random 
 import re
 from enum import Enum
-from CartesianCoordinate import CartesianCoordinate
+from cartesian_coordinate import CartesianCoordinate
 
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
