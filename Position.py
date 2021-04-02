@@ -117,7 +117,3 @@ class CastlingRights():
             "k" in string,
             "q" in string
         )
-
-
-
-
