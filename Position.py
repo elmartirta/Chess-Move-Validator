@@ -1,6 +1,7 @@
+import random 
+import re
 from enum import Enum
 from CartesianCoordinate import CartesianCoordinate
-import re
 
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
@@ -25,7 +26,14 @@ class Position():
             self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
         return self
     def fromStartingPosition():
-        return Position.fromFEN("rnbqkbnr/pppppppp/8/3p4/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+        return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    def fromChess960(seed=None):
+        if seed: random.seed(seed)
+        shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
+        return Position.fromFEN(
+            "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
+            (shuffled_pieces, shuffled_pieces.upper())
+        )
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
@@ -63,8 +71,6 @@ class Position():
         pos.enPassantPawn = CartesianCoordinate.fromAN(enPassantField) if enPassantField != "-" else CartesianCoordinate.fromNonExistent()
         pos.halfClock = int(halfClockField) 
         pos.fullMove = int(fullMoveField)
-        print(fields)
-        print(pos.boardState.toString())
         return pos
 
 class FENParsingError(ValueError):
