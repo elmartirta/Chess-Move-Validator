@@ -108,6 +108,12 @@ class CastlingRights():
         self.whiteQueenSide = whiteQueenSide
         self.blackKingSide = blackKingSide
         self.blackQueenSide = blackQueenSide
+    def __eq__(self, other):
+        return \
+            self.whiteKingSide == other.whiteKingSide and \
+            self.whiteQueenSide == other.whiteQueenSide and \
+            self.blackKingSide == other.blackKingSide and \
+            self.blackQueenSide == other.blackQueenSide
     def fromAllTrue():
         return CastlingRights()
     def fromFEN(string):
