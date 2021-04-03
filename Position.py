@@ -11,22 +11,20 @@ class Position():
         self.enPassantPawn = enPassantPawn or Position.emptyEnpassantPawn()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
-    def emptyBoardState():
-        return BoardState()
-    def emptyGameStatus():
-        return GameStatus.WHITE_TO_MOVE
-    def emptyCastlingRights():
-        return CastlingRights.fromAllTrue()
-    def emptyEnpassantPawn():
-        return CartesianCoordinate.fromNonExistent()
     def addPiecesFromList(self, ANList):
         for pieceLocation in ANList:
             location = pieceLocation[0]
             pieceType = pieceLocation[1]
             self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
         return self
-    def fromStartingPosition():
-        return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    def emptyBoardState():
+        return BoardState()
+    def emptyCastlingRights():
+        return CastlingRights.fromAllTrue()
+    def emptyEnpassantPawn():
+        return CartesianCoordinate.fromNonExistent()
+    def emptyGameStatus():
+        return GameStatus.WHITE_TO_MOVE
     def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
@@ -72,6 +70,8 @@ class Position():
         pos.halfClock = int(halfClockField) 
         pos.fullMove = int(fullMoveField)
         return pos
+    def fromStartingPosition():
+        return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
