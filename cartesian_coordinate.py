@@ -15,9 +15,9 @@ class CartesianCoordinate():
         return CartesianCoordinate.fromAlgebreicNotation(text)
     def fromAlgebreicNotation(text):
         return CartesianCoordinate.fromOneOneOrigin(ord(text[0].lower()) - 96, int(text[1]))
-    def fromZeroZeroOrigin(self, x, y):
+    def fromZeroZeroOrigin(x, y):
         return CartesianCoordinate(x+1, y+1)
-    def fromOneOneOrigin(self, x, y):
+    def fromOneOneOrigin(x, y):
         return CartesianCoordinate(x,y)
     def fromNonExistent():
         return CartesianCoordinate(None, None)
