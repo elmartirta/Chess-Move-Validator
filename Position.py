@@ -5,27 +5,18 @@ from cartesian_coordinate import CartesianCoordinate
 
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
-        self.boardState = boardState or Position.emptyBoardState()
-        self.gameStatus = gameStatus or Position.emptyGameStatus()
-        self.castlingRights = castlingRights or Position.emptyCastlingRights()
-        self.enPassantPawn = enPassantPawn or Position.emptyEnpassantPawn()
+        self.boardState = boardState or BoardState.fromEmpty()
+        self.gameStatus = gameStatus or GameStatus.WHITE_TO_MOVE
+        self.castlingRights = castlingRights or CastlingRights.fromAllTrue()
+        self.enPassantPawn = enPassantPawn or CartesianCoordinate.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
-        
     def addPiecesFromList(self, ANList):
         for pieceLocation in ANList:
             location = pieceLocation[0]
             pieceType = pieceLocation[1]
             self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
         return self
-    def emptyBoardState():
-        return BoardState()
-    def emptyCastlingRights():
-        return CastlingRights.fromAllTrue()
-    def emptyEnpassantPawn():
-        return CartesianCoordinate.fromNonExistent()
-    def emptyGameStatus():
-        return GameStatus.WHITE_TO_MOVE
     def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
@@ -82,6 +73,8 @@ class FENParsingError(ValueError):
 class BoardState():
     def __init__(self):
         self.squares = [[Square(x,y) for x in range(8)] for y in range(8)]
+    def fromEmpty():
+        return BoardState()
     def addPiece(self, coordinate, piece):
         self.squares[coordinate.y-1][coordinate.x - 1].piece = piece
     def toString(self):
