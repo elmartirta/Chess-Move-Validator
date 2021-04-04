@@ -11,12 +11,6 @@ class Position():
         self.enPassantPawn = enPassantPawn or CartesianCoordinate.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
-    def addPiecesFromList(self, ANList):
-        for pieceLocation in ANList:
-            location = pieceLocation[0]
-            pieceType = pieceLocation[1]
-            self.boardState.addPiece(CartesianCoordinate.fromAN(location), pieceType)
-        return self
     def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
