@@ -1,4 +1,5 @@
 from position_test_suite import PositionTestSuite
+import traceback
 
 
 def main():
@@ -16,11 +17,11 @@ def runTests():
         for test in suite["test_list"]:
             test_number += 1
             result = False
-            errorMessage = None
             try:
                 result = test["runnable"]()
             except Exception as e:
-                errorMessage = str(e)
+                print("[EXPT] %s %2d : !!!!!! Exception !!!!!!" % (suite["suite_name"], test_number))
+                traceback.print_exc()
             finally:
                 print("[%s] %s %2d : %s" % (
                     "PASS" if result == True else "FAIL" if result == False else "UNDF",
@@ -28,8 +29,6 @@ def runTests():
                     test_number, 
                     test["name"])
                 )
-                if errorMessage != None: 
-                    print(errorMessage)
 
     
 if __name__ == "__main__":
