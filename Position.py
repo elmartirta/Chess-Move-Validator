@@ -21,8 +21,8 @@ class Position():
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
-        if not re.fullmatch("[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\/[\w]+\s[\w]\s[\w-]+\s[\w-]+\s\d\s\d", string):
-            raise FENParsingError(string, "Forsyth Edwards Notation must be in the format: \n\t[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#]/[a#] a a a # #")
+        if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
+            raise FENParsingError(string, "Forsyth Edwards Notation must be in the correct format")
         
         fields = string.split(" ")
         if len(fields) != 6: 
