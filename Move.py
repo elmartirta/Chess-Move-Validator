@@ -1,4 +1,3 @@
-from cartesian_coordinate import CartesianCoordinate
 import re
 
 class Move():
@@ -9,9 +8,28 @@ class Move():
         self.destination = destination
         self.isCapture = isCapture 
         self.isCheck = isCheck
+    def clone(self):
+        return Move(
+            self.pieceType,
+            self.sourceFile,
+            self.sourceRank,
+            self.destination,
+            self.isCapture,
+            self.isCheck,
+            self.isCheckmate
+        )
         self.isCheckmate = isCheckmate
-
+    def color(self):
+        return "black" if self.pieceType.isupper() else "white"
+    def setSource(self, cartesianCoordinate):
+        self.sourceFile = cartesianCoordinate.y
+        self.sourceRank = cartesianCoordinate.x + 96
+        return self
     def fromString(string):
+        return self.fromAN(string)
+    def fromAN(string):
+        return self.fromAlgebreicNotation(string)
+    def fromAlgebreicNotation(string):
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQK") else None
         sourceFile = None
         sourceRank = None

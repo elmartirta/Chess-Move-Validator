@@ -11,6 +11,7 @@ class Position():
         self.enPassantPawn = enPassantPawn or Position.emptyEnpassantPawn()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
+        
     def addPiecesFromList(self, ANList):
         for pieceLocation in ANList:
             location = pieceLocation[0]
@@ -72,7 +73,8 @@ class Position():
         return pos
     def fromStartingPosition():
         return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-
+    def squareAt(self, cartesianCoordinate):
+        return self.boardState.squares[cartesianCoordinate.y-1][cartesianCoordinate.x-1]
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))

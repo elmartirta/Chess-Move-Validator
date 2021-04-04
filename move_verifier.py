@@ -1,190 +1,104 @@
+from position import Position
+from move import Move
+from cartesian_coordinate import CartesianCoordinate as Coordinate
 class MoveVerifier():
-    pass
-    def isMoveLegal(self,x1,y1,x2,y2):
-    """Returns whether or not moving a piece
-    from (x1,y1) to (x2,y2) is a legal move"""
-    if(x1 < 0 or x1 > 8 or y1 < 0 or y1 > 8): return {"result":False, "reason": "The piece must exist on the board"}
-    if(x1 < 0 or x2 > 8 or y2 < 0 or y2 > 8): return {"result":False, "reason": "The destination location must exist on the board"}
-    if(x1 == x2 and y1 == y2): return {"result":False, "reason": "The piece must move to a different location than it started from"}
+    def generateMoveListFromFEN(self, positionFEN, moveAN):
+        position = Position.fromFEN(positionFEN)
+        move = Move.fromAN(moveAN)
 
-    sourceTile = self.tileAt(x1,y1)
-    destTile = self.tileAt(x2,y2)
-
-    if(not sourceTile.hasPiece()): return {"result": False, "reason": "There must be a piece within the source tile."}
-    if(destTile.hasPiece() and sourceTile.piece.faction == destTile.piece.faction):
-      return {"result": False, "reason": "The piece may not move into the same square as an allied piece."}
-
-    move = (x2-x1, y2-y1)
-    legal_moves = sourceTile.piece.legalMoves()
-    if not(move in legal_moves):
-      return {"result": False, "reason": "The piece must follow its own rules"}
+        moveList = []
+        if move.pieceType == None: raise MoveGenerationError("PieceType is None")
+        destination = CartesianCoordinate.fromFEN(move.destination)
+        elif (move.pieceType == "r"):
+            self.addRookCandidates(moveList, position, move)
+        elif (move.pieceType == "b"):
+            self.addBishopCandidates(movelist, position, move)
+        elif (move.pieceType == "q"):
+            self.addRookCandidates(movelist, position, move)
+            self.addBishopCandidates(movelist, position, move)
+        elif (move.pieceType == "n"):
+            self.addKnightCandidates(movelist, position, move)
+        elif (move.pieceType == "k"):
+            self.addKingCandidates(movelist, position, move)
+        elif (move.pieceType == "p"):
+            self.addPawnCandidates(movelist, position, move)
+        else:
+            raise MoveGenerationError("Unsupported Piece type: " + move.pieceType)
+        return moveList()
     
-    for path_tile in legal_moves[move]["Path"]:
-      path_coord = tuple(sum(x) for x in zip((x1,y1), path_tile))
-      if (self.tileAt(*path_coord).hasPiece()): 
-        return {"result": False, "reason": "There cannot be a piece in the path of the moving piece."}
+    def addRookCandidates(self, moveList, position, move)
+        destination = move.destination
+        for i in range(1,9):
+            for line in ["vertical", "horizontal"]:
+                if line == "vertical":
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x, i)
+                elif line == "horizontal":
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(i, destination.y)
+                else:
+                    continue
+                if position.squareAt(candidateCoordinate).pieceType == move.pieceType:
+                    moveList += move.clone().setSource(candidateSquare.coordinate)
 
-    if (self.isKingInCheck(sourceTile.piece.faction)):
-      return {"result": False, "reason": "The King cannot be in check."}
-    
-    #The final board state can not end with the allied king in check.
+    def addBishopCandidates(self, moveList, position, move):
+        destination = move.destination
+        for i in range(1,8):
+            for diagonal in ["++", "+-", "-+", "--"]:
+                if diagonal == "++" and destination.x+i <= 8 and destination.y+i <= 8:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+i, destination.y+1)
+                elif diagonal == "+-" and destination.x+i <= 8 and destination.y-i >= 1:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+i, destination.y-1)
+                elif diagonal == "-+" and destination.x-i >= 1 and destination.y+i <= 8:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-i, destination.y+1)
+                elif diagonal == "--" and destination.x-i >= 1 or destination.y-i >= 1:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-i, destination.y+1)
+                else:
+                    continue
+                if position.squareAt(candidateCoordinate).pieceType == move.pieceType:
+                    moveList += move.clone().setSource(candidateSquare.coordinate)
+    def addKnightCandidates(self, moveList, position, move):
+        destination = move.destination
+        for m in [{"x": 1, "y": 2}, {"x": 2, "y": 1}]:
+            for diagonal in ["++", "+-", "-+", "--"]:
+                if diagonal == "++" and destination.x+m["x"] <= 8 and destination.y+m["y"] <= 8:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+m["x"], destination.y+m["y"])
+                elif diagonal == "+-" and destination.x+m["x"] <= 8 and destination.y-m["y"] >= 1:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+m["x"], destination.y-m["y"])
+                elif diagonal == "-+" and destination.x-m["x"] >= 1 and destination.y+m["y"] <= 8:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-m["x"], destination.y+m["y"])
+                elif diagonal == "--" and destination.x-m["x"] >= 1 or destination.y-m["y"] >= 1:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-m["x"], destination.y+m["y"])
+                else:
+                    continue
+                if position.squareAt(candidateCoordinate).pieceType == move.pieceType:
+                    moveList += move.clone().setSource(candidateSquare.coordinate)
+    def addKingCandidates(self, moveList, position, move):
+        destination = move.destination
+        for mX in [1,0,-1]:
+            for my in [1,0,-1]:
+                if mx != 0 and my != 0:
+                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+mX, destination.y+my)
+                else:
+                    continue
+                if position.squareAt(candidateCoordinate).pieceType == move.pieceType:
+                    moveList += move.clone().setSource(candidateSquare.coordinate)
+    def addPawnCandidates(self, moveList, position, move):
+        destination = move.destination
+        if move.color() == "black":
+            direction = 1
+        elif move.color() == "white":
+            direction = -1
+        else:
+            return MoveGenerationError("Pawn is the unimplemented color %s." % (move.pieceType.color()))
+        for i in [1*direction,2*direction]:
+            if destination.y+i <= 8 and destination.y+i >= 1:
+                candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x, destination.y+i)
+                moveList += move.clone().setSource(candidateSquare.coordinate)
 
-    return {"result":True} #stub
 
-    def isKingInCheck(self, faction):
-        return False #stub
 
-    def legalMoves(self):    
-    if self.label == "p" and self.faction == "W":
-      return {
-        (0,1):{"Path":[]}
-      }
-    if self.label == "p" and self.faction == "B":
-      return {
-        (0,-1):{"Path":[]}
-      }
-    if self.label == "r":
-      return {
-        ( 0, 1):{"Path": []},
-        ( 0, 2):{"Path": [(0,1)]},
-        ( 0, 3):{"Path": [(0,1),(0,2)]},
-        ( 0, 4):{"Path": [(0,1),(0,2),(0,3)]},
-        ( 0, 5):{"Path": [(0,1),(0,2),(0,3),(0,4)]},
-        ( 0, 6):{"Path": [(0,1),(0,2),(0,3),(0,4),(0,5)]},
-        ( 0, 7):{"Path": [(0,1),(0,2),(0,3),(0,4),(0,5),(0,6)]},
-        ( 0,-1):{"Path": []},
-        ( 0,-2):{"Path": [(0,-1)]},
-        ( 0,-3):{"Path": [(0,-1),(0,-2)]},
-        ( 0,-4):{"Path": [(0,-1),(0,-2),(0,-3)]},
-        ( 0,-5):{"Path": [(0,-1),(0,-2),(0,-3),(0,-4)]},
-        ( 0,-6):{"Path": [(0,-1),(0,-2),(0,-3),(0,-4),(0,-5)]},
-        ( 0,-7):{"Path": [(0,-1),(0,-2),(0,-3),(0,-4),(0,-5),(0,-6)]},
-        ( 1, 0):{"Path": []},
-        ( 2, 0):{"Path": [(1,0)]},
-        ( 3, 0):{"Path": [(1,0),(2,0)]},
-        ( 4, 0):{"Path": [(1,0),(2,0),(3,0)]},
-        ( 5, 0):{"Path": [(1,0),(2,0),(3,0),(4,0)]},
-        ( 6, 0):{"Path": [(1,0),(2,0),(3,0),(4,0),(5,0)]},
-        ( 7, 0):{"Path": [(1,0),(2,0),(3,0),(4,0),(5,0),(6,0)]},
-        (-1, 0):{"Path": []},
-        (-2, 0):{"Path": [(-1,0)]},
-        (-3, 0):{"Path": [(-1,0),(-2,0)]},
-        (-4, 0):{"Path": [(-1,0),(-2,0),(-3,0)]},
-        (-5, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0)]},
-        (-6, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0),(-5,0)]},
-        (-7, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0),(-5,0),(-6,0)]}
-      }
-    if self.label == "n":
-      return {
-        ( 1, 2):{"Path":[]},
-        ( 1,-2):{"Path":[]},
-        (-1, 2):{"Path":[]},
-        (-1,-2):{"Path":[]},
-        ( 2, 1):{"Path":[]},
-        ( 2,-1):{"Path":[]},
-        (-2, 1):{"Path":[]},
-        (-2,-1):{"Path":[]}
-      }
-    if self.label == "b":
-      return {
-        ( 1, 1):{"Path":[]},
-        ( 2, 2):{"Path":[(1,1)]},
-        ( 3, 3):{"Path":[(1,1),(2,2)]},
-        ( 4, 4):{"Path":[(1,1),(2,2),(3,3)]},
-        ( 5, 5):{"Path":[(1,1),(2,2),(3,3),(4,4)]},
-        ( 6, 6):{"Path":[(1,1),(2,2),(3,3),(4,4),(5,5)]},
-        ( 7, 7):{"Path":[(1,1),(2,2),(3,3),(4,4),(5,5),(6,6)]},
-        (-1, 1):{"Path":[]},
-        (-2, 2):{"Path":[(-1,1)]},
-        (-3, 3):{"Path":[(-1,1),(-2,2)]},
-        (-4, 4):{"Path":[(-1,1),(-2,2),(-3,3)]},
-        (-5, 5):{"Path":[(-1,1),(-2,2),(-3,3),(-4,4)]},
-        (-6, 6):{"Path":[(-1,1),(-2,2),(-3,3),(-4,4),(-5,5)]},
-        (-7, 7):{"Path":[(-1,1),(-2,2),(-3,3),(-4,4),(-5,5),(-6,6)]},
-        ( 1,-1):{"Path":[]},
-        ( 2,-2):{"Path":[(1,-1)]},
-        ( 3,-3):{"Path":[(1,-1),(2,-2)]},
-        ( 4,-4):{"Path":[(1,-1),(2,-2),(3,-3)]},
-        ( 5,-5):{"Path":[(1,-1),(2,-2),(3,-3),(4,-4)]},
-        ( 6,-6):{"Path":[(1,-1),(2,-2),(3,-3),(4,-4),(5,-5)]},
-        ( 7,-7):{"Path":[(1,-1),(2,-2),(3,-3),(4,-4),(5,-5),(6,-6)]},
-        (-1,-1):{"Path":[]},
-        (-2,-2):{"Path":[(-1,-1)]},
-        (-3,-3):{"Path":[(-1,-1),(-2,-2)]},
-        (-4,-4):{"Path":[(-1,-1),(-2,-2),(-3,-3)]},
-        (-5,-5):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4)]},
-        (-6,-6):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4),(-5,-5)]},
-        (-7,-7):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4),(-5,-5),(-6,-6)]}
-      }
+        
+            
 
-    if self.label == "k":
-      return {
-        ( 1 ,0):{"Path":[]},
-        (-1, 0):{"Path":[]},
-        ( 0, 1):{"Path":[]},
-        ( 0,-1):{"Path":[]},
-        ( 1, 1):{"Path":[]},
-        ( 1,-1):{"Path":[]},
-        (-1, 1):{"Path":[]},
-        (-1,-1):{"Path":[]}
-      }
-    if self.label == "q":
-      return {
-        ( 0, 1):{"Path": []},
-        ( 0, 2):{"Path": [(0,1)]},
-        ( 0, 3):{"Path": [(0,1),(0,2)]},
-        ( 0, 4):{"Path": [(0,1),(0,2),(0,3)]},
-        ( 0, 5):{"Path": [(0,1),(0,2),(0,3),(0,4)]},
-        ( 0, 6):{"Path": [(0,1),(0,2),(0,3),(0,4),(0,5)]},
-        ( 0, 7):{"Path": [(0,1),(0,2),(0,3),(0,4),(0,5),(0,6)]},
-        ( 0,-1):{"Path": []},
-        ( 0,-2):{"Path": [(0,-1)]},
-        ( 0,-3):{"Path": [(0,-1),(0,-2)]},
-        ( 0,-4):{"Path": [(0,-1),(0,-2),(0,-3)]},
-        ( 0,-5):{"Path": [(0,-1),(0,-2),(0,-3),(0,-4)]},
-        ( 0,-6):{"Path": [(0,-1),(0,-2),(0,-3),(0,-4),(0,-5)]},
-        ( 0,-7):{"Path": [(0,-1),(0,-2),(0,-3),(0,-4),(0,-5),(0,-6)]},
-        ( 1, 0):{"Path": []},
-        ( 2, 0):{"Path": [(1,0)]},
-        ( 3, 0):{"Path": [(1,0),(2,0)]},
-        ( 4, 0):{"Path": [(1,0),(2,0),(3,0)]},
-        ( 5, 0):{"Path": [(1,0),(2,0),(3,0),(4,0)]},
-        ( 6, 0):{"Path": [(1,0),(2,0),(3,0),(4,0),(5,0)]},
-        ( 7, 0):{"Path": [(1,0),(2,0),(3,0),(4,0),(5,0),(6,0)]},
-        (-1, 0):{"Path": []},
-        (-2, 0):{"Path": [(-1,0)]},
-        (-3, 0):{"Path": [(-1,0),(-2,0)]},
-        (-4, 0):{"Path": [(-1,0),(-2,0),(-3,0)]},
-        (-5, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0)]},
-        (-6, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0),(-5,0)]},
-        (-7, 0):{"Path": [(-1,0),(-2,0),(-3,0),(-4,0),(-5,0),(-6,0)]},        
-        ( 1, 1):{"Path":[]},
-        ( 2, 2):{"Path":[(1,1)]},
-        ( 3, 3):{"Path":[(1,1),(2,2)]},
-        ( 4, 4):{"Path":[(1,1),(2,2),(3,3)]},
-        ( 5, 5):{"Path":[(1,1),(2,2),(3,3),(4,4)]},
-        ( 6, 6):{"Path":[(1,1),(2,2),(3,3),(4,4),(5,5)]},
-        ( 7, 7):{"Path":[(1,1),(2,2),(3,3),(4,4),(5,5),(6,6)]},
-        (-1, 1):{"Path":[]},
-        (-2, 2):{"Path":[(-1,1)]},
-        (-3, 3):{"Path":[(-1,1),(-2,2)]},
-        (-4, 4):{"Path":[(-1,1),(-2,2),(-3,3)]},
-        (-5, 5):{"Path":[(-1,1),(-2,2),(-3,3),(-4,4)]},
-        (-6, 6):{"Path":[(-1,1),(-2,2),(-3,3),(-4,4),(-5,5)]},
-        (-7, 7):{"Path":[(-1,1),(-2,2),(-3,3),(-4,4),(-5,5),(-6,6)]},
-        ( 1,-1):{"Path":[]},
-        ( 2,-2):{"Path":[(1,-1)]},
-        ( 3,-3):{"Path":[(1,-1),(2,-2)]},
-        ( 4,-4):{"Path":[(1,-1),(2,-2),(3,-3)]},
-        ( 5,-5):{"Path":[(1,-1),(2,-2),(3,-3),(4,-4)]},
-        ( 6,-6):{"Path":[(1,-1),(2,-2),(3,-3),(4,-4),(5,-5)]},
-        ( 7,-7):{"Path":[(1,-1),(2,-2),(3,-3),(4,-4),(5,-5),(6,-6)]},
-        (-1,-1):{"Path":[]},
-        (-2,-2):{"Path":[(-1,-1)]},
-        (-3,-3):{"Path":[(-1,-1),(-2,-2)]},
-        (-4,-4):{"Path":[(-1,-1),(-2,-2),(-3,-3)]},
-        (-5,-5):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4)]},
-        (-6,-6):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4),(-5,-5)]},
-        (-7,-7):{"Path":[(-1,-1),(-2,-2),(-3,-3),(-4,-4),(-5,-5),(-6,-6)]}
-      }
-    return {}
+class MoveGenerationError(ValueError):
+    def __init__(self, positionFEN, moveAN, errorMessage):
+        super().__init__("Error trying to parse position \"%s\" and move %s. %s" % (positionFEN, moveAN, errorMessage))
