@@ -31,9 +31,9 @@ class MoveVerifier():
         for i in range(0,8):
             for line in ["vertical", "horizontal"]:
                 if line == "vertical":
-                    candidateCoordinate = Coordinate.fromZeroZeroOrigin(destination.x, i)
+                    candidateCoordinate = Coordinate(destination.x, i)
                 elif line == "horizontal":
-                    candidateCoordinate = Coordinate.fromZeroZeroOrigin(i, destination.y)
+                    candidateCoordinate = Coordinate(i, destination.y)
                 else:
                     continue
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
@@ -52,7 +52,7 @@ class MoveVerifier():
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
 
-                candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
+                candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addKnightCandidates(moveList, position, move):
@@ -68,7 +68,7 @@ class MoveVerifier():
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
 
-                candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
+                candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addKingCandidates(moveList, position, move):
@@ -82,7 +82,7 @@ class MoveVerifier():
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
 
-                candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
+                candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addPawnCandidates(moveList, position, move):
@@ -95,7 +95,7 @@ class MoveVerifier():
             return MoveGenerationError("Pawn is the unimplemented color %s." % (move.pieceType.color()))
         for i in [1*direction,2*direction]:
             if destination.y+i <= 8 and destination.y+i >= 1:
-                candidateCoordinate = Coordinate.fromZeroZeroOrigin(destination.x, destination.y+i)
+                candidateCoordinate = Coordinate(destination.x, destination.y+i)
                 moveList.append(move.clone().setSource(candidateCoordinate))
 
 
