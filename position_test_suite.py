@@ -49,7 +49,7 @@ class PositionTestSuite():
     def test5():
         pos = Position.fromFEN("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
         assert(pos.boardState != None)
-        #assert(pos.gameStatus == GameStatue.WHITE_IN_MATE) TODO:Not implemented yet
+        assert(pos.gameStatus == GameStatus.WHITE_TO_MOVE)
         assert(pos.castlingRights == CastlingRights.fromAllTrue())
         assert(pos.enPassantPawn == Coordinate.fromNonExistent())
         return True

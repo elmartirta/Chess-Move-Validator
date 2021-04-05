@@ -20,7 +20,7 @@ class MoveVerifierTestSuite():
         assert(check(pos, "Nb3") != None)
         assert(check(pos, "Qb3") != None)
         assert(check(pos, "Kb3") != None)
-        #assert(check(pos, "b3")) #TODO: FIX ISSUE, CURRENTLY FAILING
+        assert(check(pos, "b3")) #TODO: FIX ISSUE, CURRENTLY FAILING
         return True
     def test2():
         res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)

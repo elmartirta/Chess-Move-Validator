@@ -38,15 +38,15 @@ class Move():
         isCheck = "+" in string
         isCheckmate = "#" in string
         
-        if re.fullmatch("[RNBQK]*x*\w\d[+#]*", string):         #Parse Moves like Ke2, Be4+, Be4#
+        if re.fullmatch("[RNBQK]x*\w\d[+#]*", string):         #Parse Moves like Ke2, Be4+, Be4#
             destination = string.replace("x", "")[1:3]
-        elif re.fullmatch("[RNBQK]*\wx*\w\d[+#]*", string):     #Parse moves like Rae4, etc
+        elif re.fullmatch("[RNBQK]\wx*\w\d[+#]*", string):     #Parse moves like Rae4, etc
             sourceFile = string[1]
             destination = string.replace("x", "")[2:4]
-        elif re.fullmatch("[RNBQK]*\dx*\w\d[+#]*", string):     #Parse moves like R1e4, etc
+        elif re.fullmatch("[RNBQK]\dx*\w\d[+#]*", string):     #Parse moves like R1e4, etc
             sourceRank = string[1]
             destination = string.replace("x", "")[2:4]
-        elif re.fullmatch("[RNBQK]*\w\dx*\w\d[+#]*", string):   #Parse moves like Qa1e4, etc
+        elif re.fullmatch("[RNBQK]\w\dx*\w\d[+#]*", string):   #Parse moves like Qa1e4, etc
             sourceFile = string[1]
             sourceRank = string[2]
             destination = string.replace("x", "")[3:5]

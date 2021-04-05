@@ -18,8 +18,8 @@ class CartesianCoordinate():
         return CartesianCoordinate(ord(text[0].lower()) - 97, int(text[1])-1)
     def fromNonExistent():
         return CartesianCoordinate(None, None)
-    def plus(self, x, y):
-        return CartesianCoordinate(x+self.x, y+self.y)
+    def plus(self, cartesianCoordinate):
+        return CartesianCoordinate(cartesianCoordinate.x+self.x, cartesianCoordinate.y+self.y)
 
 class ANParsingError(ValueError):
     def __init__(self, ANText, errorMessage):

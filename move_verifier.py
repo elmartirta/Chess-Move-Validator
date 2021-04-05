@@ -1,4 +1,5 @@
 from position import Position
+from position import GameStatus
 from move import Move
 from cartesian_coordinate import CartesianCoordinate as Coordinate
 class MoveVerifier():
@@ -79,16 +80,36 @@ class MoveVerifier():
         MoveVerifier.addRookCandidates(moveList, position, move)
     def addPawnCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
-        if move.color() == "black":
-            direction = 1
-        elif move.color() == "white":
-            direction = -1
-        else:
-            return MoveGenerationError("Pawn is the unimplemented color %s." % (move.pieceType.color()))
-        for i in [1*direction,2*direction]:
-            if destination.y+i <= 8 and destination.y+i >= 1:
-                candidateCoordinate = Coordinate(destination.x, destination.y+i)
-                moveList.append(move.clone().setSource(candidateCoordinate))
+      
+        candidates = []
+        deduceCandidate = lambda movementVector: candidates.append(destination.plus(movementVector))
+        if position.gameStatus == GameStatus.WHITE_TO_MOVE:
+            if move.isCapture:
+                deduceCandidate(Coordinate(-1,-1))
+                deduceCandidate(Coordinate( 1,-1))
+            else:
+                if destination.y == 3:
+                    deduceCandidate(Coordinate(0,-2))
+                else:
+                    deduceCandidate(Coordinate(0,-1))
+        elif position.gameStatus == GameStatus.BLACK_TO_MOVE:
+            if move.isCapture:
+                deduceCandidate(Coordinate(-1,1))
+                deduceCandidate(Coordinate( 1,1))
+            else:
+                if destination.y == 4:
+                    deduceCandidate(Coordinate(0,2))
+                else:
+                    deduceCandidate(Coordinate(0,1))
+
+        for candidate in candidates:
+            candidateX = candidate.x
+            candidateY = candidate.y
+
+            if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+                continue
+            if (position.pieceAt(candidate).upper() == move.pieceType):
+                moveList.append(move.clone().setSource(Coordinate(candidateX, candidateY)))
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
