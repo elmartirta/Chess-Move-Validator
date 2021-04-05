@@ -7,21 +7,14 @@ class MoveVerifier():
         move = Move.fromAN(moveAN)
 
         moveList = []
-        if move.pieceType == None: raise MoveGenerationError(positionFEN, moveAN, "PieceType is None")
-        destination = Coordinate.fromAN(move.destination)
-        if (move.pieceType in "rR"):
-            MoveVerifier.addRookCandidates(moveList, position, move)
-        elif (move.pieceType in "bB"):
-            MoveVerifier.addBishopCandidates(moveList, position, move)
-        elif (move.pieceType in "qQ"):
-            MoveVerifier.addRookCandidates(moveList, position, move)
-            MoveVerifier.addBishopCandidates(moveList, position, move)
-        elif (move.pieceType in "nN"):
-            MoveVerifier.addKnightCandidates(moveList, position, move)
-        elif (move.pieceType in "kK"):
-            MoveVerifier.addKingCandidates(moveList, position, move)
-        elif (move.pieceType in "pP"):
-            MoveVerifier.addPawnCandidates(moveList, position, move)
+        if move.pieceType == None: 
+            raise MoveGenerationError(positionFEN, moveAN, "PieceType is None")
+        if   (move.pieceType in "rR"): MoveVerifier.addRookCandidates(moveList, position, move)
+        elif (move.pieceType in "bB"): MoveVerifier.addBishopCandidates(moveList, position, move)
+        elif (move.pieceType in "qQ"): MoveVerifier.addQueenCandidates(moveList, position, move)
+        elif (move.pieceType in "nN"): MoveVerifier.addKnightCandidates(moveList, position, move)
+        elif (move.pieceType in "kK"): MoveVerifier.addKingCandidates(moveList, position, move)
+        elif (move.pieceType in "pP"): MoveVerifier.addPawnCandidates(moveList, position, move)
         else:
             raise MoveGenerationError(positionFEN, moveAN, "Unsupported Piece type: " + move.pieceType)
         return moveList
@@ -81,6 +74,9 @@ class MoveVerifier():
                 candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
+    def addQueenCandidates(moveList, position, move):
+        MoveVerifier.addBishopCandidates(moveList, position, move)
+        MoveVerifier.addRookCandidates(moveList, position, move)
     def addPawnCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
         if move.color() == "black":
