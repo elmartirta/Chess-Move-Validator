@@ -43,46 +43,31 @@ class MoveVerifier():
         destination = Coordinate.fromAN(move.destination)
         for i in range(1,10):
             for diagonal in ["++", "+-", "-+", "--"]:
-                if diagonal == "++":
-                    candidateX = destination.x + i
-                    candidateY = destination.y + i
-                elif diagonal == "+-":
-                    candidateX = destination.x + i
-                    candidateY = destination.y - i
-                elif diagonal == "-+":
-                    candidateX = destination.x - i
-                    candidateY = destination.y + i
-                elif diagonal == "--":
-                    candidateX = destination.x - i
-                    candidateY = destination.y - i
-                else:
+                if   diagonal == "++": candidateX, candidateY = destination.x+i, destination.y+i
+                elif diagonal == "+-": candidateX, candidateY = destination.x+i, destination.y-i
+                elif diagonal == "-+": candidateX, candidateY = destination.x-i, destination.y+i
+                elif diagonal == "--": candidateX, candidateY = destination.x-i, destination.y-i
+                else: 
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
+
                 candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
-                
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addKnightCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
         for m in [{"x": 1, "y": 2}, {"x": 2, "y": 1}]:
             for diagonal in ["++", "+-", "-+", "--"]:
-                if diagonal == "++":
-                    candidateX = destination.x + m["x"]
-                    candidateY = destination.y + m["y"]
-                elif diagonal == "+-":
-                    candidateX = destination.x + m["x"]
-                    candidateY = destination.y - m["y"]
-                elif diagonal == "-+":
-                    candidateX = destination.x - m["x"]
-                    candidateY = destination.y + m["y"]
-                elif diagonal == "--":
-                    candidateX = destination.x - m["x"]
-                    candidateY = destination.y - m["y"]
+                if   diagonal == "++": candidateX, candidateY = destination.x+m["x"], destination.y+m["y"]
+                elif diagonal == "+-": candidateX, candidateY = destination.x+m["x"], destination.y-m["y"]
+                elif diagonal == "-+": candidateX, candidateY = destination.x-m["x"], destination.y+m["y"]
+                elif diagonal == "--": candidateX, candidateY = destination.x-m["x"], destination.y-m["y"]
                 else:
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
+
                 candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
@@ -91,9 +76,13 @@ class MoveVerifier():
         for mx in [1,0,-1]:
             for my in [1,0,-1]:
                 if mx != 0 and my != 0:
-                    candidateCoordinate = Coordinate.fromZeroZeroOrigin(destination.x+mx, destination.y+my)
+                    candidateX, candidateY = destination.x+mx, destination.y+my
                 else:
                     continue
+                if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+                    continue
+
+                candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addPawnCandidates(moveList, position, move):
