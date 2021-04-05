@@ -21,16 +21,18 @@ class Position():
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
-        if (string == None): raise FENParsingError(string, "String is equal to None")
-        if (string == ""): raise FENParsingError(string, "String is the empty String")
-
+        if (string == None): 
+            raise FENParsingError(string, "String is equal to None")
+        if (string == ""): 
+            raise FENParsingError(string, "String is the empty String")
         if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
             raise FENParsingError(string, "Forsyth Edwards Notation must be in the correct format")
-        
         fields = string.split(" ")
         if len(fields) != 6: 
             raise FENParsingError(string, "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces")
+        
         pos = Position()
+        
         piecePlacementField = fields[0]
         activeColorField = fields[1]
         castlingRightsField = fields[2]
@@ -87,10 +89,9 @@ class BoardState():
     def toString(self):
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]
-            printedLine = ""
-            for square in rank:
-                printedLine += square + " "
-            print(printedLine)
+            for piece in rank:
+                print(piece, end=" ")
+            print("")
 
 class GameStatus(Enum):
     WHITE_TO_MOVE = 1

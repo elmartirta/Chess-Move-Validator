@@ -38,7 +38,6 @@ class MoveVerifier():
                     continue
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
-
     def addBishopCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
         for i in range(1,10):
@@ -51,7 +50,6 @@ class MoveVerifier():
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
-
                 candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
@@ -67,7 +65,6 @@ class MoveVerifier():
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
-
                 candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
@@ -81,7 +78,6 @@ class MoveVerifier():
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
-
                 candidateCoordinate = Coordinate(candidateX, candidateY)
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
@@ -97,10 +93,6 @@ class MoveVerifier():
             if destination.y+i <= 8 and destination.y+i >= 1:
                 candidateCoordinate = Coordinate(destination.x, destination.y+i)
                 moveList.append(move.clone().setSource(candidateCoordinate))
-
-
-        
-            
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
