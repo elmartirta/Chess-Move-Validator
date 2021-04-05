@@ -68,14 +68,14 @@ class Position():
         if (cartesianCoordinate.y > 7): raise ValueError(str(cartesianCoordinate))
         return self.boardState.squares[cartesianCoordinate.y][cartesianCoordinate.x]
     def pieceAt(self, cartesianCoordinate):
-        return self.squareAt(cartesianCoordinate).piece
+        return self.squareAt(cartesianCoordinate)
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
 
 class BoardState():
     def __init__(self):
-        self.squares = [[Square(x,y) for x in range(8)] for y in range(8)]
+        self.squares = [["-" for x in range(8)] for y in range(8)]
     def fromEmpty():
         return BoardState()
     def addPiece(self, coordinate, piece):
@@ -83,19 +83,14 @@ class BoardState():
         assert(coordinate.x <= 7)
         assert(coordinate.y >= 0)
         assert(coordinate.y <= 7)
-        self.squares[coordinate.y][coordinate.x].piece = piece
+        self.squares[coordinate.y][coordinate.x] = piece
     def toString(self):
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]
             printedLine = ""
             for square in rank:
-                printedLine += square.piece + " "
+                printedLine += square + " "
             print(printedLine)
-                        
-class Square():
-    def __init__(self,x,y,piece=None):
-        self.coordinate = CartesianCoordinate(x,y)
-        self.piece = piece or "-"
 
 class GameStatus(Enum):
     WHITE_TO_MOVE = 1
