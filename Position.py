@@ -21,6 +21,9 @@ class Position():
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
+        if (string == None): raise FENParsingError(string, "String is equal to None")
+        if (string == ""): raise FENParsingError(string, "String is the empty String")
+
         if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
             raise FENParsingError(string, "Forsyth Edwards Notation must be in the correct format")
         
@@ -45,7 +48,7 @@ class Position():
                 if char.isdigit():
                     pieceIndex += int(char)
                 elif char.isalpha():
-                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex+1, rowIndex+1),char)
+                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex+1, 8-(rowIndex)),char)
                     pieceIndex += 1
                 else:
                     raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
@@ -60,6 +63,8 @@ class Position():
         return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     def squareAt(self, cartesianCoordinate):
         return self.boardState.squares[cartesianCoordinate.y-1][cartesianCoordinate.x-1]
+    def pieceAt(self, cartesianCoordinate):
+        return self.squareAt(cartesianCoordinate).piece
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))

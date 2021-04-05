@@ -1,4 +1,5 @@
 from position_test_suite import PositionTestSuite
+from move_verifier_test_suite import MoveVerifierTestSuite
 import traceback
 
 
@@ -10,7 +11,8 @@ def main():
     print("")
 def runTests():
     test_suites = [
-        {"suite_name": "POS", "test_list": PositionTestSuite.getTests()}
+        {"suite_name": "POS", "test_list": PositionTestSuite.getTests()},
+        {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()}
     ]
     for suite in test_suites:
         test_number = 0

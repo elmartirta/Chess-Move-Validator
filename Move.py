@@ -8,6 +8,7 @@ class Move():
         self.destination = destination
         self.isCapture = isCapture 
         self.isCheck = isCheck
+        self.isCheckmate = isCheckmate
     def clone(self):
         return Move(
             self.pieceType,
@@ -18,7 +19,6 @@ class Move():
             self.isCheck,
             self.isCheckmate
         )
-        self.isCheckmate = isCheckmate
     def color(self):
         return "black" if self.pieceType.isupper() else "white"
     def setSource(self, cartesianCoordinate):
@@ -26,11 +26,11 @@ class Move():
         self.sourceRank = cartesianCoordinate.x + 96
         return self
     def fromString(string):
-        return self.fromAN(string)
+        return Move.fromAN(string)
     def fromAN(string):
-        return self.fromAlgebreicNotation(string)
+        return Move.fromAlgebreicNotation(string)
     def fromAlgebreicNotation(string):
-        pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQK") else None
+        pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         sourceFile = None
         sourceRank = None
         destination = None
@@ -65,7 +65,16 @@ class Move():
             raise MoveParsingError("Move does not match any valid regex expression", string)
 
         return Move(pieceType, sourceFile, sourceRank, destination, isCapture, isCheck, isCheckmate)
-
+    def toString(self):
+        return "Move : %s %s%s -> %s [Capt: %s, Check: %s, Mate: %s]" % (
+            self.pieceType,
+            self.sourceFile,
+            self.sourceRank,
+            self.destination,
+            self.isCapture,
+            self.isCheck,
+            self.isCheckmate
+        )
 class MoveParsingError(ValueError):
     def __init__(self, message, moveString):
         super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))

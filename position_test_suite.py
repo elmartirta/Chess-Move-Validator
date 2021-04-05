@@ -18,6 +18,12 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == Coordinate.fromNonExistent())
         assert(pos.halfClock == 0)
         assert(pos.fullClock == 1)
+
+        assert(pos.pieceAt(Coordinate.fromAN("e1")) == "K")
+        assert(pos.pieceAt(Coordinate.fromAN("d1")) == "Q")
+        assert(pos.pieceAt(Coordinate.fromAN("a2")) == "P")
+        assert(pos.pieceAt(Coordinate.fromAN("a8")) == "r")
+
         return True
     def test2():
         for i in range(0, 50):
