@@ -94,7 +94,7 @@ class BoardState():
                         
 class Square():
     def __init__(self,x,y,piece=None):
-        self.coordinate = CartesianCoordinate.fromOneOneOrigin(x,y)
+        self.coordinate = CartesianCoordinate.fromZeroZeroOrigin(x,y)
         self.piece = piece or "-"
 
 class GameStatus(Enum):
