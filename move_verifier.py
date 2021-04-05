@@ -28,58 +28,73 @@ class MoveVerifier():
     
     def addRookCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
-        for i in range(1,9):
+        for i in range(0,8):
             for line in ["vertical", "horizontal"]:
                 if line == "vertical":
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x, i)
+                    candidateCoordinate = Coordinate.fromZeroZeroOrigin(destination.x, i)
                 elif line == "horizontal":
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(i, destination.y)
+                    candidateCoordinate = Coordinate.fromZeroZeroOrigin(i, destination.y)
                 else:
                     continue
-                if position.pieceAt(candidateCoordinate) == move.pieceType:
+                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
 
     def addBishopCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
-        for i in range(1,8):
+        for i in range(1,10):
             for diagonal in ["++", "+-", "-+", "--"]:
-                if diagonal == "++" and destination.x+i <= 8 and destination.y+i <= 8:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+i, destination.y+1)
-                elif diagonal == "+-" and destination.x+i <= 8 and destination.y-i >= 1:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+i, destination.y-1)
-                elif diagonal == "-+" and destination.x-i >= 1 and destination.y+i <= 8:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-i, destination.y+1)
-                elif diagonal == "--" and destination.x-i >= 1 or destination.y-i >= 1:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-i, destination.y+1)
+                if diagonal == "++":
+                    candidateX = destination.x + i
+                    candidateY = destination.y + i
+                elif diagonal == "+-":
+                    candidateX = destination.x + i
+                    candidateY = destination.y - i
+                elif diagonal == "-+":
+                    candidateX = destination.x - i
+                    candidateY = destination.y + i
+                elif diagonal == "--":
+                    candidateX = destination.x - i
+                    candidateY = destination.y - i
                 else:
                     continue
-                if position.pieceAt(candidateCoordinate) == move.pieceType:
+                if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+                    continue
+                candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
+                
+                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addKnightCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
         for m in [{"x": 1, "y": 2}, {"x": 2, "y": 1}]:
             for diagonal in ["++", "+-", "-+", "--"]:
-                if diagonal == "++" and destination.x+m["x"] <= 8 and destination.y+m["y"] <= 8:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+m["x"], destination.y+m["y"])
-                elif diagonal == "+-" and destination.x+m["x"] <= 8 and destination.y-m["y"] >= 1:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+m["x"], destination.y-m["y"])
-                elif diagonal == "-+" and destination.x-m["x"] >= 1 and destination.y+m["y"] <= 8:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-m["x"], destination.y+m["y"])
-                elif diagonal == "--" and destination.x-m["x"] >= 1 or destination.y-m["y"] >= 1:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x-m["x"], destination.y+m["y"])
+                if diagonal == "++":
+                    candidateX = destination.x + m["x"]
+                    candidateY = destination.y + m["y"]
+                elif diagonal == "+-":
+                    candidateX = destination.x + m["x"]
+                    candidateY = destination.y - m["y"]
+                elif diagonal == "-+":
+                    candidateX = destination.x - m["x"]
+                    candidateY = destination.y + m["y"]
+                elif diagonal == "--":
+                    candidateX = destination.x - m["x"]
+                    candidateY = destination.y - m["y"]
                 else:
                     continue
-                if position.pieceAt(candidateCoordinate) == move.pieceType:
+                if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+                    continue
+                candidateCoordinate = Coordinate.fromZeroZeroOrigin(candidateX, candidateY)
+                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addKingCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
         for mx in [1,0,-1]:
             for my in [1,0,-1]:
                 if mx != 0 and my != 0:
-                    candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x+mx, destination.y+my)
+                    candidateCoordinate = Coordinate.fromZeroZeroOrigin(destination.x+mx, destination.y+my)
                 else:
                     continue
-                if position.pieceAt(candidateCoordinate) == move.pieceType:
+                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addPawnCandidates(moveList, position, move):
         destination = Coordinate.fromAN(move.destination)
@@ -91,7 +106,7 @@ class MoveVerifier():
             return MoveGenerationError("Pawn is the unimplemented color %s." % (move.pieceType.color()))
         for i in [1*direction,2*direction]:
             if destination.y+i <= 8 and destination.y+i >= 1:
-                candidateCoordinate = Coordinate.fromOneOneOrigin(destination.x, destination.y+i)
+                candidateCoordinate = Coordinate.fromZeroZeroOrigin(destination.x, destination.y+i)
                 moveList.append(move.clone().setSource(candidateCoordinate))
 
 

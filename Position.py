@@ -48,7 +48,7 @@ class Position():
                 if char.isdigit():
                     pieceIndex += int(char)
                 elif char.isalpha():
-                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex+1, 8-(rowIndex)),char)
+                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex, 8-(rowIndex+1)),char)
                     pieceIndex += 1
                 else:
                     raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
@@ -62,7 +62,11 @@ class Position():
     def fromStartingPosition():
         return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     def squareAt(self, cartesianCoordinate):
-        return self.boardState.squares[cartesianCoordinate.y-1][cartesianCoordinate.x-1]
+        if (cartesianCoordinate.x < 0): raise ValueError(str(cartesianCoordinate))
+        if (cartesianCoordinate.x > 7): raise ValueError(str(cartesianCoordinate))
+        if (cartesianCoordinate.y < 0): raise ValueError(str(cartesianCoordinate))
+        if (cartesianCoordinate.y > 7): raise ValueError(str(cartesianCoordinate))
+        return self.boardState.squares[cartesianCoordinate.y][cartesianCoordinate.x]
     def pieceAt(self, cartesianCoordinate):
         return self.squareAt(cartesianCoordinate).piece
 class FENParsingError(ValueError):
@@ -75,7 +79,11 @@ class BoardState():
     def fromEmpty():
         return BoardState()
     def addPiece(self, coordinate, piece):
-        self.squares[coordinate.y-1][coordinate.x - 1].piece = piece
+        assert(coordinate.x >= 0)
+        assert(coordinate.x <= 7)
+        assert(coordinate.y >= 0)
+        assert(coordinate.y <= 7)
+        self.squares[coordinate.y][coordinate.x].piece = piece
     def toString(self):
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]

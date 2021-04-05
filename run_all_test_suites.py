@@ -16,18 +16,18 @@ def runTests():
     ]
     for suite in test_suites:
         test_number = 0
+        print("-- %s ---:----->" % suite["suite_name"])
         for test in suite["test_list"]:
             test_number += 1
             result = False
             try:
                 result = test["runnable"]()
             except Exception as e:
-                print("[EXPT] %s %2d : !!!!!! Exception !!!!!!" % (suite["suite_name"], test_number))
+                print("[EXPT] %2d : !!!!!! Exception !!!!!!" % ( test_number))
                 traceback.print_exc()
             finally:
-                print("[%s] %s %2d : %s" % (
-                    "PASS" if result == True else "FAIL" if result == False else "UNDF",
-                    suite["suite_name"], 
+                print("[%s] %2d : %s" % (
+                    "PASS" if result == True else "FAIL" if result == False else "UNDF", 
                     test_number, 
                     test["name"])
                 )

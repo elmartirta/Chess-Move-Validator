@@ -23,7 +23,7 @@ class Move():
         return "black" if self.pieceType.isupper() else "white"
     def setSource(self, cartesianCoordinate):
         self.sourceFile = cartesianCoordinate.y
-        self.sourceRank = cartesianCoordinate.x + 96
+        self.sourceRank = cartesianCoordinate.x
         return self
     def fromString(string):
         return Move.fromAN(string)
