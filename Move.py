@@ -21,9 +21,9 @@ class Move():
         )
     def color(self):
         return "black" if self.pieceType.isupper() else "white"
-    def setSource(self, cartesianCoordinate):
-        self.sourceFile = cartesianCoordinate.y
-        self.sourceRank = cartesianCoordinate.x
+    def setSource(self, cartesianVector):
+        self.sourceFile = cartesianVector.y
+        self.sourceRank = cartesianVector.x
         return self
     def fromString(string):
         return Move.fromAN(string)

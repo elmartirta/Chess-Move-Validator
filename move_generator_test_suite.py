@@ -1,20 +1,20 @@
 from position import Position
-from move_verifier import MoveVerifier
+from move_generator import MoveGenerator
 
 class MoveGeneratorTestSuite():
     def getTests():
         return [
-            {"runnable": MoveVerifierTestSuite.test1, "name": "Generate Moves from all pieces to B3"},
-            {"runnable": MoveVerifierTestSuite.test2, "name": "Generate lots of simple rook moves"},
-            {"runnable": MoveVerifierTestSuite.test3, "name": "Generate lots of simple bishop moves"},
-            {"runnable": MoveVerifierTestSuite.test4, "name": "Generate lots of simple knight moves"},
-            {"runnable": MoveVerifierTestSuite.test5, "name": "Generate lots of simple queen moves"},
-            {"runnable": MoveVerifierTestSuite.test6, "name": "Generate lots of simple king moves"},
-            {"runnable": MoveVerifierTestSuite.test7, "name": "Generate lots of simple pawn moves"}
+            {"runnable": MoveGeneratorTestSuite.test1, "name": "Generate Moves from all pieces to B3"},
+            {"runnable": MoveGeneratorTestSuite.test2, "name": "Generate lots of simple rook moves"},
+            {"runnable": MoveGeneratorTestSuite.test3, "name": "Generate lots of simple bishop moves"},
+            {"runnable": MoveGeneratorTestSuite.test4, "name": "Generate lots of simple knight moves"},
+            {"runnable": MoveGeneratorTestSuite.test5, "name": "Generate lots of simple queen moves"},
+            {"runnable": MoveGeneratorTestSuite.test6, "name": "Generate lots of simple king moves"},
+            {"runnable": MoveGeneratorTestSuite.test7, "name": "Generate lots of simple pawn moves"}
         ]
     def test1():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         assert(check(pos, "Rb3"))
         assert(check(pos, "Bb3"))
@@ -33,7 +33,7 @@ class MoveGeneratorTestSuite():
         assert(fails(pos, "c4"))
         return True
     def test2():
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         assert(check("8/6K1/8/8/8/8/1k6/r7 w - - 0 1", "Ra2"))
         assert(check("8/6K1/8/8/8/8/1k6/r7 w - - 0 1", "Rb1"))
@@ -51,7 +51,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/6K1/8/8/8/8/1k6/r7 w - - 0 1", "Ra1"))
         return True
     def test3():
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         assert(check("8/8/2K5/8/3B4/5k2/8/8 w - - 0 1", "Ba1"))
         assert(check("8/8/2K5/8/3B4/5k2/8/8 w - - 0 1", "Bh8"))
@@ -65,7 +65,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/8/2K5/8/3B4/5k2/8/8 w - - 0 1", "Bd4"))
         return True
     def test4():
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         fourKnightsGame = "r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq - 4 4"
         assert(check(fourKnightsGame, "Nb5"))
@@ -81,7 +81,7 @@ class MoveGeneratorTestSuite():
         assert(fails(fourKnightsGame, "Nf3"))
         return True
     def test5():
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         scandanavian = "rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 3"
         assert(check(scandanavian, "Qa5"))
@@ -99,7 +99,7 @@ class MoveGeneratorTestSuite():
         assert(fails(scandanavian, "Qf6"))
         return True
     def test6():
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         assert(check("8/8/8/5K2/8/8/1k6/3r4 w - - 4 3", "Ke6"))
         assert(check("8/8/8/5K2/8/8/1k6/3r4 w - - 4 3", "Ke5"))
@@ -116,7 +116,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/8/8/5K2/8/8/1k6/3r4 w - - 4 3", "Kh1"))
         return True
     def test7():
-        res = lambda pos, move: MoveVerifier.generateMoveListFromFEN(pos, move)
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
         pos = "rnbqkbnr/p3pp1p/1p4p1/2ppP3/1P6/2P5/P2P1PPP/RNBQKBNR w KQkq d6 0 5"
         assert(check(pos, "a3"))

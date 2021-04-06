@@ -1,14 +1,14 @@
 import random 
 import re
 from enum import Enum
-from cartesian_coordinate import CartesianCoordinate
+from vector2D import Vector2D
 
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
         self.boardState = boardState or BoardState.fromEmpty()
         self.gameStatus = gameStatus or GameStatus.WHITE_TO_MOVE
         self.castlingRights = castlingRights or CastlingRights.fromAllTrue()
-        self.enPassantPawn = enPassantPawn or CartesianCoordinate.fromNonExistent()
+        self.enPassantPawn = enPassantPawn or Vector2D.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
     def fromChess960(seed=None):
@@ -50,27 +50,27 @@ class Position():
                 if char.isdigit():
                     pieceIndex += int(char)
                 elif char.isalpha():
-                    pos.boardState.addPiece(CartesianCoordinate(pieceIndex, 8-(rowIndex+1)),char)
+                    pos.boardState.addPiece(Vector2D(pieceIndex, 8-(rowIndex+1)),char)
                     pieceIndex += 1
                 else:
                     raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
 
         pos.gameStatus = GameStatus.WHITE_TO_MOVE if activeColorField == "w" else GameStatus.BLACK_TO_MOVE
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
-        pos.enPassantPawn = CartesianCoordinate.fromAN(enPassantField) if enPassantField != "-" else CartesianCoordinate.fromNonExistent()
+        pos.enPassantPawn = Vector2D.fromAN(enPassantField) if enPassantField != "-" else Vector2D.fromNonExistent()
         pos.halfClock = int(halfClockField) 
         pos.fullMove = int(fullMoveField)
         return pos
     def fromStartingPosition():
         return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-    def squareAt(self, cartesianCoordinate):
-        if (cartesianCoordinate.x < 0): raise ValueError(str(cartesianCoordinate))
-        if (cartesianCoordinate.x > 7): raise ValueError(str(cartesianCoordinate))
-        if (cartesianCoordinate.y < 0): raise ValueError(str(cartesianCoordinate))
-        if (cartesianCoordinate.y > 7): raise ValueError(str(cartesianCoordinate))
-        return self.boardState.squares[cartesianCoordinate.y][cartesianCoordinate.x]
-    def pieceAt(self, cartesianCoordinate):
-        return self.squareAt(cartesianCoordinate)
+    def squareAt(self, cartesianVector):
+        if (cartesianVector.x < 0): raise ValueError(str(cartesianVector))
+        if (cartesianVector.x > 7): raise ValueError(str(cartesianVector))
+        if (cartesianVector.y < 0): raise ValueError(str(cartesianVector))
+        if (cartesianVector.y > 7): raise ValueError(str(cartesianVector))
+        return self.boardState.squares[cartesianVector.y][cartesianVector.x]
+    def pieceAt(self, cartesianVector):
+        return self.squareAt(cartesianVector)
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))

@@ -1,3 +1,4 @@
+from vector2D_test_suite import Vector2DTestSuite
 from position_test_suite import PositionTestSuite
 from move_generator_test_suite import MoveGeneratorTestSuite
 import traceback
@@ -11,6 +12,7 @@ def main():
     print("")
 def runTests():
     test_suites = [
+        {"suite_name": "VEC", "test_list": Vector2DTestSuite.getTests()},
         {"suite_name": "POS", "test_list": PositionTestSuite.getTests()},
         {"suite_name": "VER", "test_list": MoveGeneratorTestSuite.getTests()}
     ]

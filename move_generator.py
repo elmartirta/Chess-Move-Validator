@@ -1,7 +1,7 @@
 from position import Position
 from position import GameStatus
 from move import Move
-from cartesian_coordinate import CartesianCoordinate as Coordinate
+from vector2D import Vector2D as Vector
 class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
         position = Position.fromFEN(positionFEN)
@@ -10,31 +10,31 @@ class MoveGenerator():
         moveList = []
         if move.pieceType == None: 
             raise MoveGenerationError(positionFEN, moveAN, "PieceType is None")
-        if   (move.pieceType in "rR"): MoveVerifier.addRookCandidates(moveList, position, move)
-        elif (move.pieceType in "bB"): MoveVerifier.addBishopCandidates(moveList, position, move)
-        elif (move.pieceType in "qQ"): MoveVerifier.addQueenCandidates(moveList, position, move)
-        elif (move.pieceType in "nN"): MoveVerifier.addKnightCandidates(moveList, position, move)
-        elif (move.pieceType in "kK"): MoveVerifier.addKingCandidates(moveList, position, move)
-        elif (move.pieceType in "pP"): MoveVerifier.addPawnCandidates(moveList, position, move)
+        if   (move.pieceType in "rR"): MoveGenerator.addRookCandidates(moveList, position, move)
+        elif (move.pieceType in "bB"): MoveGenerator.addBishopCandidates(moveList, position, move)
+        elif (move.pieceType in "qQ"): MoveGenerator.addQueenCandidates(moveList, position, move)
+        elif (move.pieceType in "nN"): MoveGenerator.addKnightCandidates(moveList, position, move)
+        elif (move.pieceType in "kK"): MoveGenerator.addKingCandidates(moveList, position, move)
+        elif (move.pieceType in "pP"): MoveGenerator.addPawnCandidates(moveList, position, move)
         else:
             raise MoveGenerationError(positionFEN, moveAN, "Unsupported Piece type: " + move.pieceType)
         return moveList
     
     def addRookCandidates(moveList, position, move):
-        destination = Coordinate.fromAN(move.destination)
+        destination = Vector.fromAN(move.destination)
         for i in range(0,8):
             for line in ["vertical", "horizontal"]:
                 if line == "vertical":
-                    candidateCoordinate = Coordinate(destination.x, i)
+                    candidateVector = Vector(destination.x, i)
                 elif line == "horizontal":
-                    candidateCoordinate = Coordinate(i, destination.y)
+                    candidateVector = Vector(i, destination.y)
                 else:
                     continue
-                if candidateCoordinate == destination: continue
-                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
-                    moveList.append(move.clone().setSource(candidateCoordinate))
+                if candidateVector == destination: continue
+                if position.pieceAt(candidateVector).upper() == move.pieceType:
+                    moveList.append(move.clone().setSource(candidateVector))
     def addBishopCandidates(moveList, position, move):
-        destination = Coordinate.fromAN(move.destination)
+        destination = Vector.fromAN(move.destination)
         for i in range(1,10):
             for diagonal in ["++", "+-", "-+", "--"]:
                 if   diagonal == "++": candidateX, candidateY = destination.x+i, destination.y+i
@@ -45,11 +45,11 @@ class MoveGenerator():
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
-                candidateCoordinate = Coordinate(candidateX, candidateY)
-                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
-                    moveList.append(move.clone().setSource(candidateCoordinate))
+                candidateVector = Vector(candidateX, candidateY)
+                if position.pieceAt(candidateVector).upper() == move.pieceType:
+                    moveList.append(move.clone().setSource(candidateVector))
     def addKnightCandidates(moveList, position, move):
-        destination = Coordinate.fromAN(move.destination)
+        destination = Vector.fromAN(move.destination)
         for m in [{"x": 1, "y": 2}, {"x": 2, "y": 1}]:
             for diagonal in ["++", "+-", "-+", "--"]:
                 if   diagonal == "++": candidateX, candidateY = destination.x+m["x"], destination.y+m["y"]
@@ -60,11 +60,11 @@ class MoveGenerator():
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
-                candidateCoordinate = Coordinate(candidateX, candidateY)
-                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
-                    moveList.append(move.clone().setSource(candidateCoordinate))
+                candidateVector = Vector(candidateX, candidateY)
+                if position.pieceAt(candidateVector).upper() == move.pieceType:
+                    moveList.append(move.clone().setSource(candidateVector))
     def addKingCandidates(moveList, position, move):
-        destination = Coordinate.fromAN(move.destination)
+        destination = Vector.fromAN(move.destination)
         for mx in [1,0,-1]:
             for my in [1,0,-1]:
                 if mx != 0 or my != 0:
@@ -73,33 +73,33 @@ class MoveGenerator():
                     continue
                 if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
                     continue
-                candidateCoordinate = Coordinate(candidateX, candidateY)
-                if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
-                    moveList.append(move.clone().setSource(candidateCoordinate))
+                candidateVector = Vector(candidateX, candidateY)
+                if position.pieceAt(candidateVector).upper() == move.pieceType:
+                    moveList.append(move.clone().setSource(candidateVector))
     def addQueenCandidates(moveList, position, move):
-        MoveVerifier.addBishopCandidates(moveList, position, move)
-        MoveVerifier.addRookCandidates(moveList, position, move)
+        MoveGenerator.addBishopCandidates(moveList, position, move)
+        MoveGenerator.addRookCandidates(moveList, position, move)
     def addPawnCandidates(moveList, position, move):
-        destination = Coordinate.fromAN(move.destination)
+        destination = Vector.fromAN(move.destination)
       
         candidates = []
         deduceCandidate = lambda movementVector: candidates.append(destination.plus(movementVector))
         if position.gameStatus == GameStatus.WHITE_TO_MOVE:
             if move.isCapture:
-                deduceCandidate(Coordinate(-1,-1))
-                deduceCandidate(Coordinate( 1,-1))
+                deduceCandidate(Vector(-1,-1))
+                deduceCandidate(Vector( 1,-1))
             else:
                 if destination.y == 3:
-                    deduceCandidate(Coordinate(0,-2))
-                deduceCandidate(Coordinate(0,-1))
+                    deduceCandidate(Vector(0,-2))
+                deduceCandidate(Vector(0,-1))
         elif position.gameStatus == GameStatus.BLACK_TO_MOVE:
             if move.isCapture:
-                deduceCandidate(Coordinate(-1,1))
-                deduceCandidate(Coordinate( 1,1))
+                deduceCandidate(Vector(-1,1))
+                deduceCandidate(Vector( 1,1))
             else:
                 if destination.y == 4:
-                    deduceCandidate(Coordinate(0,2))
-                deduceCandidate(Coordinate(0,1))
+                    deduceCandidate(Vector(0,2))
+                deduceCandidate(Vector(0,1))
 
         for candidate in candidates:
             candidateX = candidate.x
@@ -107,7 +107,7 @@ class MoveGenerator():
             if (candidateX > 7 or candidateX < 0 or candidateY > 7 or candidateY < 0):
                 continue
             if (position.pieceAt(candidate).upper() == move.pieceType):
-                moveList.append(move.clone().setSource(Coordinate(candidateX, candidateY)))
+                moveList.append(move.clone().setSource(Vector(candidateX, candidateY)))
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
