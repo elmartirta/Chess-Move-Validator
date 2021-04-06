@@ -2,7 +2,7 @@ from position import Position
 from position import GameStatus
 from move import Move
 from cartesian_coordinate import CartesianCoordinate as Coordinate
-class MoveVerifier():
+class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
         position = Position.fromFEN(positionFEN)
         move = Move.fromAN(moveAN)

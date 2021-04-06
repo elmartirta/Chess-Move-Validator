@@ -1,7 +1,7 @@
 from position import Position
 from move_verifier import MoveVerifier
 
-class MoveVerifierTestSuite():
+class MoveGeneratorTestSuite():
     def getTests():
         return [
             {"runnable": MoveVerifierTestSuite.test1, "name": "Generate Moves from all pieces to B3"},
