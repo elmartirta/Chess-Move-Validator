@@ -53,13 +53,13 @@ class Move():
         elif re.fullmatch("\w\d[+#]*", string):         #Parse moves like e4, 
             pieceType = "P"
             destination = string[0:2]
-        elif re.fullmatch("\wx\w\d[+#]", string):       #Parse moves like dxe4
+        elif re.fullmatch("\wx\w\d[+#]*", string):       #Parse moves like dxe4
             pieceType = "P"
             sourceFile = string[0]
             destination = string[2:4]
-        elif re.fullmatch("o-o-o"):
+        elif re.fullmatch("o-o-o", string):
             raise MoveParsingError("Long Castling is not implemented yet.")
-        elif re.fullmatch("o-o"):
+        elif re.fullmatch("o-o", string):
             raise MoveParsingError("Castling is not implemented yet.")
         else:
             raise MoveParsingError("Move does not match any valid regex expression", string)

@@ -30,6 +30,7 @@ class MoveVerifier():
                     candidateCoordinate = Coordinate(i, destination.y)
                 else:
                     continue
+                if candidateCoordinate == destination: continue
                 if position.pieceAt(candidateCoordinate).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateCoordinate))
     def addBishopCandidates(moveList, position, move):
@@ -66,7 +67,7 @@ class MoveVerifier():
         destination = Coordinate.fromAN(move.destination)
         for mx in [1,0,-1]:
             for my in [1,0,-1]:
-                if mx != 0 and my != 0:
+                if mx != 0 or my != 0:
                     candidateX, candidateY = destination.x+mx, destination.y+my
                 else:
                     continue
@@ -90,8 +91,7 @@ class MoveVerifier():
             else:
                 if destination.y == 3:
                     deduceCandidate(Coordinate(0,-2))
-                else:
-                    deduceCandidate(Coordinate(0,-1))
+                deduceCandidate(Coordinate(0,-1))
         elif position.gameStatus == GameStatus.BLACK_TO_MOVE:
             if move.isCapture:
                 deduceCandidate(Coordinate(-1,1))
@@ -99,14 +99,12 @@ class MoveVerifier():
             else:
                 if destination.y == 4:
                     deduceCandidate(Coordinate(0,2))
-                else:
-                    deduceCandidate(Coordinate(0,1))
+                deduceCandidate(Coordinate(0,1))
 
         for candidate in candidates:
             candidateX = candidate.x
             candidateY = candidate.y
-
-            if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+            if (candidateX > 7 or candidateX < 0 or candidateY > 7 or candidateY < 0):
                 continue
             if (position.pieceAt(candidate).upper() == move.pieceType):
                 moveList.append(move.clone().setSource(Coordinate(candidateX, candidateY)))

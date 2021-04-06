@@ -16,6 +16,10 @@ class CartesianCoordinate():
     def fromAlgebreicNotation(text):
         if (len(text) != 2): raise ANParsingError(text, "Length of text not equal to 2.")
         return CartesianCoordinate(ord(text[0].lower()) - 97, int(text[1])-1)
+    def toAN(self):
+        return self.toAlgebreicNotation()
+    def toAlgebreicNotation(self):
+        return chr(self.x+97)+str(self.y+1)
     def fromNonExistent():
         return CartesianCoordinate(None, None)
     def plus(self, cartesianCoordinate):
