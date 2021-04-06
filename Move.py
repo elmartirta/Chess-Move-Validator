@@ -1,10 +1,11 @@
 import re
+from vector2D import Vector2D
 
 class Move():
     def __init__(self, pieceType, sourceFile, sourceRank, destination, isCapture, isCheck, isCheckmate):
         self.pieceType = pieceType
         self.sourceFile = sourceFile
-        self.sourceRank = sourceRank
+        self.sourceRank = int(sourceRank) if sourceRank else None
         self.destination = destination
         self.isCapture = isCapture 
         self.isCheck = isCheck
@@ -38,22 +39,22 @@ class Move():
         isCheck = "+" in string
         isCheckmate = "#" in string
         
-        if re.fullmatch("[RNBQK]x*\w\d[+#]*", string):         #Parse Moves like Ke2, Be4+, Be4#
+        if re.fullmatch("[RNBQKP]x*[a-z]\d[+#]*", string):         #Parse Moves like Ke2, Be4+, Be4#
             destination = string.replace("x", "")[1:3]
-        elif re.fullmatch("[RNBQK]\wx*\w\d[+#]*", string):     #Parse moves like Rae4, etc
+        elif re.fullmatch("[RNBQKP][a-z]x*[a-z]\d[+#]*", string):     #Parse moves like Rae4, etc
             sourceFile = string[1]
             destination = string.replace("x", "")[2:4]
-        elif re.fullmatch("[RNBQK]\dx*\w\d[+#]*", string):     #Parse moves like R1e4, etc
+        elif re.fullmatch("[RNBQKP]\dx*[a-z]\d[+#]*", string):     #Parse moves like R1e4, etc
             sourceRank = string[1]
             destination = string.replace("x", "")[2:4]
-        elif re.fullmatch("[RNBQK]\w\dx*\w\d[+#]*", string):   #Parse moves like Qa1e4, etc
+        elif re.fullmatch("[RNBQKP][a-z]\dx*[a-z]\d[+#]*", string):   #Parse moves like Qa1e4, etc
             sourceFile = string[1]
             sourceRank = string[2]
             destination = string.replace("x", "")[3:5]
-        elif re.fullmatch("\w\d[+#]*", string):         #Parse moves like e4, 
+        elif re.fullmatch("[a-z]\d[+#]*", string):         #Parse moves like e4, 
             pieceType = "P"
             destination = string[0:2]
-        elif re.fullmatch("\wx\w\d[+#]*", string):       #Parse moves like dxe4
+        elif re.fullmatch("[a-z]x[a-z]\d[+#]*", string):       #Parse moves like dxe4
             pieceType = "P"
             sourceFile = string[0]
             destination = string[2:4]
@@ -63,14 +64,14 @@ class Move():
             raise MoveParsingError("Castling is not implemented yet.")
         else:
             raise MoveParsingError("Move does not match any valid regex expression", string)
-
+        destination = Vector2D.fromAN(destination)
         return Move(pieceType, sourceFile, sourceRank, destination, isCapture, isCheck, isCheckmate)
     def toString(self):
         return "Move : %s %s%s -> %s [Capt: %s, Check: %s, Mate: %s]" % (
             self.pieceType,
             self.sourceFile,
             self.sourceRank,
-            self.destination,
+            self.destination.toAN(),
             self.isCapture,
             self.isCheck,
             self.isCheckmate

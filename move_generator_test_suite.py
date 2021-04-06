@@ -10,7 +10,10 @@ class MoveGeneratorTestSuite():
             {"runnable": MoveGeneratorTestSuite.test4, "name": "Generate lots of simple knight moves"},
             {"runnable": MoveGeneratorTestSuite.test5, "name": "Generate lots of simple queen moves"},
             {"runnable": MoveGeneratorTestSuite.test6, "name": "Generate lots of simple king moves"},
-            {"runnable": MoveGeneratorTestSuite.test7, "name": "Generate lots of simple pawn moves"}
+            {"runnable": MoveGeneratorTestSuite.test7, "name": "Generate lots of simple pawn moves"},
+            {"runnable": MoveGeneratorTestSuite.test8, "name": "Generate ambiguous rook moves"},
+            {"runnable": MoveGeneratorTestSuite.test9, "name": "Generate ambiguous bishop moves"},
+            #{"runnable": MoveGeneratorTestSuite.test10, "name": "Generate ambiguous queen moves"},
         ]
     def test1():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
@@ -141,7 +144,32 @@ class MoveGeneratorTestSuite():
         assert(fails(pos, "c3"))
         assert(fails(pos, "c2"))
         return True
-
+    def test8():
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
+        check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
+        check4= lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 4
+        assert(check2("8/8/5k2/8/R7/8/1K6/3R4 w - - 0 1", "Rd4"))
+        assert(check2("8/8/5k2/8/R6R/8/1K6/8 w - - 0 1", "Rd4"))
+        assert(check2("8/8/5k2/8/RR6/8/1K6/8 w - - 0 1", "Rd4"))
+        assert(check2("3R4/3R4/5k2/8/8/8/1K6/8 w - - 0 1", "Rd4"))
+        assert(check2("R7/8/5k2/8/8/2K5/8/7R w - - 0 1", "Ra1"))
+        assert(check2("R7/8/5k2/8/8/2K5/8/7R w - - 0 1", "Rh8"))
+        assert(check4("8/R7/R4k2/8/8/R1K5/R7/8 w - - 0 1", "Ra1"))
+        assert(check4("8/R7/R4k2/8/8/R1K5/R7/8 w - - 0 1", "Ra4"))
+        assert(check4("8/R7/R4k2/8/8/R1K5/R7/8 w - - 0 1", "Ra5"))
+        assert(check4("8/R7/R4k2/8/8/R1K5/R7/8 w - - 0 1", "Ra8"))
+        assert(check4("3R1R2/8/5k2/8/8/2K4R/8/7R w - - 0 1", "Rh8"))
+        return True
+    def test9():
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
+        check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
+        check4= lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 4
+        assert(check2("8/4k3/1B6/8/8/8/1BK5/8 w - - 0 1", "B2d4"))
+        assert(check2("8/4k3/1B6/8/8/8/1BK5/8 w - - 0 1", "B2d4"))
+        assert(check2("8/4k3/8/8/8/8/1BK5/6B1 w - - 0 1", "Bd4"))
+        assert(check2("7B/4k3/8/8/8/8/1BK5/8 w - - 0 1", "Bd4"))
+        assert(check2("8/4k3/8/8/8/8/1BK5/B7 w - - 0 1", "Bd4"))
+        return True
         
 
 

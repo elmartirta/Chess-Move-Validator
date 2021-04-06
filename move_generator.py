@@ -21,7 +21,7 @@ class MoveGenerator():
         return moveList
     
     def addRookCandidates(moveList, position, move):
-        destination = Vector.fromAN(move.destination)
+        destination = move.destination
         for i in range(0,8):
             for line in ["vertical", "horizontal"]:
                 if line == "vertical":
@@ -34,7 +34,7 @@ class MoveGenerator():
                 if position.pieceAt(candidateVector).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateVector))
     def addBishopCandidates(moveList, position, move):
-        destination = Vector.fromAN(move.destination)
+        destination = move.destination
         for i in range(1,10):
             for diagonal in ["++", "+-", "-+", "--"]:
                 if   diagonal == "++": candidateX, candidateY = destination.x+i, destination.y+i
@@ -43,13 +43,13 @@ class MoveGenerator():
                 elif diagonal == "--": candidateX, candidateY = destination.x-i, destination.y-i
                 else: 
                     continue
-                if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+                if (candidateX > 7 or candidateX < 0 or candidateY > 7 or candidateY < 0):
                     continue
                 candidateVector = Vector(candidateX, candidateY)
                 if position.pieceAt(candidateVector).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateVector))
     def addKnightCandidates(moveList, position, move):
-        destination = Vector.fromAN(move.destination)
+        destination = move.destination
         for m in [{"x": 1, "y": 2}, {"x": 2, "y": 1}]:
             for diagonal in ["++", "+-", "-+", "--"]:
                 if   diagonal == "++": candidateX, candidateY = destination.x+m["x"], destination.y+m["y"]
@@ -58,13 +58,13 @@ class MoveGenerator():
                 elif diagonal == "--": candidateX, candidateY = destination.x-m["x"], destination.y-m["y"]
                 else:
                     continue
-                if (candidateX >= 8 or candidateX <= 0 or candidateY >= 8 or candidateY <= 0):
+                if (candidateX > 7 or candidateX < 0 or candidateY > 7 or candidateY < 0):
                     continue
                 candidateVector = Vector(candidateX, candidateY)
                 if position.pieceAt(candidateVector).upper() == move.pieceType:
                     moveList.append(move.clone().setSource(candidateVector))
     def addKingCandidates(moveList, position, move):
-        destination = Vector.fromAN(move.destination)
+        destination = move.destination
         for mx in [1,0,-1]:
             for my in [1,0,-1]:
                 if mx != 0 or my != 0:
@@ -80,7 +80,7 @@ class MoveGenerator():
         MoveGenerator.addBishopCandidates(moveList, position, move)
         MoveGenerator.addRookCandidates(moveList, position, move)
     def addPawnCandidates(moveList, position, move):
-        destination = Vector.fromAN(move.destination)
+        destination = move.destination
       
         candidates = []
         deduceCandidate = lambda movementVector: candidates.append(destination.plus(movementVector))
