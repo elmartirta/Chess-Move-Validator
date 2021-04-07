@@ -42,47 +42,24 @@ class Move():
         isCheckmate = "#" in string
         promotionPiece = None
         
-        if re.fullmatch("[RNBQKP]x*[a-z]\d[+#]*", string):
-            #Parse Moves like Ke2, Be4+, Be4#
-            destination = string.replace("x", "")[1:3]
-        elif re.fullmatch("[RNBQKP][a-z]x*[a-z]\d[+#]*", string):
-            #Parse moves like Rae4, etc
-            sourceFile = string[1]
-            destination = string.replace("x", "")[2:4]
-        elif re.fullmatch("[RNBQKP]\dx*[a-z]\d[+#]*", string):
-            #Parse moves like R1e4, etc
-            sourceRank = string[1]
-            destination = string.replace("x", "")[2:4]
-        elif re.fullmatch("[RNBQKP][a-z]\dx*[a-z]\d[+#]*", string):
-            #Parse moves like Qa1e4, etc
-            sourceFile = string[1]
-            sourceRank = string[2]
-            destination = string.replace("x", "")[3:5]
-        elif re.fullmatch("[a-z]\d[+#]*", string):
-            #Parse moves like e4, 
-            pieceType = "P"
-            destination = string[0:2]
-        elif re.fullmatch("[a-z]x[a-z]\d[+#]*", string):
-            #Parse moves like dxe4
-            pieceType = "P"
-            sourceFile = string[0]
-            destination = string[2:4]
-        elif re.fullmatch("[a-z]8=[RNBQ][+#]*", string):
-            #Parse moves like a8=Q
-            pieceType = "P"
-            destination = string[0:2]
-            promotionPiece = string[3]
-        elif re.fullmatch("[a-z]x[a-z]8=[RNBQ][+#]*", string):
-            #Parse moves like dxa8=Q
-            pieceType = "P"
-            destination = string[2:4]
-            promotionPiece = string[5]
-        elif re.fullmatch("o-o-o", string):
-            raise MoveParsingError("Long Castling is not implemented yet.")
-        elif re.fullmatch("o-o", string):
-            raise MoveParsingError("Castling is not implemented yet.")
-        else:
-            raise MoveParsingError("Move does not match any valid regex expression", string)
+        basicMatch = re.fullmatch("^([RNBKQP])([a-w])?(\d)?(x)?([a-w]\d)[+#]?$", string)
+        if basicMatch:
+            pieceType = basicMatch.group(1)
+            sourceFile = basicMatch.group(2)
+            sourceRank = basicMatch.group(3)
+            destination = basicMatch.group(5)
+        else: 
+            pawnMatch = re.fullmatch("(([a-w])(x))?([a-w]\d)(=([RNBQ]))?[+#]?", string)
+            if pawnMatch:
+                sourceFile = pawnMatch.group(2)
+                destination = pawnMatch.group(4)
+                promotionPiece = pawnMatch.group(6)
+            elif re.fullmatch("o-o-o", string):
+                raise MoveParsingError("Long Castling is not implemented yet.")
+            elif re.fullmatch("o-o", string):
+                raise MoveParsingError("Castling is not implemented yet.")
+            else:
+                raise MoveParsingError("Move does not match any valid regex expression", string)
         destination = Vector2D.fromAN(destination)
         return Move(pieceType, sourceFile, sourceRank, destination, isCapture, isCheck, isCheckmate, promotionPiece)
     def toString(self):
