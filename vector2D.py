@@ -42,6 +42,9 @@ class Vector2D():
         return self == other
     def toString(self):
         return str(self)
+    def isInsideChessboard(self):
+        return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
+
 
 class ANParsingError(ValueError):
     def __init__(self, ANText, errorMessage):

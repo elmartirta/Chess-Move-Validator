@@ -63,14 +63,10 @@ class Position():
         return pos
     def fromStartingPosition():
         return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-    def squareAt(self, cartesianVector):
-        if (cartesianVector.x < 0): raise ValueError(str(cartesianVector))
-        if (cartesianVector.x > 7): raise ValueError(str(cartesianVector))
-        if (cartesianVector.y < 0): raise ValueError(str(cartesianVector))
-        if (cartesianVector.y > 7): raise ValueError(str(cartesianVector))
-        return self.boardState.squares[cartesianVector.y][cartesianVector.x]
-    def pieceAt(self, cartesianVector):
-        return self.squareAt(cartesianVector)
+    def pieceAt(self, vector):
+        if not vector.isInsideChessboard(): 
+            raise ValueError(vector)
+        return self.boardState.squares[vector.y][vector.x]
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
@@ -80,12 +76,9 @@ class BoardState():
         self.squares = [["-" for x in range(8)] for y in range(8)]
     def fromEmpty():
         return BoardState()
-    def addPiece(self, coordinate, piece):
-        assert(coordinate.x >= 0)
-        assert(coordinate.x <= 7)
-        assert(coordinate.y >= 0)
-        assert(coordinate.y <= 7)
-        self.squares[coordinate.y][coordinate.x] = piece
+    def addPiece(self, vector, piece):
+        assert(vector.isInsideChessboard())
+        self.squares[vector.y][vector.x] = piece
     def toString(self):
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]
