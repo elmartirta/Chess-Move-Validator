@@ -55,11 +55,11 @@ class Move():
                 destination = pawnMatch.group(4)
                 promotionPiece = pawnMatch.group(6)
             elif re.fullmatch("o-o-o", string):
-                raise MoveParsingError("Long Castling is not implemented yet.")
+                raise MoveParsingError(string, "Long Castling is not implemented yet.")
             elif re.fullmatch("o-o", string):
-                raise MoveParsingError("Castling is not implemented yet.")
+                raise MoveParsingError(string, "Castling is not implemented yet.")
             else:
-                raise MoveParsingError("Move does not match any valid regex expression", string)
+                raise MoveParsingError(string, "Move does not match any valid regex expression")
         destination = Vector2D.fromAN(destination)
         return Move(pieceType, sourceFile, sourceRank, destination, isCapture, isCheck, isCheckmate, promotionPiece)
     def toString(self):
@@ -73,5 +73,5 @@ class Move():
             self.isCheckmate
         )
 class MoveParsingError(ValueError):
-    def __init__(self, message, moveString):
+    def __init__(self, moveString, message):
         super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))
