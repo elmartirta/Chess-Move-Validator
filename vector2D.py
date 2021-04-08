@@ -50,7 +50,7 @@ class Vector2D():
         return str(self)
     def isInsideChessboard(self):
         return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
-    def getWalk(self):
+    def walk(self):
         deltas = []
         direction = Vector2D(
             ((1 if self.x > 0 else -1) if self.x != 0 else 0),

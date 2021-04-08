@@ -30,6 +30,20 @@ class Filter():
             return FilterResult.fail(move, "Cramped Quarters: The Move is not a capture, and the destination is not empty")
         else:
             return FilterResult.accept(move)
+    
+    def checkIfPathIsOccupied(position, move):
+        if move.pieceType in "N":
+            return FilterResult.accept(move)
+        
+        path = move.destination - move.source
+        for delta in path.walk():
+            candidate = move.source + delta
+            if position.pieceAt(candidate) != "-":
+                return FilterResult.fail(move, \
+                    "Obstructed: The piece %s at %s in the way of the move." \
+                    % (position.pieceAt(candidate), candidate.toAN()))
+        return FilterResult.accept(move)
+
 
 def FilterResult():
     def __init__(self, move, result, reason):
