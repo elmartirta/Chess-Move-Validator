@@ -28,6 +28,8 @@ class Move():
         self.sourceFile = cartesianVector.y
         self.sourceRank = cartesianVector.x
         return self
+    def source(self):
+        return Vector2D.fromAN(self.sourceFile + str(self.sourceRank))
     def fromString(string):
         return Move.fromAN(string)
     def fromAN(string):

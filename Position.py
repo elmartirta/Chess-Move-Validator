@@ -67,6 +67,12 @@ class Position():
         if not vector.isInsideChessboard(): 
             raise ValueError(vector)
         return self.boardState.squares[vector.y][vector.x]
+    def pieceIsWhite(self, vector):
+        return self.pieceAt(vector).isupper()
+    def pieceTypeOf(self, vector):
+        return self.pieceAt(vector).upper()
+    def isWhiteToMove(self):
+        return self.gameStatus == GameStatus.WHITE_TO_MOVE
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
