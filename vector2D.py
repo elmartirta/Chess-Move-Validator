@@ -8,7 +8,7 @@ class Vector2D():
         self.x = x
         self.y = y
     def __add__(self, other):
-        if not isinstance(other, Vector2D): return False
+        if not isinstance(other, Vector2D): raise TypeError("Vector addition must use vectors")
         return Vector2D(self.x + other.x, self.y + other.y)
     def __radd__(self, other):
         if other == 0:
@@ -16,14 +16,16 @@ class Vector2D():
         else:
             return self.__add__(other)
     def __sub__(self, other):
-        if not isinstance(other, Vector2D): return False
+        if not isinstance(other, Vector2D): raise TypeError("Vector subtraction must use vectors")
         return Vector2D(self.x - other.x, self.y - other.y)
     def __mul__(self, scalar):
+        if not isinstance(scalar, int): raise TypeError("Vector scalar multiplication must use an int")
         return Vector2D(self.x * scalar, self.y * scalar)
     def __rmul__(self, scalar):
         return (self * scalar)
     def __eq__(self, other):
-        if not isinstance(other, Vector2D): return False
+        if self is None or other is None: return False
+        if not isinstance(other, Vector2D): raise TypeError("Vector equality must use vectors")
         return self.x == other.x and self.y == other.y
     def __repr__(self):
         return "Vector2D(%s, %s)" % (str(self.x), str(self.y))
@@ -59,6 +61,8 @@ class Vector2D():
         for deltaMagnitude in range(1, max(abs(self.x), abs(self.y))):
             deltas.append(direction * deltaMagnitude)
         return deltas
+    def clone(self):
+        return Vector2D(self.x, self.y)
 class ANParsingError(ValueError):
     def __init__(self, ANText, errorMessage):
         super().__init__("Error trying to parse AN \"%s\": %s" % (ANText, errorMessage))

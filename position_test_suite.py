@@ -1,4 +1,5 @@
 from position import *
+from move import *
 from vector2D import Vector2D as Vector
 class PositionTestSuite():
     def getTests():
@@ -8,7 +9,8 @@ class PositionTestSuite():
             {"runnable": PositionTestSuite.test3, "name": "Double Bongcloud Initialized Correctly."},
             {"runnable": PositionTestSuite.test4, "name": "Dutch Defense: Classical Variation Initialized Correctly."},
             {"runnable": PositionTestSuite.test5, "name": "Scholar's Mate Initialized Correctly."},
-            {"runnable": PositionTestSuite.test6, "name": "En Passant Test Initialized Correctly (1. c4 e5 2. c5 d5)"}
+            {"runnable": PositionTestSuite.test6, "name": "En Passant Test Initialized Correctly (1. c4 e5 2. c5 d5)"},
+            {"runnable": PositionTestSuite.test7, "name": "Standard Position.next('e4') is actually 1. e4"}
         ]
     def test1():
         pos = Position.fromStartingPosition()        
@@ -59,4 +61,12 @@ class PositionTestSuite():
         assert(pos.gameStatus == GameStatus.WHITE_TO_MOVE)
         assert(pos.castlingRights == CastlingRights.fromAllTrue())
         assert(pos.enPassantPawn == Vector.fromAlgebreicNotation("d6"))
+        return True
+    def test7():
+        pos = Position.fromStartingPosition()
+        move = Move.fromAN("e4")
+        move.sourceFile = 'e'
+        move.sourceRank = 2
+        nextPos = pos.next(move)
+        assert(nextPos.pieceAt(Vector2D.fromAN("e4")) == "P")
         return True

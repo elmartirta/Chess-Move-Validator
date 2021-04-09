@@ -11,6 +11,16 @@ class Position():
         self.enPassantPawn = enPassantPawn or Vector2D.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
+    def clone(self):
+        return Position(
+            self.boardState.clone(),
+            self.gameStatus,
+            self.castlingRights.clone(),
+            self.enPassantPawn.clone(),
+            self.halfClock,
+            self.fullClock
+        )
+
     def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
@@ -73,6 +83,17 @@ class Position():
         return self.pieceAt(vector).upper()
     def isWhiteToMove(self):
         return self.gameStatus == GameStatus.WHITE_TO_MOVE
+    def next(self, move):
+        source = move.source()
+        destination = move.destination
+        clone = self.clone()
+        clone.boardState.squares[destination.y][destination.x] = self.boardState.squares[source.y][source.x]
+        clone.boardState.squares[source.y][source.x] = "-"
+        clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
+        clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source().y) == 2) else Vector2D.fromNonExistent()
+        clone.halfClock = self.halfClock + 1 if (not move.isCapture) else 0
+        clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
+        return clone
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
@@ -80,6 +101,10 @@ class FENParsingError(ValueError):
 class BoardState():
     def __init__(self):
         self.squares = [["-" for x in range(8)] for y in range(8)]
+    def clone(self):
+        bs = BoardState()
+        bs.squares = [[self.squares[y][x] for x in range(8)] for y in range(8)] 
+        return bs
     def fromEmpty():
         return BoardState()
     def addPiece(self, vector, piece):
@@ -105,6 +130,13 @@ class CastlingRights():
         self.whiteQueenSide = whiteQueenSide
         self.blackKingSide = blackKingSide
         self.blackQueenSide = blackQueenSide
+    def clone(self):
+        return CastlingRights(
+            self.whiteKingSide,
+            self.whiteQueenSide,
+            self.blackKingSide,
+            self.blackQueenSide
+        )
     def __eq__(self, other):
         return \
             self.whiteKingSide == other.whiteKingSide and \

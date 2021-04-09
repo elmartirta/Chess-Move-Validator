@@ -2,7 +2,7 @@ from vector2D_test_suite import Vector2DTestSuite
 from move_test_suite import MoveTestSuite
 from position_test_suite import PositionTestSuite
 from move_generator_test_suite import MoveGeneratorTestSuite
-
+from move_verifier_test_suite import MoveVerifierTestSuite
 import colorama
 import traceback
 
@@ -18,7 +18,8 @@ def runTests():
         {"suite_name": "VEC", "test_list": Vector2DTestSuite.getTests()},
         {"suite_name": "MOV", "test_list": MoveTestSuite.getTests()},
         {"suite_name": "POS", "test_list": PositionTestSuite.getTests()},
-        {"suite_name": "VER", "test_list": MoveGeneratorTestSuite.getTests()}
+        {"suite_name": "GEN", "test_list": MoveGeneratorTestSuite.getTests()},
+        {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()}
     ]
     for suite in test_suites:
         test_number = 0

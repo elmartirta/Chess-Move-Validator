@@ -19,7 +19,7 @@ class MoveGeneratorTestSuite():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
-        assert(check(pos, "Rb3"))
+        assert(check("8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1", "Rb3"))
         assert(check(pos, "Bb3"))
         assert(check(pos, "Nb3"))
         assert(check(pos, "Qb3"))

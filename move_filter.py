@@ -1,17 +1,29 @@
 from move import Move
 from position import *
 from vector2D import Vector2D as Vector
-from move_test_suite import Filter 
-class Filter():
+
+class MoveFilter():
+    def getPreMoveFilters():
+        return [
+            MoveFilter.checkSourcePiece,
+            MoveFilter.checkIfMoveWithinLegalBounds,
+            MoveFilter.checkIfDestinationIsOccupied,
+            MoveFilter.checkIfPathIsOccupied
+        ]
+    def getPostMoveFilters():
+        return []
     def checkSourcePiece(position, move):
         if move.sourceRank == None:
-            raise FilterError(move, "Which Piece? The Source rank is not instantiated, leading to ambiguity.")
+            raise FilterError(move, "Which Piece? The Source Rank is not instantiated, leading to ambiguity.")
         elif move.sourceFile == None:
             raise FilterError(move, "Which Piece? The Source file is not instantiated, leading to ambiguity.")
         elif position.pieceIsWhite(move.source()) != position.isWhiteToMove():
             return FilterResult.fail(move, "Not your turn: The color of the move's source piece is not valid in the turn order.")
         elif position.pieceTypeOf(move.source()) != move.pieceType:
-            raise FilterError(move, "Hustler's Piece: Type of source Piece does not match type of move piece.")
+            raise FilterError( \
+                move, "Hustler's Piece: Type of source Piece (%s) does not match type of move piece (%s)." \
+                % (position.pieceTypeOf(move.source()), move.pieceType)
+            )
         else:
             return FilterResult.accept(move)
 
@@ -26,7 +38,7 @@ class Filter():
             return FilterResult.fail(move, "Friendly Fire: The move involves a piece trying to capture a target of the same color.")
         elif move.isCapture and position.pieceAt(move.destination) == "-":
             return FilterResult.fail(move, "Starved Attacker: Move is a capture, but there is no piece to capture on the destination square")
-        elif not move.isCapture and not position.pieceAt(move) == "-":
+        elif not move.isCapture and not position.pieceAt(move.destination) == "-":
             return FilterResult.fail(move, "Cramped Quarters: The Move is not a capture, and the destination is not empty")
         else:
             return FilterResult.accept(move)
@@ -35,9 +47,9 @@ class Filter():
         if move.pieceType in "N":
             return FilterResult.accept(move)
         
-        path = move.destination - move.source
+        path = move.destination - move.source()
         for delta in path.walk():
-            candidate = move.source + delta
+            candidate = move.source() + delta
             if position.pieceAt(candidate) != "-":
                 return FilterResult.fail(move, \
                     "Obstructed: The piece %s at %s in the way of the move." \
@@ -45,19 +57,19 @@ class Filter():
         return FilterResult.accept(move)
 
 
-def FilterResult():
-    def __init__(self, move, result, reason):
+class FilterResult():
+    def __init__(self, move, isLegal=True, reason=""):
         self.move = move
-        self.result = result
+        self.isLegal = isLegal
         self.reason = reason
-    def accept(self, move):
+    def accept(move):
         return FilterResult(move, True, "")
-    def fail(self, move, reason):
+    def fail(move, reason):
         return FilterResult(move, False,
             "The move %s fails the filtration process because: %s" % (move, reason)
         )
 
 
-def FilterError(ValueError):
+class FilterError(ValueError):
     def __init__(self, move, reason):
-        super.__init__("The move %s is unable to be properly filtered, because: %s" % (move, reason))
+        super().__init__("The move %s is unable to be properly filtered, because: %s" % (move, reason))

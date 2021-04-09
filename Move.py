@@ -11,6 +11,8 @@ class Move():
         self.isCheck = isCheck
         self.isCheckmate = isCheckmate
         self.promotionPiece = promotionPiece
+    def __repr__(self):
+        return self.toString()
     def clone(self):
         return Move(
             self.pieceType,
@@ -24,9 +26,10 @@ class Move():
         )
     def color(self):
         return "black" if self.pieceType.isupper() else "white"
-    def setSource(self, cartesianVector):
-        self.sourceFile = cartesianVector.y
-        self.sourceRank = cartesianVector.x
+    def setSource(self, vector):
+        source = vector.toAN()
+        self.sourceFile = source[0]
+        self.sourceRank = source[1]
         return self
     def source(self):
         return Vector2D.fromAN(self.sourceFile + str(self.sourceRank))

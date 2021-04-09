@@ -4,9 +4,8 @@ from move import Move
 from vector2D import Vector2D as Vector
 class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
-        position = Position.fromFEN(positionFEN)
-        move = Move.fromAN(moveAN)
-
+        return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), Move.fromAN(moveAN))
+    def generateMoveList(position, move):
         moveList = []
         if move.pieceType == None: 
             raise MoveGenerationError(positionFEN, moveAN, "PieceType is None")
