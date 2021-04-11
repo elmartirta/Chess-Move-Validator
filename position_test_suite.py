@@ -65,8 +65,7 @@ class PositionTestSuite():
     def test7():
         pos = Position.fromStartingPosition()
         move = Move.fromAN("e4")
-        move.sourceFile = 'e'
-        move.sourceRank = 2
+        move.source = Vector2D.fromAN("e2")
         nextPos = pos.next(move)
         assert(nextPos.pieceAt(Vector2D.fromAN("e4")) == "P")
         return True

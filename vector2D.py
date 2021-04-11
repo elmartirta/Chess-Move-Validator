@@ -32,8 +32,20 @@ class Vector2D():
     def fromAN(text):
         return Vector2D.fromAlgebreicNotation(text)
     def fromAlgebreicNotation(text):
-        if (len(text) != 2): raise ANParsingError(text, "Length of text not equal to 2.")
-        return Vector2D(ord(text[0].lower()) - 97, int(text[1])-1)
+        toX = lambda chr : ord(chr.lower()) - 97
+        toY = lambda chr : int(chr)-1
+        if text is None or len(text) == 0:
+            x,y = None, None
+        elif len(text) == 1:
+            if text[0].isalpha():
+                x,y = toX(text[0]), None
+            else:
+                x,y = None, toY(text[0])
+        elif len(text) == 2:
+            x,y = toX(text[0]), toY(text[1])
+        else:
+            raise ANParsingError(text, "Length of the text is longer than 2")
+        return Vector2D(x,y)
     def toAN(self):
         return self.toAlgebreicNotation()
     def toAlgebreicNotation(self):

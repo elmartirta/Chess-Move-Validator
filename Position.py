@@ -84,13 +84,13 @@ class Position():
     def isWhiteToMove(self):
         return self.gameStatus == GameStatus.WHITE_TO_MOVE
     def next(self, move):
-        source = move.source()
+        source = move.source
         destination = move.destination
         clone = self.clone()
         clone.boardState.squares[destination.y][destination.x] = self.boardState.squares[source.y][source.x]
         clone.boardState.squares[source.y][source.x] = "-"
         clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
-        clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source().y) == 2) else Vector2D.fromNonExistent()
+        clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source.y) == 2) else Vector2D.fromNonExistent()
         clone.halfClock = self.halfClock + 1 if (not move.isCapture) else 0
         clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
         return clone

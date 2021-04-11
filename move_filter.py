@@ -13,16 +13,16 @@ class MoveFilter():
     def getPostMoveFilters():
         return []
     def checkSourcePiece(position, move):
-        if move.sourceRank == None:
-            raise FilterError(move, "Which Piece? The Source Rank is not instantiated, leading to ambiguity.")
-        elif move.sourceFile == None:
+        if move.source.x == None:
             raise FilterError(move, "Which Piece? The Source file is not instantiated, leading to ambiguity.")
-        elif position.pieceIsWhite(move.source()) != position.isWhiteToMove():
+        elif move.source.y == None:
+            raise FilterError(move, "Which Piece? The Source Rank is not instantiated, leading to ambiguity.")
+        elif position.pieceIsWhite(move.source) != position.isWhiteToMove():
             return FilterResult.fail(move, "Not your turn: The color of the move's source piece is not valid in the turn order.")
-        elif position.pieceTypeOf(move.source()) != move.pieceType:
+        elif position.pieceTypeOf(move.source) != move.pieceType:
             raise FilterError( \
                 move, "Hustler's Piece: Type of source Piece (%s) does not match type of move piece (%s)." \
-                % (position.pieceTypeOf(move.source()), move.pieceType)
+                % (position.pieceTypeOf(move.source), move.pieceType)
             )
         else:
             return FilterResult.accept(move)
@@ -47,9 +47,9 @@ class MoveFilter():
         if move.pieceType in "N":
             return FilterResult.accept(move)
         
-        path = move.destination - move.source()
+        path = move.destination - move.source
         for delta in path.walk():
-            candidate = move.source() + delta
+            candidate = move.source + delta
             if position.pieceAt(candidate) != "-":
                 return FilterResult.fail(move, \
                     "Obstructed: The piece %s at %s in the way of the move." \
