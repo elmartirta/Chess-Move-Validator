@@ -21,15 +21,24 @@ def runTests():
         {"suite_name": "GEN", "test_list": MoveGeneratorTestSuite.getTests()},
         {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()}
     ]
+    allTestsPassed = True
+    testsPassed = 0 
+    testsRun = 0
     for suite in test_suites:
         test_number = 0
         print("-- %s ---:----->" % suite["suite_name"])
         for test in suite["test_list"]:
+            testsRun += 1
             test_number += 1
             result = False
             try:
                 result = test["runnable"]()
+                if result == False:
+                    allTestsPassed = False
+                else:
+                    testsPassed += 1
             except Exception as e:
+                allTestsPassed = False
                 print("["+colorama.Fore.YELLOW+"EXPT"+colorama.Style.RESET_ALL+"] %2d : !!!!!! Exception !!!!!!" % ( test_number))
                 print(colorama.Fore.YELLOW)
                 traceback.print_exc()
@@ -40,7 +49,9 @@ def runTests():
                     test_number, 
                     test["name"])
                 )
-
+    print(colorama.Fore.GREEN if allTestsPassed == True else colorama.Fore.RED)
+    print("%d out of %d tests passed! %s\n (%d percent success rate)" % (testsPassed, testsRun, colorama.Style.RESET_ALL, (testsPassed * 100 / testsRun)))
+    print()
     
 if __name__ == "__main__":
     main()
