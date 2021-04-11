@@ -1,5 +1,5 @@
 import re
-from vector2D import Vector2D
+from vector import Vector
 
 class Move():
     def __init__(self, pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece):
@@ -42,13 +42,13 @@ class Move():
             pieceType = basicMatch.group(1)
             sourceFile = basicMatch.group(2) if basicMatch.group(2) else ""
             sourceRank = basicMatch.group(3) if basicMatch.group(3) else ""
-            source = Vector2D.fromAN(sourceFile + sourceRank)
-            destination = Vector2D.fromAN(basicMatch.group(5))
+            source = Vector.fromAN(sourceFile + sourceRank)
+            destination = Vector.fromAN(basicMatch.group(5))
         else: 
             pawnMatch = re.fullmatch("(([a-w])(x))?([a-w]\d)(=([RNBQ]))?[+#]?", string)
             if pawnMatch:
-                source = Vector2D.fromAN(pawnMatch.group(2))
-                destination = Vector2D.fromAN(pawnMatch.group(4))
+                source = Vector.fromAN(pawnMatch.group(2))
+                destination = Vector.fromAN(pawnMatch.group(4))
                 promotionPiece = pawnMatch.group(6)
             elif re.fullmatch("o-o-o", string):
                 raise MoveParsingError(string, "Long Castling is not implemented yet.")

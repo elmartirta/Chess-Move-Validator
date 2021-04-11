@@ -3,34 +3,34 @@
 # instead of maintaining an internal state of x, and y.
 # Perhaps rename it to some sort of custom math or coordinate class.
 
-class Vector2D():
+class Vector():
     def __init__(self, x, y):
         self.x = x
         self.y = y
     def __add__(self, other):
-        if not isinstance(other, Vector2D): raise TypeError("Vector addition must use vectors")
-        return Vector2D(self.x + other.x, self.y + other.y)
+        if not isinstance(other, Vector): raise TypeError("Vector addition must use vectors")
+        return Vector(self.x + other.x, self.y + other.y)
     def __radd__(self, other):
         if other == 0:
             return self
         else:
             return self.__add__(other)
     def __sub__(self, other):
-        if not isinstance(other, Vector2D): raise TypeError("Vector subtraction must use vectors")
-        return Vector2D(self.x - other.x, self.y - other.y)
+        if not isinstance(other, Vector): raise TypeError("Vector subtraction must use vectors")
+        return Vector(self.x - other.x, self.y - other.y)
     def __mul__(self, scalar):
         if not isinstance(scalar, int): raise TypeError("Vector scalar multiplication must use an int")
-        return Vector2D(self.x * scalar, self.y * scalar)
+        return Vector(self.x * scalar, self.y * scalar)
     def __rmul__(self, scalar):
         return (self * scalar)
     def __eq__(self, other):
         if self is None or other is None: return False
-        if not isinstance(other, Vector2D): raise TypeError("Vector equality must use vectors")
+        if not isinstance(other, Vector): raise TypeError("Vector equality must use vectors")
         return self.x == other.x and self.y == other.y
     def __repr__(self):
-        return "Vector2D(%s, %s)" % (str(self.x), str(self.y))
+        return "Vector(%s, %s)" % (str(self.x), str(self.y))
     def fromAN(text):
-        return Vector2D.fromAlgebreicNotation(text)
+        return Vector.fromAlgebreicNotation(text)
     def fromAlgebreicNotation(text):
         toX = lambda chr : ord(chr.lower()) - 97
         toY = lambda chr : int(chr)-1
@@ -45,13 +45,13 @@ class Vector2D():
             x,y = toX(text[0]), toY(text[1])
         else:
             raise ANParsingError(text, "Length of the text is longer than 2")
-        return Vector2D(x,y)
+        return Vector(x,y)
     def toAN(self):
         return self.toAlgebreicNotation()
     def toAlgebreicNotation(self):
         return chr(self.x+97)+str(self.y+1)
     def fromNonExistent():
-        return Vector2D(None, None)
+        return Vector(None, None)
     def plus(self, other):
         return self + other
     def minus(self, other):
@@ -66,7 +66,7 @@ class Vector2D():
         return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
     def walk(self):
         deltas = []
-        direction = Vector2D(
+        direction = Vector(
             ((1 if self.x > 0 else -1) if self.x != 0 else 0),
             ((1 if self.y > 0 else -1) if self.y != 0 else 0)
         )
@@ -74,7 +74,7 @@ class Vector2D():
             deltas.append(direction * deltaMagnitude)
         return deltas
     def clone(self):
-        return Vector2D(self.x, self.y)
+        return Vector(self.x, self.y)
 class ANParsingError(ValueError):
     def __init__(self, ANText, errorMessage):
         super().__init__("Error trying to parse AN \"%s\": %s" % (ANText, errorMessage))

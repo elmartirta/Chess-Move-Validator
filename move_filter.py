@@ -1,6 +1,6 @@
 from move import Move
 from position import *
-from vector2D import Vector2D as Vector
+from vector import Vector 
 
 class MoveFilter():
     def getPreMoveFilters():

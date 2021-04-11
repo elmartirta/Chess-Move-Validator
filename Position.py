@@ -1,14 +1,14 @@
 import random 
 import re
 from enum import Enum
-from vector2D import Vector2D
+from vector import Vector
 
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
         self.boardState = boardState or BoardState.fromEmpty()
         self.gameStatus = gameStatus or GameStatus.WHITE_TO_MOVE
         self.castlingRights = castlingRights or CastlingRights.fromAllTrue()
-        self.enPassantPawn = enPassantPawn or Vector2D.fromNonExistent()
+        self.enPassantPawn = enPassantPawn or Vector.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
     def clone(self):
@@ -60,14 +60,14 @@ class Position():
                 if char.isdigit():
                     pieceIndex += int(char)
                 elif char.isalpha():
-                    pos.boardState.addPiece(Vector2D(pieceIndex, 8-(rowIndex+1)),char)
+                    pos.boardState.addPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
                     pieceIndex += 1
                 else:
                     raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
 
         pos.gameStatus = GameStatus.WHITE_TO_MOVE if activeColorField == "w" else GameStatus.BLACK_TO_MOVE
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
-        pos.enPassantPawn = Vector2D.fromAN(enPassantField) if enPassantField != "-" else Vector2D.fromNonExistent()
+        pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else Vector.fromNonExistent()
         pos.halfClock = int(halfClockField) 
         pos.fullMove = int(fullMoveField)
         return pos
@@ -90,7 +90,7 @@ class Position():
         clone.boardState.squares[destination.y][destination.x] = self.boardState.squares[source.y][source.x]
         clone.boardState.squares[source.y][source.x] = "-"
         clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
-        clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source.y) == 2) else Vector2D.fromNonExistent()
+        clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source.y) == 2) else Vector.fromNonExistent()
         clone.halfClock = self.halfClock + 1 if (not move.isCapture) else 0
         clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
         return clone

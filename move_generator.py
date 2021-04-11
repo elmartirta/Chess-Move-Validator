@@ -1,7 +1,7 @@
 from position import Position
 from position import GameStatus
 from move import Move
-from vector2D import Vector2D as Vector
+from vector import Vector 
 class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
         return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), Move.fromAN(moveAN))

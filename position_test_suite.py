@@ -1,6 +1,6 @@
 from position import *
 from move import *
-from vector2D import Vector2D as Vector
+from vector import Vector 
 class PositionTestSuite():
     def getTests():
         return [
@@ -65,7 +65,7 @@ class PositionTestSuite():
     def test7():
         pos = Position.fromStartingPosition()
         move = Move.fromAN("e4")
-        move.source = Vector2D.fromAN("e2")
+        move.source = Vector.fromAN("e2")
         nextPos = pos.next(move)
-        assert(nextPos.pieceAt(Vector2D.fromAN("e4")) == "P")
+        assert(nextPos.pieceAt(Vector.fromAN("e4")) == "P")
         return True

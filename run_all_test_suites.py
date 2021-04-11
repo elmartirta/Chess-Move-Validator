@@ -1,4 +1,4 @@
-from vector2D_test_suite import Vector2DTestSuite
+from vector_test_suite import VectorTestSuite
 from move_test_suite import MoveTestSuite
 from position_test_suite import PositionTestSuite
 from move_generator_test_suite import MoveGeneratorTestSuite
@@ -15,7 +15,7 @@ def main():
     print("")
 def runTests():
     test_suites = [
-        {"suite_name": "VEC", "test_list": Vector2DTestSuite.getTests()},
+        {"suite_name": "VEC", "test_list": VectorTestSuite.getTests()},
         {"suite_name": "MOV", "test_list": MoveTestSuite.getTests()},
         {"suite_name": "POS", "test_list": PositionTestSuite.getTests()},
         {"suite_name": "GEN", "test_list": MoveGeneratorTestSuite.getTests()},
