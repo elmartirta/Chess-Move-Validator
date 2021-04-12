@@ -94,6 +94,13 @@ class Position():
         clone.halfClock = self.halfClock + 1 if (not move.isCapture) else 0
         clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
         return clone
+    def findAll(self, pieceType):
+        result = []
+        for y, row in enumerate(self.boardState.squares):
+            for x, currentPiece in enumerate(row):
+                if currentPiece == pieceType:
+                    result.append(Vector(x,y))
+        return result
 class FENParsingError(ValueError):
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
