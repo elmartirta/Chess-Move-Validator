@@ -64,6 +64,8 @@ class Vector():
         return str(self)
     def isInsideChessboard(self):
         return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
+    def between(self, other):
+        return [self + delta for delta in (other - self).walk()]
     def walk(self):
         deltas = []
         direction = Vector(

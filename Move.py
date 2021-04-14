@@ -58,7 +58,7 @@ class Move():
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
         return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
     def toString(self):
-        return "Move : %s %s%s -> %s [Capt: %s, Check: %s, Mate: %s]" % (
+        return "Move : %s %s-> %s [Capt: %s, Check: %s, Mate: %s]" % (
             self.pieceType,
             self.source,
             self.destination.toAN(),
