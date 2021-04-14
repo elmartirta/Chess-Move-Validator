@@ -49,7 +49,9 @@ class Vector():
     def toAN(self):
         return self.toAlgebreicNotation()
     def toAlgebreicNotation(self):
-        return chr(self.x+97)+str(self.y+1)
+        sourceRank = chr(self.x+97) if self.x else ""
+        sourceFile = str(self.y+1) if self.y else ""
+        return sourceRank + sourceFile
     def fromNonExistent():
         return Vector(None, None)
     def plus(self, other):
