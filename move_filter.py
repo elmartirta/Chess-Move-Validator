@@ -16,10 +16,8 @@ class MoveFilter():
             MoveFilter.checkIfOppositeKingInCheck
         ]
     def checkSourcePiece(position, move):
-        if move.source.x == None:
+        if move.source.x == None or move.source.y == None:
             raise FilterError(move, "Which Piece? The Source file is not instantiated, leading to ambiguity.")
-        elif move.source.y == None:
-            raise FilterError(move, "Which Piece? The Source Rank is not instantiated, leading to ambiguity.")
         elif position.pieceIsWhite(move.source) != position.isWhiteToMove():
             return FilterResult.fail(move, "Not your turn: The color of the move's source piece is not valid in the turn order.")
         elif position.pieceTypeOf(move.source) != move.pieceType:
@@ -73,30 +71,31 @@ class MoveFilter():
         kingLocations = position.findAll("K" if kingColor == "WHITE" else "k")
 
         for king in kingLocations:
-            isEnemy = lambda attackerPos, attackerType: \
-                position.pieceAt(attackerPos) == (attackerType.lower() if kingColor == "WHITE" else attackerType.upper()) \
-                and all(tile == "-" in (attackerPos - king).path())
+            isEnemy = lambda enemy, enemyType: \
+                position.pieceTypeIs(enemy, enemyType) \
+                and position.pieceIsWhite(enemy) != position.pieceIsWhite(king) \
+                and all(tile == "-" in enemy.walk(king))
 
             xLine = [Vector(king.x, y) for y in range(0,8)]
             yLine = [Vector(x, king.y) for x in range(0,8)]
             orthogonals = xLine + yLine
 
             for rook in orthogonals:
-                if rook != king and isEnemy(rook, "r") and pathIsClear(rook): 
+                if rook != king and isEnemy(rook, "R"): 
                     return FilterResult.fail("The king on %s is being checked by the rook on %s" % (king, rook))
 
-            posPosDiagonal = [king + Vector( i, i) for i in range(1,8) if (king + Vector( i, i)).isInsideChessboard()]
-            posNegDiagonal = [king + Vector(-i, i) for i in range(1,8) if (king + Vector(-i, i)).isInsideChessboard()]
-            NegPosDiagonal = [king + Vector( i,-i) for i in range(1,8) if (king + Vector( i,-i)).isInsideChessboard()]
-            NegNegDiagonal = [king + Vector(-i,-i) for i in range(1,8) if (king + Vector(-i,-i)).isInsideChessboard()]
-            diagonals = posPosDiagonal + posNegDiagonal + NegPosDiagonal + NegNegDiagonal
+            posPos = [king + Vector( i, i) for i in range(1,8) if (king + Vector( i, i)).isInsideChessboard()]
+            posNeg = [king + Vector(-i, i) for i in range(1,8) if (king + Vector(-i, i)).isInsideChessboard()]
+            NegPos = [king + Vector( i,-i) for i in range(1,8) if (king + Vector( i,-i)).isInsideChessboard()]
+            NegNeg = [king + Vector(-i,-i) for i in range(1,8) if (king + Vector(-i,-i)).isInsideChessboard()]
+            diagonals = posPos + posNeg + NegPos + NegNeg
 
             for bishop in diagonals:
-                if bishop != king and isEnemy(bishop, "b") and pathIsClear(bishop): 
+                if bishop != king and isEnemy(bishop, "B"): 
                     return FilterResult.fail("The king on %s is being checked by the bishop on %s" % (king, bishop))
             
             for queen in orthogonals + diagonals:
-                if queen != king and isEnemy(queen, "q") and pathIsClear(queen): 
+                if queen != king and isEnemy(queen, "Q"): 
                     return FilterResult.fail("The king on %s is being checked by the queen on %s" % (king, queen))
 
             knightSquares = [king + deltaN for deltaN in [
@@ -120,7 +119,7 @@ class MoveFilter():
 
             for pawn in pawns:
                 if isEnemy(pawn, "p"):
-                    return FilterResult.fail("The king on %s is being checked by teh pawn on %s" % (king, pawn))
+                    return FilterResult.fail("The king on %s is being checked by the pawn on %s" % (king, pawn))
 
             return FilterResult.accept(move)  
 

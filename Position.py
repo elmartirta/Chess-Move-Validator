@@ -81,6 +81,8 @@ class Position():
         return self.pieceAt(vector).isupper()
     def pieceTypeOf(self, vector):
         return self.pieceAt(vector).upper()
+    def pieceTypeIs(self, vector, pieceType):
+        return self.pieceAt(vector).upper() == pieceType.upper()
     def isWhiteToMove(self):
         return self.gameStatus == GameStatus.WHITE_TO_MOVE
     def next(self, move):

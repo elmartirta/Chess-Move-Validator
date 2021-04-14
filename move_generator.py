@@ -26,7 +26,7 @@ class MoveGenerator():
                     Vector(i, move.destination.y)]:
                 if candidate == move.destination: 
                     continue
-                if position.pieceAt(candidate).upper() == move.pieceType:
+                if position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     def addBishopCandidates(moveList, position, move):
         for i in range(1,10):
@@ -36,7 +36,7 @@ class MoveGenerator():
                     Vector( i,-i),
                     Vector(-i,-i)]:
                 candidate = move.destination + delta
-                if candidate.isInsideChessboard() and position.pieceAt(candidate).upper() == move.pieceType:
+                if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     def addKnightCandidates(moveList, position, move):
         for n in [Vector(1,2), Vector(2,1)]:
@@ -46,7 +46,7 @@ class MoveGenerator():
                     Vector( n.x,-n.y),
                     Vector(-n.x,-n.y)]:
                 candidate = move.destination + delta
-                if candidate.isInsideChessboard() and position.pieceAt(candidate).upper() == move.pieceType:
+                if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     def addKingCandidates(moveList, position, move):
         for dx in [1,0,-1]:
@@ -54,7 +54,7 @@ class MoveGenerator():
                 if dx == 0 and dy == 0: continue
                 delta = Vector(dx, dy)
                 candidate = move.destination + delta
-                if candidate.isInsideChessboard() and position.pieceAt(candidate).upper() == move.pieceType:
+                if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     def addQueenCandidates(moveList, position, move):
         MoveGenerator.addBishopCandidates(moveList, position, move)
@@ -75,7 +75,7 @@ class MoveGenerator():
 
         for delta in deltas:
             candidate = move.destination + delta
-            if candidate.isInsideChessboard() and position.pieceAt(candidate).upper() == move.pieceType:
+            if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
 
 class MoveGenerationError(ValueError):
