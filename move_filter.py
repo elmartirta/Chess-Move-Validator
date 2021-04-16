@@ -1,6 +1,7 @@
 from move import Move
 from position import *
 from vector import Vector 
+from castling_move import CastlingMove
 
 class MoveFilter():
     def getPreMoveFilters():
@@ -9,6 +10,10 @@ class MoveFilter():
             MoveFilter.checkIfMoveWithinLegalBounds,
             MoveFilter.checkIfDestinationIsOccupied,
             MoveFilter.checkIfPathIsOccupied,
+            MoveFilter.checkIfCurrentKingInCheck
+        ]
+    def getMidCastleFilters():
+        return [
             MoveFilter.checkIfCurrentKingInCheck
         ]
     def getPostMoveFilters():
@@ -41,8 +46,12 @@ class MoveFilter():
             return FilterResult.fail(move, "Starved Attacker: Move is a capture, but there is no piece to capture on the destination square")
         elif not move.isCapture and not position.pieceAt(move.destination) == "-":
             return FilterResult.fail(move, "Cramped Quarters: The Move is not a capture, and the destination is not empty")
-        else:
-            return FilterResult.accept(move)
+        elif isinstance(move, CastlingMove):
+            midStep = move.source + Vector(1,0) if move.castlingDirection == GameStatus.WHITE_TO_MOVE else Vector(-1,0)
+            if not position.pieceAt(midStep) == "-":
+                return FilterResult.fail(move, "Castling Blocked: There is a piece between the king's source and destination squares.")
+        
+        return FilterResult.accept(move)
     
     def checkIfPathIsOccupied(position, move):
         if move.pieceType in "N":

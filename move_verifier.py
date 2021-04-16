@@ -2,6 +2,8 @@ from move_generator import MoveGenerator
 from move_filter import MoveFilter
 from position import Position
 from move import Move
+from castling_move import CastlingMove
+
 import enum
 
 class MoveVerifier():
@@ -42,12 +44,21 @@ class MoveVerifier():
             )
     
     def verifyCandidate(position, move):
-        for moveFilter in MoveFilter.getPreMoveFilters():
-            filterResult = moveFilter(position, move)
-            if not filterResult.isLegal:
-                return VerificationResult.fail(position, move, filterResult.reason)
+        def checkAllFilters(filters, position, move):
+            for moveFilter in filters:
+                filterResult = moveFilter(position, move)
+                if not filterResult.isLegal:
+                    return VerificationResult.fail()
 
-        newPosition = position.next(move)
+        checkAllFilters(MoveFilter.getPreMoveFilters(), position, move)
+
+        if isinstance(move, CastlingMove):
+            halfPosition = postion.halfCastle(move)
+            checkAllFilters(MoveFilter.getMidCastleFilters(), position, move)
+            newPosition = halfPosition.finishCastle(move)
+        else:
+            newPosition = position.next(move)
+
         for moveFilter in MoveFilter.getPostMoveFilters():
             filterResult = moveFilter(newPosition, move)
             if not filterResult.isLegal:

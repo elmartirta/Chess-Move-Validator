@@ -85,6 +85,25 @@ class Position():
         return self.pieceAt(vector).upper() == pieceType.upper()
     def isWhiteToMove(self):
         return self.gameStatus == GameStatus.WHITE_TO_MOVE
+    def castle(self, move):
+        return self.halfCastle(move).finishCastle(move)
+    def halfCastle(self, move):
+        clone = self.clone()
+        midStep = move.source + Vector(1,0) if move.castlingDirection == castlingDirection.KINGSIDE else move.source - Vector(1,0)
+        clone.boardState[midstep.y][midstep.x] = self.boardState[source.y][source.x]
+        clone.boardState[source.y][source.x] == "-"
+        return clone
+    def finishCastle(self, move):
+        clone = self.clone()
+        midStep = move.source + Vector(1,0) if move.castlingDirection == castlingDirection.KINGSIDE else move.source - Vector(1,0)
+        clone.boardState[destintation.y][destination.x] = self.pieceAt(midStep)
+        clone.boardState[midStep.y][midStep.x] = self.pieceAt(move.rookLocation)
+        clone.boardState[move.rookLocation.y][move.rookLocation.x] = "-"
+        clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
+        clone.enPassantPawn = Vector.fromNonExistent()
+        clone.halfClock = self.halfClock + 1 
+        clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
+        return clone
     def next(self, move):
         source = move.source
         destination = move.destination
