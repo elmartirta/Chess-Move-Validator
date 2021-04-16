@@ -50,12 +50,12 @@ class Move():
                 source = Vector.fromAN(pawnMatch.group(2))
                 destination = Vector.fromAN(pawnMatch.group(4))
                 promotionPiece = pawnMatch.group(6)
-            elif re.fullmatch("o-o-o", string):
-                raise MoveParsingError(string, "Long Castling is not implemented yet.")
-            elif re.fullmatch("o-o", string):
-                raise MoveParsingError(string, "Castling is not implemented yet.")
             else:
-                raise MoveParsingError(string, "Move does not match any valid regex expression")
+                castlingMatch = re.fullmatch("O-O(-O)([+#])?", string)
+                if castlingMatch:
+                    castlingDirection == CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE
+                else:
+                    raise MoveParsingError(string, "Move does not match any valid regex expression")
         return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
     def toString(self):
         return "Move %s%s%s%s (%s%s)" % (
