@@ -96,6 +96,9 @@ class Position():
     def finishCastle(self, move):
         clone = self.clone()
         midStep = move.source + Vector(1,0) if move.castlingDirection == castlingDirection.KINGSIDE else move.source - Vector(1,0)
+        print(destination.toAN())
+        print(midStep.toAN())
+        print(move.rookLocation.toAN())
         clone.boardState[destintation.y][destination.x] = self.pieceAt(midStep)
         clone.boardState[midStep.y][midStep.x] = self.pieceAt(move.rookLocation)
         clone.boardState[move.rookLocation.y][move.rookLocation.x] = "-"

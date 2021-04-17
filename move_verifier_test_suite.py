@@ -1,6 +1,8 @@
 from move_verifier import MoveVerifier
 from position import Position
 from move import Move
+from castling_move import CastlingMove
+from vector import Vector
 class MoveVerifierTestSuite():
     def getTests():
         return [
@@ -11,12 +13,13 @@ class MoveVerifierTestSuite():
             {"runnable": MoveVerifierTestSuite.test5, "name": "King Check Checks : Bishop Moves"},
             {"runnable": MoveVerifierTestSuite.test6, "name": "King Check Checks : Knight Moves"},
             {"runnable": MoveVerifierTestSuite.test7, "name": "King Check Checks : Queen Moves"},
-            {"runnable": MoveVerifierTestSuite.test8, "name": "King Check Checks : Pawn Moves"}
+            {"runnable": MoveVerifierTestSuite.test8, "name": "King Check Checks : Pawn Moves"},
+            {"runnable": MoveVerifierTestSuite.test9, "name": "Just a Kingside Castle"}
         ]
     def verifyGame(position, moveList):
         res = MoveVerifier.verifyGame(position, moveList)
         if res.isLegal: 
-            return True
+            return res
         else:
             print(res.reason)
             return False
@@ -134,3 +137,11 @@ class MoveVerifierTestSuite():
             MoveVerifierTestSuite.kingIsStuck(whiteKingsJail),
             MoveVerifierTestSuite.kingIsStuck(blackKingsJail)
         ])
+    def test9():
+        kingsIndianAttack = Position.fromFEN("r1bqkbnr/pp1npppp/2p5/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 2 4")
+        newPos = MoveVerifierTestSuite.verifyGame(kingsIndianAttack, [CastlingMove.fromAN("O-O")]).updatedPosition
+        print(newPos.boardState.toString())
+        assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "R"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "K"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "-"))
+        return True

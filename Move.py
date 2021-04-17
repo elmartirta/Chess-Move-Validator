@@ -51,12 +51,18 @@ class Move():
                 destination = Vector.fromAN(pawnMatch.group(4))
                 promotionPiece = pawnMatch.group(6)
             else:
-                castlingMatch = re.fullmatch("O-O(-O)([+#])?", string)
-                if castlingMatch:
-                    castlingDirection == CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE
-                else:
-                    raise MoveParsingError(string, "Move does not match any valid regex expression")
+                raise MoveParsingError(string, "Move does not match any valid regex expression")
         return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+    def fromEmpty():
+        return Move(
+            "",
+            Vector.fromNonExistent(),
+            Vector.fromNonExistent(),
+            False,
+            False,
+            False,
+            Vector.fromNonExistent()
+        )
     def toString(self):
         return "Move %s%s%s%s (%s%s)" % (
             self.pieceType,

@@ -80,9 +80,9 @@ class MoveGenerator():
             candidate = move.destination + delta
             if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
-    def addCastlingCandidates(self, moveList, position, move):
-        homeRow = 0 if position.gameStatus == GameStatus.WHITE_TO_MOVE else 7
-        homeRow = [Vector2D(x, homeRow) for x in range(0,8)]
+    def addCastlingCandidates(moveList, position, move):
+        homeIndex = 0 if position.gameStatus == GameStatus.WHITE_TO_MOVE else 7
+        homeRow = [Vector(x, homeIndex) for x in range(0,8)]
         homeRow = [position.pieceTypeOf(tile) for tile in homeRow]
         kingSymbol = "K" if position.gameStatus == GameStatus.WHITE_TO_MOVE else "k"
         if not kingSymbol in homeRow:
@@ -90,17 +90,17 @@ class MoveGenerator():
         else:
             rook = None
             kingPos = homeRow.index(kingSymbol)
-            king = Vector2D(kingPos, homeRow)
-            edge = Vector2D(0, homeRow) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector2D(7, homeRow)
+            king = Vector(kingPos, homeIndex)
+            edge = Vector(0, homeIndex) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(7, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
-                if position.pieceTypeOf(rookCandidate) == "R" and position.pieceIsWhite(rookCandiate) == (position.gameStatus == GameStatus.WHITE_TO_MOVE):
-                    rook = rookCandiate
+                if position.pieceTypeOf(rookCandidate) == "R" and position.pieceIsWhite(rookCandidate) == (position.gameStatus == GameStatus.WHITE_TO_MOVE):
+                    rook = rookCandidate
                     break
         output = move.clone()
         output.source = king
-        output.destination = king + (Vector2D(2,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector2D(-2, 0))
+        output.destination = king + (Vector(2,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-2, 0))
         output.rookLocation = rook
-        return moveList.append()
+        return moveList.append(output)
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
