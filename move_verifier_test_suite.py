@@ -14,7 +14,9 @@ class MoveVerifierTestSuite():
             {"runnable": MoveVerifierTestSuite.test6, "name": "King Check Checks : Knight Moves"},
             {"runnable": MoveVerifierTestSuite.test7, "name": "King Check Checks : Queen Moves"},
             {"runnable": MoveVerifierTestSuite.test8, "name": "King Check Checks : Pawn Moves"},
-            {"runnable": MoveVerifierTestSuite.test9, "name": "Just a Kingside Castle"}
+            {"runnable": MoveVerifierTestSuite.test9, "name": "Just a Kings Indian Attack"},
+            {"runnable": MoveVerifierTestSuite.test10, "name": "Kingside Sniper"},
+            {"runnable": MoveVerifierTestSuite.test11, "name": "Queenside Sniper"}
         ]
     def verifyGame(position, moveList):
         res = MoveVerifier.verifyGame(position, moveList)
@@ -144,3 +146,21 @@ class MoveVerifierTestSuite():
         assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "K"))
         assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "-"))
         return True
+    def test10():
+        kingSideSniper = Position.fromFEN("1k6/ppp5/3q4/8/8/8/PPPPP1PP/4K2R w - - 0 1")
+        return all([
+            MoveVerifierTestSuite.verifyGame(kingSideSniper, [
+                CastlingMove.fromAN("O-O"),
+                Move.fromAN("Qf8"),
+                Move.fromAN("Rxf8#")
+            ])
+        ])
+    def test11():
+        queenSideSniper = Position.fromFEN("1k6/ppp5/5q2/8/8/8/PPP1PPPP/R3K3 w - - 0 1")
+        return all([
+            MoveVerifierTestSuite.verifyGame(queenSideSniper, [
+                CastlingMove.fromAN("O-O-O"),
+                Move.fromAN("Qd8"),
+                Move.fromAN("Rxd8#")
+            ])
+        ])

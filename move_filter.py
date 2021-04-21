@@ -40,14 +40,14 @@ class MoveFilter():
             return FilterResult.accept(move)
  
     def checkIfDestinationIsOccupied(position, move):
-        if move.isCapture and (position.pieceIsWhite(move.destination) == positon.isWhiteToMove()):
+        if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove()):
             return FilterResult.fail(move, "Friendly Fire: The move involves a piece trying to capture a target of the same color.")
         elif move.isCapture and position.pieceAt(move.destination) == "-":
             return FilterResult.fail(move, "Starved Attacker: Move is a capture, but there is no piece to capture on the destination square")
         elif not move.isCapture and not position.pieceAt(move.destination) == "-":
             return FilterResult.fail(move, "Cramped Quarters: The Move is not a capture, and the destination is not empty")
         elif isinstance(move, CastlingMove):
-            midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-1,0)
+            midStep = move.source + (Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-1,0))
             if not position.pieceAt(midStep) == "-":
                 return FilterResult.fail(move, "Castling Blocked: There is a piece between the king's source and destination squares.")
         
