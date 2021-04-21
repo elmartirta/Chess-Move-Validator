@@ -101,16 +101,14 @@ class Position():
     def castle(self, move):
         return self.halfCastle(move).finishCastle(move)
     def halfCastle(self, move):
-        #TODO: SMELL - Line Length
         clone = self.clone()
-        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(1,0))
+        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
         clone.setPiece(midStep, self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     def finishCastle(self, move):
-        #TODO: SMELL - Line Length
         clone = self.clone()
-        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(1,0))
+        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
         clone.setPiece(move.destination, self.pieceAt(midStep))
         clone.setPiece(midStep, self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
@@ -120,11 +118,10 @@ class Position():
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
         return clone
     def next(self, move):
-        #TODO: SMELL - Line Length
         source = move.source
         destination = move.destination
         clone = self.clone()
-        clone.setPiece(move.destination, self.pieceAt(source))
+        clone.setPiece(destination, self.pieceAt(source))
         clone.setPiece(source, "-")
         clone.gameStatus = GameStatus.BLACK_TO_MOVE if self.isWhiteToMove() else GameStatus.WHITE_TO_MOVE
         clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else Vector.fromNonExistent()

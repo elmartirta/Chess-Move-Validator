@@ -5,18 +5,20 @@ from castling_move import CastlingMove
 from vector import Vector
 class MoveVerifierTestSuite():
     def getTests():
+        Suite = MoveVerifierTestSuite
         return [
-            {"runnable": MoveVerifierTestSuite.test1, "name": "Just. 1. e4."},
-            {"runnable": MoveVerifierTestSuite.test2, "name": "Just. 1. e4 e5"},
-            {"runnable": MoveVerifierTestSuite.test3, "name": "JUST DOUBLE BONGCLOUD (Carleson vs Nakamura 2021)"},
-            {"runnable": MoveVerifierTestSuite.test4, "name": "King Check Checks : Rook Moves"},
-            {"runnable": MoveVerifierTestSuite.test5, "name": "King Check Checks : Bishop Moves"},
-            {"runnable": MoveVerifierTestSuite.test6, "name": "King Check Checks : Knight Moves"},
-            {"runnable": MoveVerifierTestSuite.test7, "name": "King Check Checks : Queen Moves"},
-            {"runnable": MoveVerifierTestSuite.test8, "name": "King Check Checks : Pawn Moves"},
-            {"runnable": MoveVerifierTestSuite.test9, "name": "Just a Kings Indian Attack"},
-            {"runnable": MoveVerifierTestSuite.test10, "name": "Kingside Sniper"},
-            {"runnable": MoveVerifierTestSuite.test11, "name": "Queenside Sniper"}
+            {"runnable": Suite.test1, "name": "Just. 1. e4."},
+            {"runnable": Suite.test2, "name": "Just. 1. e4 e5"},
+            {"runnable": Suite.test3, "name": "JUST DOUBLE BONGCLOUD (Carleson vs Nakamura 2021)"},
+            {"runnable": Suite.test4, "name": "King Check Checks : Rook Moves"},
+            {"runnable": Suite.test5, "name": "King Check Checks : Bishop Moves"},
+            {"runnable": Suite.test6, "name": "King Check Checks : Knight Moves"},
+            {"runnable": Suite.test7, "name": "King Check Checks : Queen Moves"},
+            {"runnable": Suite.test8, "name": "King Check Checks : Pawn Moves"},
+            {"runnable": Suite.test9, "name": "Just a Kings Indian Attack"},
+            {"runnable": Suite.test10, "name": "Kingside Sniper"},
+            {"runnable": Suite.test11, "name": "Queenside Sniper"},
+            {"runnable": Suite.test12, "name": "Just a Blackmar-Diemer Gambit Bogoljubov Variation Queenside Castling"},
         ]
     def verifyGame(position, moveList):
         res = MoveVerifier.verifyGame(position, moveList)
@@ -165,3 +167,21 @@ class MoveVerifierTestSuite():
                 Move.fromAN("Rxd8#")
             ])
         ])
+    def test12():
+        BDGambit_Bogoljubov = Position.fromFEN(
+            "rnbq1rk1/ppp1ppbp/5np1/8/3P1B2/2N2N2/PPPQ2PP/R3KB1R w KQ - 4 8"
+        )
+        newPos = MoveVerifierTestSuite.verifyGame(
+            BDGambit_Bogoljubov, 
+            [CastlingMove.fromAN("O-O-O")]
+        ).updatedPosition
+        print(newPos.boardState.toString())
+        assert(newPos.pieceTypeIs(Vector.fromAN("a1"), "-"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("b1"), "-"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("c1"), "K"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("d1"), "R"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("e1"), "-"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "B"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "-"))
+        assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "R"))
+        return True

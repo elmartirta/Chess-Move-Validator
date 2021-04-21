@@ -47,7 +47,6 @@ class MoveFilter():
             return FilterResult.accept(move)
  
     def checkIfDestinationIsOccupied(position, move):
-        #TODO: SMELL - Line Length
         if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove()):
             return FilterResult.fail(
                     """Friendly Fire: The move involves a piece trying to 
@@ -87,11 +86,11 @@ class MoveFilter():
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
-        color = "WHITE" if position.gameStatus.isWhiteToMove() else "BLACK"
+        color = "WHITE" if position.isWhiteToMove() else "BLACK"
         return MoveFilter.checkIfKingInCheck(position, move, color)
 
     def checkIfOppositeKingInCheck(position, move):
-        color = "BLACK" if position.gameStatus.isWhiteToMove() else "WHITE"
+        color = "BLACK" if position.isWhiteToMove() else "WHITE"
         return MoveFilter.checkIfKingInCheck(position, move, color)
         
     def checkIfKingInCheck(position, move, kingColor):

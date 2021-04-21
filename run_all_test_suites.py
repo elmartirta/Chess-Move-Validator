@@ -50,6 +50,7 @@ def runTests():
                 print(Fore.YELLOW + "=== !!!!!! Exception !!!!!! ===")
                 traceback.print_exc()
                 print(Style.RESET_ALL)
+                result = Exception
                 
 
             finally:
@@ -57,6 +58,8 @@ def runTests():
                     resText = Fore.GREEN + "PASS"
                 elif result == False:
                     resText = Fore.RED + "FAIL"
+                elif result == Exception:
+                    resText = Fore.YELLOW + "EXPT"
                 else:
                     resText = Fore.CYAN + "UNDF" 
                 print("[%s] %2d : %s" % (

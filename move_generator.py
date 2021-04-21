@@ -1,5 +1,4 @@
 from position import Position
-from position import GameStatus
 from move import Move
 from vector import Vector 
 from castling_move import CastlingMove
@@ -66,14 +65,14 @@ class MoveGenerator():
         destination = move.destination
       
         deltas = []
-        dy = -1 if position.gameStatus.isWhiteToMove() else 1
+        dy = -1 if position.isWhiteToMove() else 1
         if move.isCapture:
             deltas.append(Vector(-1,dy))
             deltas.append(Vector( 1,dy))
         else:
             deltas.append(Vector(0,dy))
-            if (destination.y == 3 and position.gameStatus.isWhiteToMove()) or \
-                    (destination.y == 4 and not position.gameStatus.isWhiteToMove()):
+            if (destination.y == 3 and position.isWhiteToMove()) or \
+                    (destination.y == 4 and not position.isWhiteToMove()):
                 deltas.append(Vector(0,2*dy))
 
         for delta in deltas:
@@ -81,10 +80,10 @@ class MoveGenerator():
             if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     def addCastlingCandidates(moveList, position, move):
-        homeIndex = 0 if position.gameStatus == GameStatus.WHITE_TO_MOVE else 7
+        homeIndex = 0 if position.isWhiteToMove() else 7
         homeRow = [Vector(x, homeIndex) for x in range(0,8)]
         homeRow = [position.pieceTypeOf(tile) for tile in homeRow]
-        kingSymbol = "K" if position.gameStatus == GameStatus.WHITE_TO_MOVE else "k"
+        kingSymbol = "K" if position.isWhiteToMove() else "k"
         king = Vector.fromNonExistent()
         if not kingSymbol in homeRow:
             king = None
@@ -92,16 +91,14 @@ class MoveGenerator():
             rook = None
             kingPos = homeRow.index(kingSymbol)
             king = Vector(kingPos, homeIndex)
-            #TODO: SMELL - Line Length
             edge = Vector(7, homeIndex) if move.isKingsideCastling() else Vector(0, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
                 if position.pieceTypeOf(rookCandidate) == "R" \
-                        and position.pieceIsWhite(rookCandidate) == (position.gameStatus == GameStatus.WHITE_TO_MOVE):
+                        and position.pieceIsWhite(rookCandidate) == (position.isWhiteToMove()):
                     rook = rookCandidate
                     break        
         output = move.clone()
         output.source = king
-        #TODO: SMELL - Line Length
         output.destination = king + (Vector(2,0) if move.isKingsideCastling() else Vector(-2, 0))
         output.rookLocation = rook
         return moveList.append(output)
