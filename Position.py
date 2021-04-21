@@ -74,6 +74,10 @@ class Position():
         return pos
     def fromStartingPosition():
         return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    def setPiece(self, vector, string):
+        if not vector.isInsideChessboard():
+            return ValueError(vector)
+        self.boardState.squares[vector.y][vector.x] = string
     def pieceAt(self, vector):
         if not vector.isInsideChessboard(): 
             raise ValueError(vector)
@@ -91,15 +95,15 @@ class Position():
     def halfCastle(self, move):
         clone = self.clone()
         midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
-        clone.boardState.squares[midStep.y][midStep.x] = self.boardState.squares[move.source.y][move.source.x]
-        clone.boardState.squares[move.source.y][move.source.x] = "-"
+        clone.setPiece(midStep, self.pieceAt(move.source))
+        clone.setPiece(move.source, "-")
         return clone
     def finishCastle(self, move):
         clone = self.clone()
         midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
-        clone.boardState.squares[move.destination.y][move.destination.x] = self.pieceAt(midStep)
-        clone.boardState.squares[midStep.y][midStep.x] = self.pieceAt(move.rookLocation)
-        clone.boardState.squares[move.rookLocation.y][move.rookLocation.x] = "-"
+        clone.setPiece(move.destination, self.pieceAt(midStep))
+        clone.setPiece(midStep, self.pieceAt(move.rookLocation))
+        clone.setPiece(move.rookLocation, "-")
         clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
         clone.enPassantPawn = Vector.fromNonExistent()
         clone.halfClock = self.halfClock + 1 
@@ -109,8 +113,8 @@ class Position():
         source = move.source
         destination = move.destination
         clone = self.clone()
-        clone.boardState.squares[destination.y][destination.x] = self.boardState.squares[source.y][source.x]
-        clone.boardState.squares[source.y][source.x] = "-"
+        clone.setPiece(move.destination, self.pieceAt(source))
+        clone.setPiece(source, "-")
         clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
         clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source.y) == 2) else Vector.fromNonExistent()
         clone.halfClock = self.halfClock + 1 if (not move.isCapture) else 0
