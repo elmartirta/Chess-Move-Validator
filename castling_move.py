@@ -4,9 +4,25 @@ from enum import Enum
 import re
 
 class CastlingMove(Move):
-    #TODO: SMELL - Line Length
-    def __init__(self, pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece, castlingDirection, rookLocation):
-        super().__init__(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+    def __init__(
+            self, 
+            pieceType, 
+            source, 
+            destination, 
+            isCapture, 
+            isCheck, 
+            isCheckmate, 
+            promotionPiece, 
+            castlingDirection, 
+            rookLocation):
+        super().__init__(
+            pieceType, 
+            source, 
+            destination, 
+            isCapture, 
+            isCheck, 
+            isCheckmate, 
+            promotionPiece)
         self.castlingDirection = castlingDirection
         self.rookLocation = rookLocation
     def clone(self):
@@ -27,26 +43,20 @@ class CastlingMove(Move):
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
         if castlingMatch:
             e = Move.fromEmpty()
-            pieceType = "K"
-            source = e.source
-            destination = e.destination
-            isCapture = e.isCapture
-            isCheck = e.isCheck
-            isCheckmate = e.isCheckmate
-            promotionPiece = e.promotionPiece
-            #TODO: SMELL - Line Length
-            castlingDirection = CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE
-            isCheck = "+" in string
-            isCheckmate = "#" in string
-            rookLocation = Vector.fromNonExistent()
-            #TODO: SMELL - Line Length
-            return CastlingMove(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece, castlingDirection, rookLocation)
+            return CastlingMove(
+                "K", 
+                e.source, 
+                e.destination, 
+                "x" in string, 
+                "+" in string, 
+                "#" in string, 
+                e.promotionPiece, 
+                CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE, 
+                Vector.fromNonExistent())
         else:
             return Move.fromAlgebreicNotation(string)
     def toString(self):
         return "Castling"+super().toString()
-
-
 
 class CastlingDirection(Enum):
     KINGSIDE = 1

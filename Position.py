@@ -5,8 +5,14 @@ from vector import Vector
 from castling_move import CastlingDirection
 
 class Position():
-    #TODO: SMELL - Line Length
-    def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
+    def __init__(
+            self, 
+            boardState=None, 
+            gameStatus=None, 
+            castlingRights=None, 
+            enPassantPawn=None, 
+            halfClock=None, 
+            fullClock=None):
         self.boardState = boardState or BoardState.fromEmpty()
         self.gameStatus = gameStatus or GameStatus.WHITE_TO_MOVE
         self.castlingRights = castlingRights or CastlingRights.fromAllTrue()
@@ -165,8 +171,12 @@ class GameStatus(Enum):
     STALEMATE = 5
 
 class CastlingRights():
-    #TODO: SMELL - Line Length
-    def __init__(self, whiteKingSide=True,whiteQueenSide=True,blackKingSide=True,blackQueenSide=True):
+    def __init__(
+            self, 
+            whiteKingSide=True,
+            whiteQueenSide=True,
+            blackKingSide=True,
+            blackQueenSide=True):
         self.whiteKingSide = whiteKingSide
         self.whiteQueenSide = whiteQueenSide
         self.blackKingSide = blackKingSide

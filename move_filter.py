@@ -17,7 +17,6 @@ class MoveFilter():
     def getPostMoveFilters():
         return [MoveFilter.checkIfOppositeKingInCheck]
     def checkSourcePiece(position, move):
-        #TODO: SMELL - Line Length
         if move.source.x == None or move.source.y == None:
             raise FilterError(
                     """Which Piece? The Source file is not instantiated, 
