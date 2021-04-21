@@ -21,6 +21,7 @@ class MoveFilter():
             MoveFilter.checkIfOppositeKingInCheck
         ]
     def checkSourcePiece(position, move):
+        #TODO: SMELL - Line Length
         if move.source.x == None or move.source.y == None:
             raise FilterError(move, "Which Piece? The Source file is not instantiated, leading to ambiguity.")
         elif position.pieceIsWhite(move.source) != position.isWhiteToMove():
@@ -34,12 +35,14 @@ class MoveFilter():
             return FilterResult.accept(move)
 
     def checkIfMoveWithinLegalBounds(position, move):
+        #TODO: SMELL - Line Length
         if not move.destination.isInsideChessboard():
             return FilterResult.fail(move, "Out of Bounds: The move's destination is not within the legal bounds of an 8x8 chessboard")
         else:
             return FilterResult.accept(move)
  
     def checkIfDestinationIsOccupied(position, move):
+        #TODO: SMELL - Line Length
         if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove()):
             return FilterResult.fail(move, "Friendly Fire: The move involves a piece trying to capture a target of the same color.")
         elif move.isCapture and position.pieceAt(move.destination) == "-":
@@ -73,6 +76,7 @@ class MoveFilter():
         return MoveFilter.checkIfKingInCheck(position, move, color)
         
     def checkIfKingInCheck(position, move, kingColor):
+        #TODO: SMELL - Line Length
         if not any(("K" if kingColor == "WHITE" else "k") in row for row in position.boardState.squares):
             raise FilterError(move, "There is no king of the right color on the board")
         kingLocations = position.findAll("K" if kingColor == "WHITE" else "k")
@@ -90,7 +94,7 @@ class MoveFilter():
             for rook in orthogonals:
                 if rook != king and isEnemy(rook, "R"): 
                     return FilterResult.fail(move, "The king on %s is being checked by the rook on %s" % (king, rook))
-
+            #TODO: SMELL - Line Length
             posPos = [king + Vector( i, i) for i in range(1,8) if (king + Vector( i, i)).isInsideChessboard()]
             posNeg = [king + Vector(-i, i) for i in range(1,8) if (king + Vector(-i, i)).isInsideChessboard()]
             NegPos = [king + Vector( i,-i) for i in range(1,8) if (king + Vector( i,-i)).isInsideChessboard()]
@@ -119,7 +123,7 @@ class MoveFilter():
             for knight in knightSquares:
                 if isEnemy(knight, "n"):
                     return FilterResult.fail(move, "The king on %s is being checked by the knight on %s" % (king, knight))
-
+            #TODO: SMELL - Line Length
             blackPawns = [king + deltaP for deltaP in [Vector(1, 1), Vector(-1, 1)] if (king + deltaP).isInsideChessboard()]
             whitePawns = [king + deltaP for deltaP in [Vector(1,-1), Vector(-1,-1)] if (king + deltaP).isInsideChessboard()]
             pawns = blackPawns if kingColor == "WHITE" else whitePawns
@@ -149,4 +153,5 @@ class FilterResult():
 
 class FilterError(ValueError):
     def __init__(self, move, reason):
+        #TODO: SMELL - Line Length
         super().__init__("The move %s is unable to be properly filtered, because: %s \n %s" % (move, reason, position.boardState.toString()))

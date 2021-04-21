@@ -92,6 +92,7 @@ class MoveGenerator():
             rook = None
             kingPos = homeRow.index(kingSymbol)
             king = Vector(kingPos, homeIndex)
+            #TODO: SMELL - Line Length
             edge = Vector(7, homeIndex) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(0, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
                 if position.pieceTypeOf(rookCandidate) == "R" \
@@ -100,10 +101,12 @@ class MoveGenerator():
                     break        
         output = move.clone()
         output.source = king
+        #TODO: SMELL - Line Length
         output.destination = king + (Vector(2,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-2, 0))
         output.rookLocation = rook
         return moveList.append(output)
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
+        #TODO: SMELL - Line Length
         super().__init__("Error trying to parse position \"%s\" and move %s. %s" % (positionFEN, moveAN, errorMessage))

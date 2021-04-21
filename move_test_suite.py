@@ -35,6 +35,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == True)        
         return True
     def test2():
+        #TODO: SMELL - Line Length
         m = Move.fromAN("Rba1")
         assert(m.destination == Vector.fromAN("a1") and m.pieceType == "R" and m.source == Vector.fromAN("b"))
         assert(m.isCapture == False)
@@ -52,6 +53,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == True)
         return True
     def test3():
+        #TODO: SMELL - Line Length
         m = Move.fromAN("R1a1")
         assert(m.destination == Vector.fromAN("a1") and m.pieceType == "R" and m.source == Vector.fromAN("1"))
         assert(m.isCapture == False)
@@ -69,6 +71,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == True)
         return True
     def test4():
+        #TODO: SMELL - Line Length
         m = Move.fromAN("Rb1a2")
         assert(m.pieceType == "R" and m.destination == Vector.fromAN("a2") and m.source == Vector.fromAN("b1"))
         assert(m.isCapture == False)
@@ -98,6 +101,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == False)
         return True
     def test6():
+        #TODO: SMELL - Line Length
         m = Move.fromAN("dxe4#")        
         assert(m.pieceType == "P" and m.destination == Vector.fromAN("e4") and m.source == Vector.fromAN("d"))
         assert(m.isCapture == True)
@@ -125,6 +129,7 @@ class MoveTestSuite():
         assert(m.promotionPiece == "N")
         return True
     def test8():
+        #TODO: SMELL - Line Length
         m = Move.fromAN("bxc8=B")
         assert(m.pieceType == "P" and m.destination == Vector.fromAN("c8") and m.source == Vector.fromAN("c"))
         assert(m.isCapture == False)

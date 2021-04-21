@@ -140,6 +140,7 @@ class MoveVerifierTestSuite():
             MoveVerifierTestSuite.kingIsStuck(blackKingsJail)
         ])
     def test9():
+        #TODO: SMELL - Line Length
         kingsIndianAttack = Position.fromFEN("r1bqkbnr/pp1npppp/2p5/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 2 4")
         newPos = MoveVerifierTestSuite.verifyGame(kingsIndianAttack, [CastlingMove.fromAN("O-O")]).updatedPosition
         assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "R"))

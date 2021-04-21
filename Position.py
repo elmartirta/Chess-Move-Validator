@@ -5,6 +5,7 @@ from vector import Vector
 from castling_move import CastlingDirection
 
 class Position():
+    #TODO: SMELL - Line Length
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
         self.boardState = boardState or BoardState.fromEmpty()
         self.gameStatus = gameStatus or GameStatus.WHITE_TO_MOVE
@@ -32,6 +33,7 @@ class Position():
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
+        #TODO: SMELL - Line Length
         if (string == None): 
             raise FENParsingError(string, "String is equal to None")
         if (string == ""): 
@@ -64,6 +66,7 @@ class Position():
                     pos.boardState.addPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
                     pieceIndex += 1
                 else:
+                    #TODO: SMELL - Line Length
                     raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
 
         pos.gameStatus = GameStatus.WHITE_TO_MOVE if activeColorField == "w" else GameStatus.BLACK_TO_MOVE
@@ -93,12 +96,14 @@ class Position():
     def castle(self, move):
         return self.halfCastle(move).finishCastle(move)
     def halfCastle(self, move):
+        #TODO: SMELL - Line Length
         clone = self.clone()
         midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
         clone.setPiece(midStep, self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     def finishCastle(self, move):
+        #TODO: SMELL - Line Length
         clone = self.clone()
         midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
         clone.setPiece(move.destination, self.pieceAt(midStep))
@@ -110,6 +115,7 @@ class Position():
         clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
         return clone
     def next(self, move):
+        #TODO: SMELL - Line Length
         source = move.source
         destination = move.destination
         clone = self.clone()
@@ -128,6 +134,7 @@ class Position():
                     result.append(Vector(x,y))
         return result
 class FENParsingError(ValueError):
+    #TODO: SMELL - Line Length
     def __init__(self, FENString, message):
         super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
 
@@ -158,6 +165,7 @@ class GameStatus(Enum):
     STALEMATE = 5
 
 class CastlingRights():
+    #TODO: SMELL - Line Length
     def __init__(self, whiteKingSide=True,whiteQueenSide=True,blackKingSide=True,blackQueenSide=True):
         self.whiteKingSide = whiteKingSide
         self.whiteQueenSide = whiteQueenSide

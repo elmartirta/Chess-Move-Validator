@@ -185,6 +185,7 @@ class MoveGeneratorTestSuite():
         return True
     def test11():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
+        #TODO: SMELL - Line Length
         check = lambda pos, move: res(pos, move) != None and isinstance(res(pos, move)[0], CastlingMove)
         assert(res("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", "O-O"))
         assert(res("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", "O-O-O"))

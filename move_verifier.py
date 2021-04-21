@@ -32,6 +32,7 @@ class MoveVerifier():
                    position, move, "Illegal Move: The move %s is illegal because %s" % (move, results[0].reason)
                 )
             else: 
+                #TODO: SMELL - Line Length
                 return VerificationResult.fail(
                     position, move, "No Legal Moves: The move %s is illegal because %s" % (move, [result.reason for result in results])
                 )

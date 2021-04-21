@@ -6,6 +6,7 @@ def main():
   chessboard = Position.fromStartingPosition()
   chessboard.boardState.toString()
   
+  #TODO: SMELL - Unused Commented Code
   """
   #Ask for tile selection
   x = int(input("What is the X Vector of the piece you want to select?\n"))

@@ -4,6 +4,7 @@ from enum import Enum
 import re
 
 class CastlingMove(Move):
+    #TODO: SMELL - Line Length
     def __init__(self, pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece, castlingDirection, rookLocation):
         super().__init__(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
         self.castlingDirection = castlingDirection
@@ -33,10 +34,12 @@ class CastlingMove(Move):
             isCheck = e.isCheck
             isCheckmate = e.isCheckmate
             promotionPiece = e.promotionPiece
+            #TODO: SMELL - Line Length
             castlingDirection = CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE
             isCheck = "+" in string
             isCheckmate = "#" in string
             rookLocation = Vector.fromNonExistent()
+            #TODO: SMELL - Line Length
             return CastlingMove(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece, castlingDirection, rookLocation)
         else:
             return Move.fromAlgebreicNotation(string)

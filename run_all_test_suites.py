@@ -45,6 +45,7 @@ def runTests():
                     else:
                         summaryString += (colorama.Fore.CYAN+"u"+colorama.Style.RESET_ALL)
             except Exception as e:
+                #TODO: SMELL - Line Length
                 allTestsPassed = False
                 print("["+colorama.Fore.YELLOW+"EXPT"+colorama.Style.RESET_ALL+"] %2d : !!!!!! Exception !!!!!!" % ( test_number))
                 print(colorama.Fore.YELLOW)
@@ -53,12 +54,14 @@ def runTests():
                 summaryString += colorama.Fore.YELLOW+"x"+colorama.Style.RESET_ALL
 
             finally:
+                #TODO: SMELL - Line Length
                 print("[%s] %2d : %s" % (
                     colorama.Fore.GREEN+"PASS"+colorama.Style.RESET_ALL if result == True else colorama.Fore.RED+"FAIL"+colorama.Style.RESET_ALL if result == False else colorama.Fore.CYAN+"UNDF"+colorama.Style.RESET_ALL, 
                     test_number, 
                     test["name"])
                 )
     print(colorama.Fore.GREEN if allTestsPassed == True else colorama.Fore.RED)
+    #TODO: SMELL - Line Length
     print("%d out of %d tests passed! %s\n (%d percent success rate)" % (testsPassed, testsRun, colorama.Style.RESET_ALL, (testsPassed * 100 / testsRun)))
     print("[%s]" % summaryString)
     print()

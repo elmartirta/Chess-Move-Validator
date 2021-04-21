@@ -2,6 +2,7 @@ import re
 from vector import Vector
 
 class Move():
+    #TODO: SMELL - Line Length
     def __init__(self, pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece):
         self.pieceType = pieceType
         self.source = source

@@ -57,6 +57,7 @@ class VectorTestSuite:
         assert(Vector.fromAN("b3") + Vector(1, -1) == Vector.fromAN("c2"))
         assert(Vector.fromAN("h8") + Vector(-2,-2) == Vector.fromAN("f6"))
         assert(Vector.fromAN("b2") + Vector.fromAN("b2") == Vector(2,2))
+        #TODO: SMELL - Line Length
         assert(sum([Vector.fromAN("b2"),Vector.fromAN("b2"),Vector.fromAN("b2")]) == Vector.fromAN("d4"))
         return True
     def test6():
