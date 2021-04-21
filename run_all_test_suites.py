@@ -3,7 +3,7 @@ from move_test_suite import MoveTestSuite
 from position_test_suite import PositionTestSuite
 from move_generator_test_suite import MoveGeneratorTestSuite
 from move_verifier_test_suite import MoveVerifierTestSuite
-import colorama
+from colorama import Fore, Style
 import traceback
 
 
@@ -37,32 +37,42 @@ def runTests():
                 result = test["runnable"]()
                 if result == False:
                     allTestsPassed = False
-                    summaryString += (colorama.Fore.RED+"-"+colorama.Style.RESET_ALL)
+                    summaryString += Fore.RED + "-" + Style.RESET_ALL
                 else:
                     testsPassed += 1
                     if result == True:
-                        summaryString += (colorama.Fore.GREEN+"+"+colorama.Style.RESET_ALL)
+                        summaryString += Fore.GREEN + "+" + Style.RESET_ALL
                     else:
-                        summaryString += (colorama.Fore.CYAN+"u"+colorama.Style.RESET_ALL)
+                        summaryString += Fore.CYAN + "u" + Style.RESET_ALL
             except Exception as e:
-                #TODO: SMELL - Line Length
                 allTestsPassed = False
-                print("["+colorama.Fore.YELLOW+"EXPT"+colorama.Style.RESET_ALL+"] %2d : !!!!!! Exception !!!!!!" % ( test_number))
-                print(colorama.Fore.YELLOW)
+                summaryString += Fore.YELLOW+"x"+Style.RESET_ALL
+                print(Fore.YELLOW + "=== !!!!!! Exception !!!!!! ===")
                 traceback.print_exc()
-                print(colorama.Style.RESET_ALL)
-                summaryString += colorama.Fore.YELLOW+"x"+colorama.Style.RESET_ALL
+                print(Style.RESET_ALL)
+                
 
             finally:
-                #TODO: SMELL - Line Length
+                if result == True:
+                    resText = Fore.GREEN + "PASS"
+                elif result == False:
+                    resText = Fore.RED + "FAIL"
+                else:
+                    resText = Fore.CYAN + "UNDF" 
                 print("[%s] %2d : %s" % (
-                    colorama.Fore.GREEN+"PASS"+colorama.Style.RESET_ALL if result == True else colorama.Fore.RED+"FAIL"+colorama.Style.RESET_ALL if result == False else colorama.Fore.CYAN+"UNDF"+colorama.Style.RESET_ALL, 
+                    resText + Style.RESET_ALL,
                     test_number, 
                     test["name"])
                 )
-    print(colorama.Fore.GREEN if allTestsPassed == True else colorama.Fore.RED)
-    #TODO: SMELL - Line Length
-    print("%d out of %d tests passed! %s\n (%d percent success rate)" % (testsPassed, testsRun, colorama.Style.RESET_ALL, (testsPassed * 100 / testsRun)))
+    print(
+        "%s%d out of %d tests passed! %s\n (%d percent success rate)" 
+        % (
+            Fore.GREEN if allTestsPassed == True else Fore.RED,
+            testsPassed, 
+            testsRun, 
+            Style.RESET_ALL, 
+            (testsPassed * 100 / testsRun)
+        ))
     print("[%s]" % summaryString)
     print()
     

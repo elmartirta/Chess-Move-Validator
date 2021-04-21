@@ -3,8 +3,10 @@ class Vector():
         self.x = x
         self.y = y
     def __add__(self, other):
-        #TODO: SMELL - Line Length
-        if not isinstance(other, Vector): raise TypeError("Vector addition must use vectors, not %s and %s" % (str(self), str(other)))
+        if not isinstance(other, Vector): 
+            raise TypeError(
+                "Vector addition must use vectors, not %s and %s"
+                 % (str(self), str(other)))
         return Vector(self.x + other.x, self.y + other.y)
     def __radd__(self, other):
         if other == 0:
@@ -12,17 +14,19 @@ class Vector():
         else:
             return self.__add__(other)
     def __sub__(self, other):
-        if not isinstance(other, Vector): raise TypeError("Vector subtraction must use vectors")
+        if not isinstance(other, Vector):
+             raise TypeError("Vector subtraction must use vectors")
         return Vector(self.x - other.x, self.y - other.y)
     def __mul__(self, scalar):
-        #TODO: SMELL - Line Length
-        if not isinstance(scalar, int): raise TypeError("Vector scalar multiplication must use an int")
+        if not isinstance(scalar, int): 
+            raise TypeError("Vector scalar multiplication must use an int")
         return Vector(self.x * scalar, self.y * scalar)
     def __rmul__(self, scalar):
         return (self * scalar)
     def __eq__(self, other):
         if self is None or other is None: return False
-        if not isinstance(other, Vector): raise TypeError("Vector equality must use vectors")
+        if not isinstance(other, Vector): 
+            raise TypeError("Vector equality must use vectors")
         return self.x == other.x and self.y == other.y
     def __repr__(self):
         return "Vector(%s, %s)" % (str(self.x), str(self.y))

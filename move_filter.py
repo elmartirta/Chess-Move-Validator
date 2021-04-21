@@ -106,7 +106,7 @@ class MoveFilter():
             isEnemy = lambda enemy, enemyType: \
                 position.pieceTypeIs(enemy, enemyType) \
                 and position.pieceIsWhite(enemy) != position.pieceIsWhite(king) \
-                and all(position.pieceAt(tile) == "-" for tile in king.between(enemy))
+                and all(position.pieceAt(tile) == "-" for tile in king.between(enemy)) 
 
             xLine = [Vector(king.x, y) for y in range(0,8)]
             yLine = [Vector(x, king.y) for x in range(0,8)]

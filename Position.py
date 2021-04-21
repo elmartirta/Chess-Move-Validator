@@ -140,9 +140,10 @@ class Position():
                     result.append(Vector(x,y))
         return result
 class FENParsingError(ValueError):
-    #TODO: SMELL - Line Length
     def __init__(self, FENString, message):
-        super().__init__("\n\nError: The FEN string %s cannot be parsed:\n\t%s" %(FENString, message))
+        super().__init__(
+            "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
+            %(FENString, message))
 
 class BoardState():
     def __init__(self):
