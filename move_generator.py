@@ -2,7 +2,7 @@ from position import Position
 from position import GameStatus
 from move import Move
 from vector import Vector 
-from castling_move import CastlingMove, CastlingDirection
+from castling_move import CastlingMove
 
 class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
@@ -66,14 +66,14 @@ class MoveGenerator():
         destination = move.destination
       
         deltas = []
-        dy = -1 if position.gameStatus == GameStatus.WHITE_TO_MOVE else 1
+        dy = -1 if position.gameStatus.isWhiteToMove() else 1
         if move.isCapture:
             deltas.append(Vector(-1,dy))
             deltas.append(Vector( 1,dy))
         else:
             deltas.append(Vector(0,dy))
-            if (destination.y == 3 and position.gameStatus == GameStatus.WHITE_TO_MOVE) or \
-                    (destination.y == 4 and position.gameStatus == GameStatus.BLACK_TO_MOVE):
+            if (destination.y == 3 and position.gameStatus.isWhiteToMove()) or \
+                    (destination.y == 4 and not position.gameStatus.isWhiteToMove()):
                 deltas.append(Vector(0,2*dy))
 
         for delta in deltas:
@@ -93,7 +93,7 @@ class MoveGenerator():
             kingPos = homeRow.index(kingSymbol)
             king = Vector(kingPos, homeIndex)
             #TODO: SMELL - Line Length
-            edge = Vector(7, homeIndex) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(0, homeIndex)
+            edge = Vector(7, homeIndex) if move.isKingsideCastling() else Vector(0, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
                 if position.pieceTypeOf(rookCandidate) == "R" \
                         and position.pieceIsWhite(rookCandidate) == (position.gameStatus == GameStatus.WHITE_TO_MOVE):
@@ -102,7 +102,7 @@ class MoveGenerator():
         output = move.clone()
         output.source = king
         #TODO: SMELL - Line Length
-        output.destination = king + (Vector(2,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-2, 0))
+        output.destination = king + (Vector(2,0) if move.isKingsideCastling() else Vector(-2, 0))
         output.rookLocation = rook
         return moveList.append(output)
 

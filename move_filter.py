@@ -1,7 +1,7 @@
 from move import Move
 from position import *
 from vector import Vector 
-from castling_move import CastlingMove, CastlingDirection
+from castling_move import CastlingMove
 
 class MoveFilter():
     def getPreMoveFilters():
@@ -64,7 +64,7 @@ class MoveFilter():
                     and the destination is not empty""",
                 move)
         elif isinstance(move, CastlingMove):
-            midStep = move.source + (Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-1,0))
+            midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
             if not position.pieceAt(midStep) == "-":
                 return FilterResult.fail(
                         """Castling Blocked: There is a piece between the 
@@ -87,11 +87,11 @@ class MoveFilter():
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
-        color = "WHITE" if position.gameStatus == GameStatus.WHITE_TO_MOVE else "BLACK"
+        color = "WHITE" if position.gameStatus.isWhiteToMove() else "BLACK"
         return MoveFilter.checkIfKingInCheck(position, move, color)
 
     def checkIfOppositeKingInCheck(position, move):
-        color = "BLACK" if position.gameStatus == GameStatus.WHITE_TO_MOVE else "WHITE"
+        color = "BLACK" if position.gameStatus.isWhiteToMove() else "WHITE"
         return MoveFilter.checkIfKingInCheck(position, move, color)
         
     def checkIfKingInCheck(position, move, kingColor):

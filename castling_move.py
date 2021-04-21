@@ -55,6 +55,8 @@ class CastlingMove(Move):
                 Vector.fromNonExistent())
         else:
             return Move.fromAlgebreicNotation(string)
+    def isKingsideCastling(self):
+        return self.castlingDirection == CastlingDirection.KINGSIDE
     def toString(self):
         return "Castling"+super().toString()
 

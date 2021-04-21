@@ -2,7 +2,6 @@ import random
 import re
 from enum import Enum
 from vector import Vector
-from castling_move import CastlingDirection
 
 class Position():
     def __init__(
@@ -104,21 +103,21 @@ class Position():
     def halfCastle(self, move):
         #TODO: SMELL - Line Length
         clone = self.clone()
-        midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
+        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(1,0))
         clone.setPiece(midStep, self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     def finishCastle(self, move):
         #TODO: SMELL - Line Length
         clone = self.clone()
-        midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
+        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(1,0))
         clone.setPiece(move.destination, self.pieceAt(midStep))
         clone.setPiece(midStep, self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
-        clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
+        clone.gameStatus = GameStatus.BLACK_TO_MOVE if self.isWhiteToMove() else GameStatus.WHITE_TO_MOVE
         clone.enPassantPawn = Vector.fromNonExistent()
         clone.halfClock = self.halfClock + 1 
-        clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
+        clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
         return clone
     def next(self, move):
         #TODO: SMELL - Line Length
@@ -127,10 +126,10 @@ class Position():
         clone = self.clone()
         clone.setPiece(move.destination, self.pieceAt(source))
         clone.setPiece(source, "-")
-        clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
-        clone.enPassantPawn = move.destination if (move.pieceType == "P" and abs(move.destination.y - move.source.y) == 2) else Vector.fromNonExistent()
-        clone.halfClock = self.halfClock + 1 if (not move.isCapture) else 0
-        clone.fullClock = self.fullClock + 1 if self.gameStatus == GameStatus.BLACK_TO_MOVE else self.fullClock
+        clone.gameStatus = GameStatus.BLACK_TO_MOVE if self.isWhiteToMove() else GameStatus.WHITE_TO_MOVE
+        clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else Vector.fromNonExistent()
+        clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
+        clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
         return clone
     def findAll(self, pieceType):
         result = []
