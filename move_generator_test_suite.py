@@ -13,7 +13,7 @@ class MoveGeneratorTestSuite():
             {"runnable": MoveGeneratorTestSuite.test7, "name": "Generate lots of simple pawn moves"},
             {"runnable": MoveGeneratorTestSuite.test8, "name": "Generate ambiguous rook moves"},
             {"runnable": MoveGeneratorTestSuite.test9, "name": "Generate ambiguous bishop moves"},
-            #{"runnable": MoveGeneratorTestSuite.test10, "name": "Generate ambiguous queen moves"},
+            {"runnable": MoveGeneratorTestSuite.test10, "name": "Generate ambiguous queen moves"},
         ]
     def test1():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
@@ -170,6 +170,22 @@ class MoveGeneratorTestSuite():
         assert(check2("7B/4k3/8/8/8/8/1BK5/8 w - - 0 1", "Bd4"))
         assert(check2("8/4k3/8/8/8/8/1BK5/B7 w - - 0 1", "Bd4"))
         return True
+    def test10():
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
+        check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
+        check4 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 4
+        assert(check2("3Q4/6k1/8/8/8/7Q/1K6/8 w - - 0 1", "Qd3"))
+        assert(check2("3Q4/6k1/8/8/8/7Q/1K6/8 w - - 0 1", "Qh8"))
+        assert(check2("3Q4/6k1/8/8/8/7Q/1K6/8 w - - 0 1", "Qh4"))
+        assert(check2("3Q4/6k1/8/8/8/7Q/1K6/8 w - - 0 1", "Qd7"))
+        assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qd3"))
+        assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qf5"))
+        return True
+
+
+        
+
+
         
 
 
