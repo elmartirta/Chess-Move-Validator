@@ -8,7 +8,7 @@ class Vector():
         self.x = x
         self.y = y
     def __add__(self, other):
-        if not isinstance(other, Vector): raise TypeError("Vector addition must use vectors")
+        if not isinstance(other, Vector): raise TypeError("Vector addition must use vectors, not %s and %s" % (str(self), str(other)))
         return Vector(self.x + other.x, self.y + other.y)
     def __radd__(self, other):
         if other == 0:
@@ -49,8 +49,8 @@ class Vector():
     def toAN(self):
         return self.toAlgebreicNotation()
     def toAlgebreicNotation(self):
-        sourceRank = chr(self.x+97) if self.x else ""
-        sourceFile = str(self.y+1) if self.y else ""
+        sourceRank = chr(self.x+97) if not self.x is None else ""
+        sourceFile = str(self.y+1) if not self.y is None else ""
         return sourceRank + sourceFile
     def fromNonExistent():
         return Vector(None, None)

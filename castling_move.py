@@ -8,7 +8,18 @@ class CastlingMove(Move):
         super().__init__(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
         self.castlingDirection = castlingDirection
         self.rookLocation = rookLocation
-    
+    def clone(self):
+        return CastlingMove(
+            self.pieceType,
+            self.source,
+            self.destination,
+            self.isCapture,
+            self.isCheck,
+            self.isCheckmate,
+            self.promotionPiece,
+            self.castlingDirection,
+            self.rookLocation
+        )
     def fromAN(string):
         return CastlingMove.fromAlgebreicNotation(string)
     def fromAlgebreicNotation(string):
@@ -29,6 +40,8 @@ class CastlingMove(Move):
             return CastlingMove(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece, castlingDirection, rookLocation)
         else:
             return Move.fromAlgebreicNotation(string)
+    def toString(self):
+        return "Castling"+super().toString()
 
 
 

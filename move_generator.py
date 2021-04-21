@@ -6,7 +6,7 @@ from castling_move import CastlingMove, CastlingDirection
 
 class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
-        return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), Move.fromAN(moveAN))
+        return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), CastlingMove.fromAN(moveAN))
     def generateMoveList(position, move):
         moveList = []
         if move.pieceType == None: 
@@ -85,17 +85,19 @@ class MoveGenerator():
         homeRow = [Vector(x, homeIndex) for x in range(0,8)]
         homeRow = [position.pieceTypeOf(tile) for tile in homeRow]
         kingSymbol = "K" if position.gameStatus == GameStatus.WHITE_TO_MOVE else "k"
+        king = Vector.fromNonExistent()
         if not kingSymbol in homeRow:
             king = None
         else:
             rook = None
             kingPos = homeRow.index(kingSymbol)
             king = Vector(kingPos, homeIndex)
-            edge = Vector(0, homeIndex) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(7, homeIndex)
+            edge = Vector(7, homeIndex) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(0, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
-                if position.pieceTypeOf(rookCandidate) == "R" and position.pieceIsWhite(rookCandidate) == (position.gameStatus == GameStatus.WHITE_TO_MOVE):
+                if position.pieceTypeOf(rookCandidate) == "R" \
+                        and position.pieceIsWhite(rookCandidate) == (position.gameStatus == GameStatus.WHITE_TO_MOVE):
                     rook = rookCandidate
-                    break
+                    break        
         output = move.clone()
         output.source = king
         output.destination = king + (Vector(2,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-2, 0))

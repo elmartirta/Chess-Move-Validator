@@ -53,7 +53,7 @@ class MoveVerifier():
         checkAllFilters(MoveFilter.getPreMoveFilters(), position, move)
 
         if isinstance(move, CastlingMove):
-            halfPosition = postion.halfCastle(move)
+            halfPosition = position.halfCastle(move)
             checkAllFilters(MoveFilter.getMidCastleFilters(), position, move)
             newPosition = halfPosition.finishCastle(move)
         else:

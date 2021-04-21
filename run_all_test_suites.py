@@ -40,10 +40,10 @@ def runTests():
                     summaryString += (colorama.Fore.RED+"-"+colorama.Style.RESET_ALL)
                 else:
                     testsPassed += 1
-                    if result is None:
-                        summaryString += (colorama.Fore.CYAN+"u"+colorama.Style.RESET_ALL)
-                    else:
+                    if result == True:
                         summaryString += (colorama.Fore.GREEN+"+"+colorama.Style.RESET_ALL)
+                    else:
+                        summaryString += (colorama.Fore.CYAN+"u"+colorama.Style.RESET_ALL)
             except Exception as e:
                 allTestsPassed = False
                 print("["+colorama.Fore.YELLOW+"EXPT"+colorama.Style.RESET_ALL+"] %2d : !!!!!! Exception !!!!!!" % ( test_number))

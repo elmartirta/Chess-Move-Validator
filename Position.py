@@ -2,6 +2,7 @@ import random
 import re
 from enum import Enum
 from vector import Vector
+from castling_move import CastlingDirection
 
 class Position():
     def __init__(self, boardState=None, gameStatus=None, castlingRights=None, enPassantPawn=None, halfClock=None, fullClock=None):
@@ -89,19 +90,16 @@ class Position():
         return self.halfCastle(move).finishCastle(move)
     def halfCastle(self, move):
         clone = self.clone()
-        midStep = move.source + Vector(1,0) if move.castlingDirection == castlingDirection.KINGSIDE else move.source - Vector(1,0)
-        clone.boardState[midstep.y][midstep.x] = self.boardState[source.y][source.x]
-        clone.boardState[source.y][source.x] == "-"
+        midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
+        clone.boardState.squares[midStep.y][midStep.x] = self.boardState.squares[move.source.y][move.source.x]
+        clone.boardState.squares[move.source.y][move.source.x] = "-"
         return clone
     def finishCastle(self, move):
         clone = self.clone()
-        midStep = move.source + Vector(1,0) if move.castlingDirection == castlingDirection.KINGSIDE else move.source - Vector(1,0)
-        print(destination.toAN())
-        print(midStep.toAN())
-        print(move.rookLocation.toAN())
-        clone.boardState[destintation.y][destination.x] = self.pieceAt(midStep)
-        clone.boardState[midStep.y][midStep.x] = self.pieceAt(move.rookLocation)
-        clone.boardState[move.rookLocation.y][move.rookLocation.x] = "-"
+        midStep = move.source + Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else move.source - Vector(1,0)
+        clone.boardState.squares[move.destination.y][move.destination.x] = self.pieceAt(midStep)
+        clone.boardState.squares[midStep.y][midStep.x] = self.pieceAt(move.rookLocation)
+        clone.boardState.squares[move.rookLocation.y][move.rookLocation.x] = "-"
         clone.gameStatus = GameStatus.WHITE_TO_MOVE if self.gameStatus == GameStatus.BLACK_TO_MOVE else GameStatus.BLACK_TO_MOVE
         clone.enPassantPawn = Vector.fromNonExistent()
         clone.halfClock = self.halfClock + 1 

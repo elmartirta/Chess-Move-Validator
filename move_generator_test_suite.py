@@ -1,5 +1,6 @@
 from position import Position
 from move_generator import MoveGenerator
+from castling_move import CastlingMove
 
 class MoveGeneratorTestSuite():
     def getTests():
@@ -14,6 +15,7 @@ class MoveGeneratorTestSuite():
             {"runnable": MoveGeneratorTestSuite.test8, "name": "Generate ambiguous rook moves"},
             {"runnable": MoveGeneratorTestSuite.test9, "name": "Generate ambiguous bishop moves"},
             {"runnable": MoveGeneratorTestSuite.test10, "name": "Generate ambiguous queen moves"},
+            {"runnable": MoveGeneratorTestSuite.test11, "name": "Generate castling moves"}
         ]
     def test1():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
@@ -181,6 +183,14 @@ class MoveGeneratorTestSuite():
         assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qd3"))
         assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qf5"))
         return True
+    def test11():
+        res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
+        check = lambda pos, move: res(pos, move) != None and isinstance(res(pos, move)[0], CastlingMove)
+        assert(res("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", "O-O"))
+        assert(res("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", "O-O-O"))
+        return True
+
+
 
 
         

@@ -73,16 +73,16 @@ class MoveVerifierTestSuite():
             MoveVerifierTestSuite.verifyIllegal(position, [Move.fromAN("Ke3")])
         ])
     def test1():
-        return MoveVerifierTestSuite.verifyGame(Position.fromStartingPosition(), [
+        return all([MoveVerifierTestSuite.verifyGame(Position.fromStartingPosition(), [
             Move.fromAN("e4")
-        ])
+        ])])
     def test2():
-        return MoveVerifierTestSuite.verifyGame(Position.fromStartingPosition(), [
+        return all([MoveVerifierTestSuite.verifyGame(Position.fromStartingPosition(), [
             Move.fromAN("e4"),
             Move.fromAN("e5"),
-        ])
+        ])])
     def test3():
-        return MoveVerifierTestSuite.verifyGame(Position.fromStartingPosition(), [
+        return all([MoveVerifierTestSuite.verifyGame(Position.fromStartingPosition(), [
             Move.fromAN("e4"),
             Move.fromAN("e5"),
             Move.fromAN("Ke2"),
@@ -93,7 +93,7 @@ class MoveVerifierTestSuite():
             Move.fromAN("Ke7"),
             Move.fromAN("Ke1"),
             Move.fromAN("Ke8")
-        ])
+        ])])
     def test4():
         whiteKingsJail = Position.fromFEN("8/6k1/2r5/5r2/3K4/1r6/4r3/8 w - - 0 1")
         blackKingsJail = Position.fromFEN("8/6K1/2R5/5R2/3k4/1R6/4R3/8 b - - 0 1")
@@ -140,7 +140,6 @@ class MoveVerifierTestSuite():
     def test9():
         kingsIndianAttack = Position.fromFEN("r1bqkbnr/pp1npppp/2p5/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 2 4")
         newPos = MoveVerifierTestSuite.verifyGame(kingsIndianAttack, [CastlingMove.fromAN("O-O")]).updatedPosition
-        print(newPos.boardState.toString())
         assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "R"))
         assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "K"))
         assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "-"))
