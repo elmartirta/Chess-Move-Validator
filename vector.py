@@ -51,12 +51,12 @@ class Vector():
         return sourceRank + sourceFile
     def fromNonExistent():
         return Vector(None, None)
-    def plus(self, other):
-        return self + other
-    def minus(self, other):
-        return self - other
-    def equals(self, other):
-        return self == other
+    def plus(self, x, y):
+        return Vector(self.x + x, self.y + y)
+    def minus(self, x, y):
+        return Vector(self.x - x, self.y - y)
+    def equals(self, x, y):
+        return self == Vector(x,y)
     def times(self, scalar):
         return self * scalar
     def toString(self):

@@ -13,46 +13,64 @@ class MoveFilter():
             MoveFilter.checkIfCurrentKingInCheck
         ]
     def getMidCastleFilters():
-        return [
-            MoveFilter.checkIfCurrentKingInCheck
-        ]
+        return [MoveFilter.checkIfCurrentKingInCheck]
     def getPostMoveFilters():
-        return [
-            MoveFilter.checkIfOppositeKingInCheck
-        ]
+        return [MoveFilter.checkIfOppositeKingInCheck]
     def checkSourcePiece(position, move):
         #TODO: SMELL - Line Length
         if move.source.x == None or move.source.y == None:
-            raise FilterError(move, "Which Piece? The Source file is not instantiated, leading to ambiguity.")
-        elif position.pieceIsWhite(move.source) != position.isWhiteToMove():
-            return FilterResult.fail(move, "Not your turn: The color of the move's source piece is not valid in the turn order.")
+            raise FilterError(
+                    """Which Piece? The Source file is not instantiated, 
+                    leading to ambiguity.""",
+                move) 
         elif position.pieceTypeOf(move.source) != move.pieceType:
-            raise FilterError( \
-                move, "Hustler's Piece: Type of source Piece (%s) does not match type of move piece (%s)." \
-                % (position.pieceTypeOf(move.source), move.pieceType)
-            )
+            raise FilterError(
+                    """Hustler's Piece: Type of source Piece 
+                    (%s) does not match type of move piece (%s)."""
+                    % (position.pieceTypeOf(move.source), move.pieceType),
+                move)
+        elif position.pieceIsWhite(move.source) != position.isWhiteToMove():
+            return FilterResult.fail(
+                    """Wrong Color: The color of the move's 
+                    source piece does not match the color that
+                    is moving right now.""",
+                move) 
         else:
             return FilterResult.accept(move)
 
     def checkIfMoveWithinLegalBounds(position, move):
-        #TODO: SMELL - Line Length
         if not move.destination.isInsideChessboard():
-            return FilterResult.fail(move, "Out of Bounds: The move's destination is not within the legal bounds of an 8x8 chessboard")
+            return FilterResult.fail(
+                    """Out of Bounds: The move's destination is not 
+                    within the legal bounds of an 8x8 chessboard""",
+                move)
         else:
             return FilterResult.accept(move)
  
     def checkIfDestinationIsOccupied(position, move):
         #TODO: SMELL - Line Length
         if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove()):
-            return FilterResult.fail(move, "Friendly Fire: The move involves a piece trying to capture a target of the same color.")
+            return FilterResult.fail(
+                    """Friendly Fire: The move involves a piece trying to 
+                    capture a target of the same color.""",
+                move)
         elif move.isCapture and position.pieceAt(move.destination) == "-":
-            return FilterResult.fail(move, "Starved Attacker: Move is a capture, but there is no piece to capture on the destination square")
+            return FilterResult.fail(
+                    """Starved Attacker: Move is a capture, but there is no 
+                    piece to capture on the destination square""",
+                move)
         elif not move.isCapture and not position.pieceAt(move.destination) == "-":
-            return FilterResult.fail(move, "Cramped Quarters: The Move is not a capture, and the destination is not empty")
+            return FilterResult.fail(
+                    """Cramped Quarters: The Move is not a capture,
+                    and the destination is not empty""",
+                move)
         elif isinstance(move, CastlingMove):
             midStep = move.source + (Vector(1,0) if move.castlingDirection == CastlingDirection.KINGSIDE else Vector(-1,0))
             if not position.pieceAt(midStep) == "-":
-                return FilterResult.fail(move, "Castling Blocked: There is a piece between the king's source and destination squares.")
+                return FilterResult.fail(
+                        """Castling Blocked: There is a piece between the 
+                        king's source and destination squares.""",
+                    move) 
         
         return FilterResult.accept(move)
     
@@ -62,9 +80,11 @@ class MoveFilter():
 
         for candidate in move.source.between(move.destination):
             if position.pieceAt(candidate) != "-":
-                return FilterResult.fail(move, \
-                    "Obstructed: The piece %s at %s in the way of the move." \
-                    % (position.pieceAt(candidate), candidate.toAN()))
+                return FilterResult.fail(
+                        """Obstructed: The piece %s at %s in the way of the move."""
+                        % (position.pieceAt(candidate), candidate.toAN()),
+                    move)
+
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
@@ -76,10 +96,12 @@ class MoveFilter():
         return MoveFilter.checkIfKingInCheck(position, move, color)
         
     def checkIfKingInCheck(position, move, kingColor):
-        #TODO: SMELL - Line Length
-        if not any(("K" if kingColor == "WHITE" else "k") in row for row in position.boardState.squares):
-            raise FilterError(move, "There is no king of the right color on the board")
-        kingLocations = position.findAll("K" if kingColor == "WHITE" else "k")
+        kingSymbol = "K" if kingColor == "WHITE" else "k"
+        if not any(kingSymbol in row for row in position.boardState.squares):
+            raise FilterResult.fail(
+                    """There is no king of the right color on the board""",
+                move)
+        kingLocations = position.findAll(kingSymbol)
 
         for king in kingLocations:
             isEnemy = lambda enemy, enemyType: \
@@ -93,21 +115,29 @@ class MoveFilter():
 
             for rook in orthogonals:
                 if rook != king and isEnemy(rook, "R"): 
-                    return FilterResult.fail(move, "The king on %s is being checked by the rook on %s" % (king, rook))
-            #TODO: SMELL - Line Length
-            posPos = [king + Vector( i, i) for i in range(1,8) if (king + Vector( i, i)).isInsideChessboard()]
-            posNeg = [king + Vector(-i, i) for i in range(1,8) if (king + Vector(-i, i)).isInsideChessboard()]
-            NegPos = [king + Vector( i,-i) for i in range(1,8) if (king + Vector( i,-i)).isInsideChessboard()]
-            NegNeg = [king + Vector(-i,-i) for i in range(1,8) if (king + Vector(-i,-i)).isInsideChessboard()]
+                    return FilterResult.fail(
+                            "The king on %s is being checked by the rook on %s"
+                            % (king, rook),
+                        move) 
+            posPos = [king.plus( i, i) for i in range(1,8) if (king.plus( i, i)).isInsideChessboard()]
+            posNeg = [king.plus(-i, i) for i in range(1,8) if (king.plus(-i, i)).isInsideChessboard()]
+            NegPos = [king.plus( i,-i) for i in range(1,8) if (king.plus( i,-i)).isInsideChessboard()]
+            NegNeg = [king.plus(-i,-i) for i in range(1,8) if (king.plus(-i,-i)).isInsideChessboard()]
             diagonals = posPos + posNeg + NegPos + NegNeg
 
             for bishop in diagonals:
                 if bishop != king and isEnemy(bishop, "B"): 
-                    return FilterResult.fail(move, "The king on %s is being checked by the bishop on %s" % (king, bishop))
+                    return FilterResult.fail(
+                            "The king on %s is being checked by the bishop on %s"
+                            % (king, bishop),
+                        move)
             
             for queen in orthogonals + diagonals:
                 if queen != king and isEnemy(queen, "Q"): 
-                    return FilterResult.fail(move, "The king on %s is being checked by the queen on %s" % (king, queen))
+                    return FilterResult.fail(
+                            "The king on %s is being checked by the queen on %s"
+                            % (king, queen),
+                        move)
 
             knightSquares = [king + deltaN for deltaN in [
                     Vector( 1 , 2),
@@ -122,15 +152,20 @@ class MoveFilter():
 
             for knight in knightSquares:
                 if isEnemy(knight, "n"):
-                    return FilterResult.fail(move, "The king on %s is being checked by the knight on %s" % (king, knight))
-            #TODO: SMELL - Line Length
-            blackPawns = [king + deltaP for deltaP in [Vector(1, 1), Vector(-1, 1)] if (king + deltaP).isInsideChessboard()]
-            whitePawns = [king + deltaP for deltaP in [Vector(1,-1), Vector(-1,-1)] if (king + deltaP).isInsideChessboard()]
+                    return FilterResult.fail(
+                            "The king on %s is being checked by the knight on %s"
+                            % (king, knight),
+                        move)
+            blackPawns = [king + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (king + delta).isInsideChessboard()]
+            whitePawns = [king + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (king + delta).isInsideChessboard()]
             pawns = blackPawns if kingColor == "WHITE" else whitePawns
 
             for pawn in pawns:
                 if isEnemy(pawn, "p"):
-                    return FilterResult.fail(move, "The king on %s is being checked by the pawn on %s" % (king, pawn))
+                    return FilterResult.fail(
+                            "The king on %s is being checked by the pawn on %s"
+                            % (king, pawn),
+                        move)
 
             return FilterResult.accept(move)  
 
@@ -139,19 +174,22 @@ class MoveFilter():
 
 
 class FilterResult():
-    def __init__(self, move, isLegal=True, reason=""):
+    def __init__(self, reason, move, isLegal=True):
+        self.reason = reason
         self.move = move
         self.isLegal = isLegal
-        self.reason = reason
     def accept(move):
-        return FilterResult(move, True, "")
-    def fail(move, reason):
-        return FilterResult(move, False,
-            "The move %s fails the filtration process because: %s" % (move, reason)
-        )
+        return FilterResult("", move, True)
+    def fail(reason, move):
+        assert(isinstance(reason, str))
+        return FilterResult(
+                "The move %s fails the filtration process because: %s"
+                % (move, reason),
+            move, False)
 
 
 class FilterError(ValueError):
-    def __init__(self, move, reason):
-        #TODO: SMELL - Line Length
-        super().__init__("The move %s is unable to be properly filtered, because: %s \n %s" % (move, reason, position.boardState.toString()))
+    def __init__(self, reason, move):
+        super().__init__(
+            "The move %s is unable to be properly filtered, because: %s \n %s" \
+            % (move, reason, position.boardState.toString()))

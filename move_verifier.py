@@ -28,28 +28,32 @@ class MoveVerifier():
         legalMoves = [result for result in results if result.isLegal == True]
         if len(legalMoves) == 0:
             if (len(results) == 1):
+                assert(isinstance(results[0].reason, str))
                 return VerificationResult.fail(
-                   position, move, "Illegal Move: The move %s is illegal because %s" % (move, results[0].reason)
-                )
+                        "Illegal Move: The move %s is illegal because %s"
+                        % (move, results[0].reason),
+                   position, move)
             else: 
                 #TODO: SMELL - Line Length
                 return VerificationResult.fail(
-                    position, move, "No Legal Moves: The move %s is illegal because %s" % (move, [result.reason for result in results])
-                )
+                        "No Legal Moves: The move %s is illegal because %s"
+                        % (move, [result.reason for result in results]),
+                    position, move)
         elif len(legalMoves) == 1:
             validMove = legalMoves[0]
             return VerificationResult.accept(validMove.updatedPosition, validMove)
         else:
             return VerificationResult.fail(
-                position, move, "Ambiguous Move: The move %s leads to multiple valid moves [%s]" % (move, legalMoves)
-            )
+                    "Ambiguous Move: The move %s leads to multiple valid moves [%s]"
+                    % (move, legalMoves),
+                position, move)
     
     def verifyCandidate(position, move):
         def checkAllFilters(filters, position, move):
             for moveFilter in filters:
                 filterResult = moveFilter(position, move)
                 if not filterResult.isLegal:
-                    return VerificationResult.fail()
+                    return VerificationResult.fail(filterResult.reason, position, move)
 
         checkAllFilters(MoveFilter.getPreMoveFilters(), position, move)
 
@@ -63,20 +67,21 @@ class MoveVerifier():
         for moveFilter in MoveFilter.getPostMoveFilters():
             filterResult = moveFilter(newPosition, move)
             if not filterResult.isLegal:
-                return VerificationResult.fail(newPosition, move, filterResult.reason)
+                return VerificationResult.fail(filterResult.reason, newPosition, move)
 
         return VerificationResult.accept(newPosition, move)
 
 
 class VerificationResult():
-    def __init__(self, updatedPosition, move, isLegal, reason):
+    def __init__(self, reason, updatedPosition, move, isLegal):
+        self.reason = reason
         self.updatedPosition = updatedPosition
         self.move = move
         self.isLegal = isLegal
-        self.reason = reason
     def accept(position, move):
-        return VerificationResult(position, move, True, "")
-    def fail(position, move, reason):
-        return VerificationResult(position, move, False, reason)
+        return VerificationResult("", position, move, True)
+    def fail(reason, position, move):
+        assert(isinstance(reason, str))
+        return VerificationResult(reason, position, move, False)
         
         
