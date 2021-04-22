@@ -34,6 +34,9 @@ class Move():
         )
 
     def color(self):
+        #TODO: SMELL - Inconsistency
+        #TODO: SMELL - Inappropriate Type
+        #"black" or "BLACK"? Also why use strings to pass messages, not bool, or an enum?
         return "black" if self.pieceType.isupper() else "white"
 
     def fromString(string):

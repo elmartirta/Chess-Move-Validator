@@ -50,6 +50,8 @@ class Position():
             raise FENParsingError(
                     "String is the empty String",
                 string) 
+        #TODO: SMELL - God Regex
+        #Holy shit this is a huge regex. Necessary? Maybe split it.
         if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
             raise FENParsingError(
                     "Forsyth Edwards Notation must be in the correct format",

@@ -67,6 +67,9 @@ class MoveFilter():
                     and the destination is not empty""",
                 move)
         elif isinstance(move, CastlingMove):
+            # TODO: SMELL - Repeated Code
+            # Deriving a midstep is done in multiple places all over the codebase.
+            # It may be neccesary to define a midstep() method for the CastlingMove object
             midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
             if not position.pieceAt(midStep) == "-":
                 return FilterResult.fail(
@@ -79,6 +82,9 @@ class MoveFilter():
         if move.pieceType in "N":
             return FilterResult.accept(move)
         for candidate in move.source.between(move.destination):
+            # TODO: SMELL - Repeated Code
+            # Checking if a position is empty (by comparing the pieceAt a location to
+            # "-" happens throughout the codebase. An isEmpty function may be required.
             if position.pieceAt(candidate) != "-":
                 return FilterResult.fail(
                         """Obstructed: The piece %s at %s in the way of the move."""
@@ -101,6 +107,10 @@ class MoveFilter():
                     """There is no king of the right color on the board""",
                 move)
         kingLocations = position.findAll(kingSymbol)
+
+        #TODO: SMELL - Repeated Code
+        #The following for loop contains nested for loops that repeat code
+        # (for rook ..., for bishop ..., for queen ...)
         for king in kingLocations:
             isEnemy = lambda enemy, enemyType: \
                 position.pieceTypeIs(enemy, enemyType) \
@@ -168,7 +178,7 @@ class FilterResult():
 
     def accept(move):
         return FilterResult("", move, True)
-        
+
     def fail(reason, move):
         assert(isinstance(reason, str))
         return FilterResult(

@@ -17,10 +17,14 @@ class MoveVerifier():
         return result
 
     def verifyMoveFromFEN(positionFEN, moveAN):
-        return MoveVerifier.verifyMove(Position.fromFEN(positionFEN), Move.fromAN(moveAN))
+        return MoveVerifier.verifyMove(
+            Position.fromFEN(positionFEN), 
+            Move.fromAN(moveAN))
 
     def verifyMove(position, move):
         candidates = MoveGenerator.generateMoveList(position, move)
+        #TODO: SMELL - Mysterious Name
+        #What is result? Result of what?
         results = []
         for candidate in candidates:
             finalResult = MoveVerifier.verifyCandidate(position, candidate)
