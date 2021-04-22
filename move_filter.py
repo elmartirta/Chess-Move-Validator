@@ -3,6 +3,7 @@ from position import *
 from vector import Vector 
 from castling_move import CastlingMove
 
+
 class MoveFilter():
     def getPreMoveFilters():
         return [
@@ -12,10 +13,13 @@ class MoveFilter():
             MoveFilter.checkIfPathIsOccupied,
             MoveFilter.checkIfCurrentKingInCheck
         ]
+
     def getMidCastleFilters():
         return [MoveFilter.checkIfCurrentKingInCheck]
+
     def getPostMoveFilters():
         return [MoveFilter.checkIfOppositeKingInCheck]
+
     def checkSourcePiece(position, move):
         if move.source.x == None or move.source.y == None:
             raise FilterError(
@@ -69,20 +73,17 @@ class MoveFilter():
                         """Castling Blocked: There is a piece between the 
                         king's source and destination squares.""",
                     move) 
-        
         return FilterResult.accept(move)
     
     def checkIfPathIsOccupied(position, move):
         if move.pieceType in "N":
             return FilterResult.accept(move)
-
         for candidate in move.source.between(move.destination):
             if position.pieceAt(candidate) != "-":
                 return FilterResult.fail(
                         """Obstructed: The piece %s at %s in the way of the move."""
                         % (position.pieceAt(candidate), candidate.toAN()),
                     move)
-
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
@@ -100,17 +101,14 @@ class MoveFilter():
                     """There is no king of the right color on the board""",
                 move)
         kingLocations = position.findAll(kingSymbol)
-
         for king in kingLocations:
             isEnemy = lambda enemy, enemyType: \
                 position.pieceTypeIs(enemy, enemyType) \
                 and position.pieceIsWhite(enemy) != position.pieceIsWhite(king) \
                 and all(position.pieceAt(tile) == "-" for tile in king.between(enemy)) 
-
             xLine = [Vector(king.x, y) for y in range(0,8)]
             yLine = [Vector(x, king.y) for x in range(0,8)]
             orthogonals = xLine + yLine
-
             for rook in orthogonals:
                 if rook != king and isEnemy(rook, "R"): 
                     return FilterResult.fail(
@@ -122,21 +120,18 @@ class MoveFilter():
             NegPos = [king.plus( i,-i) for i in range(1,8) if (king.plus( i,-i)).isInsideChessboard()]
             NegNeg = [king.plus(-i,-i) for i in range(1,8) if (king.plus(-i,-i)).isInsideChessboard()]
             diagonals = posPos + posNeg + NegPos + NegNeg
-
             for bishop in diagonals:
                 if bishop != king and isEnemy(bishop, "B"): 
                     return FilterResult.fail(
                             "The king on %s is being checked by the bishop on %s"
                             % (king, bishop),
                         move)
-            
             for queen in orthogonals + diagonals:
                 if queen != king and isEnemy(queen, "Q"): 
                     return FilterResult.fail(
                             "The king on %s is being checked by the queen on %s"
                             % (king, queen),
                         move)
-
             knightSquares = [king + deltaN for deltaN in [
                     Vector( 1 , 2),
                     Vector(-1 , 2),
@@ -147,7 +142,6 @@ class MoveFilter():
                     Vector( 2 ,-1),
                     Vector(-2 ,-1)
                 ] if (king + deltaN).isInsideChessboard()]
-
             for knight in knightSquares:
                 if isEnemy(knight, "n"):
                     return FilterResult.fail(
@@ -157,18 +151,13 @@ class MoveFilter():
             blackPawns = [king + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (king + delta).isInsideChessboard()]
             whitePawns = [king + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (king + delta).isInsideChessboard()]
             pawns = blackPawns if kingColor == "WHITE" else whitePawns
-
             for pawn in pawns:
                 if isEnemy(pawn, "p"):
                     return FilterResult.fail(
                             "The king on %s is being checked by the pawn on %s"
                             % (king, pawn),
                         move)
-
             return FilterResult.accept(move)  
-
-
-
 
 
 class FilterResult():
@@ -176,8 +165,10 @@ class FilterResult():
         self.reason = reason
         self.move = move
         self.isLegal = isLegal
+
     def accept(move):
         return FilterResult("", move, True)
+        
     def fail(reason, move):
         assert(isinstance(reason, str))
         return FilterResult(

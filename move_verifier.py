@@ -3,8 +3,8 @@ from move_filter import MoveFilter
 from position import Position
 from move import Move
 from castling_move import CastlingMove
-
 import enum
+
 
 class MoveVerifier():
     def verifyGame(position, moveList):
@@ -77,10 +77,10 @@ class VerificationResult():
         self.updatedPosition = updatedPosition
         self.move = move
         self.isLegal = isLegal
+
     def accept(position, move):
         return VerificationResult("", position, move, True)
+
     def fail(reason, position, move):
         assert(isinstance(reason, str))
         return VerificationResult(reason, position, move, False)
-        
-        

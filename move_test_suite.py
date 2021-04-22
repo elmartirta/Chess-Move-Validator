@@ -12,6 +12,7 @@ class MoveTestSuite():
             {"runnable": MoveTestSuite.test6, "name": "Moves like : dxe4, dxe5#, dxe3+"},
             {"runnable": MoveTestSuite.test7, "name": "Moves like : h8=Q, h8=Q+, h8=N#"}
         ]
+
     def test1():
         m = Move.fromAN("Ra1")
         assert(m.destination == Vector.fromAN("a1"))
@@ -43,7 +44,6 @@ class MoveTestSuite():
 
         return True
 
-
     def test2():
         m = Move.fromAN("Rba1")
         assert(m.destination == Vector.fromAN("a1"))
@@ -70,7 +70,6 @@ class MoveTestSuite():
         assert(m.isCheckmate == True)
 
         return True
-
 
     def test3():
         m = Move.fromAN("R1a1")
@@ -99,7 +98,6 @@ class MoveTestSuite():
 
         return True
 
-
     def test4():
         m = Move.fromAN("Rb1a2")
         assert(m.pieceType == "R")
@@ -127,7 +125,6 @@ class MoveTestSuite():
 
         return True
 
-
     def test5():
         m = Move.fromAN("e4")        
         assert(m.pieceType == "P")
@@ -145,7 +142,6 @@ class MoveTestSuite():
 
         return True
 
-
     def test6():
         m = Move.fromAN("dxe4#")        
         assert(m.pieceType == "P")
@@ -156,7 +152,6 @@ class MoveTestSuite():
         assert(m.isCheckmate == True)
 
         return True
-
 
     def test7():
         m = Move.fromAN("h8=Q")
@@ -184,7 +179,6 @@ class MoveTestSuite():
         assert(m.promotionPiece == "N")
 
         return True
-
 
     def test8():
         m = Move.fromAN("bxc8=B")

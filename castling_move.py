@@ -3,6 +3,7 @@ from move import Move
 from enum import Enum
 import re
 
+
 class CastlingMove(Move):
     def __init__(
             self, 
@@ -25,6 +26,7 @@ class CastlingMove(Move):
             promotionPiece)
         self.castlingDirection = castlingDirection
         self.rookLocation = rookLocation
+
     def clone(self):
         return CastlingMove(
             self.pieceType,
@@ -37,8 +39,10 @@ class CastlingMove(Move):
             self.castlingDirection,
             self.rookLocation
         )
+
     def fromAN(string):
         return CastlingMove.fromAlgebreicNotation(string)
+
     def fromAlgebreicNotation(string):
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
         if castlingMatch:
@@ -55,10 +59,13 @@ class CastlingMove(Move):
                 Vector.fromNonExistent())
         else:
             return Move.fromAlgebreicNotation(string)
+
     def isKingsideCastling(self):
         return self.castlingDirection == CastlingDirection.KINGSIDE
+
     def toString(self):
         return "Castling"+super().toString()
+
 
 class CastlingDirection(Enum):
     KINGSIDE = 1

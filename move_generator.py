@@ -3,9 +3,11 @@ from move import Move
 from vector import Vector 
 from castling_move import CastlingMove
 
+
 class MoveGenerator():
     def generateMoveListFromFEN(positionFEN, moveAN):
         return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), CastlingMove.fromAN(moveAN))
+
     def generateMoveList(position, move):
         moveList = []
         if move.pieceType == None: 
@@ -30,6 +32,7 @@ class MoveGenerator():
                     continue
                 if position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
+    
     def addBishopCandidates(moveList, position, move):
         for i in range(1,10):
             for delta in [
@@ -40,6 +43,7 @@ class MoveGenerator():
                 candidate = move.destination + delta
                 if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
+    
     def addKnightCandidates(moveList, position, move):
         for n in [Vector(1,2), Vector(2,1)]:
             for delta in [
@@ -50,6 +54,7 @@ class MoveGenerator():
                 candidate = move.destination + delta
                 if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
+    
     def addKingCandidates(moveList, position, move):
         for dx in [1,0,-1]:
             for dy in [1,0,-1]:
@@ -58,9 +63,11 @@ class MoveGenerator():
                 candidate = move.destination + delta
                 if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
+    
     def addQueenCandidates(moveList, position, move):
         MoveGenerator.addBishopCandidates(moveList, position, move)
         MoveGenerator.addRookCandidates(moveList, position, move)
+
     def addPawnCandidates(moveList, position, move):
         destination = move.destination
       
@@ -79,6 +86,7 @@ class MoveGenerator():
             candidate = move.destination + delta
             if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
+
     def addCastlingCandidates(moveList, position, move):
         homeIndex = 0 if position.isWhiteToMove() else 7
         homeRow = [Vector(x, homeIndex) for x in range(0,8)]
@@ -102,6 +110,7 @@ class MoveGenerator():
         output.destination = king + (Vector(2,0) if move.isKingsideCastling() else Vector(-2, 0))
         output.rookLocation = rook
         return moveList.append(output)
+
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):

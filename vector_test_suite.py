@@ -1,5 +1,6 @@
 from vector import Vector
 
+
 class VectorTestSuite:
     def getTests():
         return [
@@ -10,6 +11,7 @@ class VectorTestSuite:
             {"runnable": VectorTestSuite.test5, "name": "Addition of Vectors"},
             {"runnable": VectorTestSuite.test6, "name": "Subtraction of Vectors"}
         ]
+
     def test1():
         assert(Vector(0,0) != None)
         assert(Vector(1,0) != None)
@@ -19,12 +21,14 @@ class VectorTestSuite:
         assert(Vector(-1,-1) != None)
         assert(Vector(1,1) != None)
         return True
+    
     def test2():
         assert (Vector.fromAN("a1") != None)
         assert (Vector.fromAN("h8") != None)
         assert (Vector.fromAN("h2") != None)
         assert (Vector.fromAN("b4") != None)
         return True
+    
     def test3():
         assert(Vector(0,0) == Vector(0,0))
         assert(Vector(1,0) == Vector(1,0))
@@ -35,6 +39,7 @@ class VectorTestSuite:
         assert(Vector(0,2) != Vector(1,2))
         assert(Vector(5,-4) != Vector(5,-3))
         return True
+    
     def test4():
         assert(Vector.fromAN("a1") == Vector(0,0))
         assert(Vector.fromAN("b1") == Vector(1,0))
@@ -45,6 +50,7 @@ class VectorTestSuite:
         assert(Vector.fromAN("a2") != Vector(1,1))
         assert(Vector.fromAN("h8") != Vector(7,8))
         return True
+    
     def test5():
         assert(Vector(0,0) + Vector(0,0) == Vector(0,0))
         assert(Vector(1,0) + Vector(0,0) == Vector(1,0))
@@ -64,6 +70,7 @@ class VectorTestSuite:
                 Vector.fromAN("b2")
             ]) == Vector.fromAN("d4"))
         return True
+    
     def test6():
         assert(Vector(0,0) - Vector(0,0) == Vector(0,0))
         assert(Vector(4,0) - Vector(1,0) == Vector(3,0))

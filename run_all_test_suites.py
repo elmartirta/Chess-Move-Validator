@@ -13,6 +13,8 @@ def main():
     runTests()
     print("=== Tests Complete !!! ===")
     print("")
+
+
 def runTests():
     test_suites = [
         {"suite_name": "VEC", "test_list": VectorTestSuite.getTests()},
@@ -78,6 +80,7 @@ def runTests():
         ))
     print("[%s]" % summaryString)
     print()
+    
     
 if __name__ == "__main__":
     main()

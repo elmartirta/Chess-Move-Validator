@@ -3,6 +3,7 @@ import re
 from enum import Enum
 from vector import Vector
 
+
 class Position():
     def __init__(
             self, 
@@ -18,6 +19,7 @@ class Position():
         self.enPassantPawn = enPassantPawn or Vector.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
+
     def clone(self):
         return Position(
             self.boardState.clone(),
@@ -35,8 +37,10 @@ class Position():
             "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
             (shuffled_pieces, shuffled_pieces.upper())
         )
+
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
+
     def fromForsythEdwardsNotation(string):
         if (string == None): 
             raise FENParsingError(
@@ -88,33 +92,43 @@ class Position():
         pos.halfClock = int(halfClockField) 
         pos.fullMove = int(fullMoveField)
         return pos
+
     def fromStartingPosition():
         return Position.fromFEN(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
     def setPiece(self, vector, string):
         if not vector.isInsideChessboard():
             return ValueError(vector)
         self.boardState.squares[vector.y][vector.x] = string
+
     def pieceAt(self, vector):
         if not vector.isInsideChessboard(): 
             raise ValueError(vector)
         return self.boardState.squares[vector.y][vector.x]
+
     def pieceIsWhite(self, vector):
         return self.pieceAt(vector).isupper()
+
     def pieceTypeOf(self, vector):
         return self.pieceAt(vector).upper()
+
     def pieceTypeIs(self, vector, pieceType):
         return self.pieceAt(vector).upper() == pieceType.upper()
+
     def isWhiteToMove(self):
         return self.gameStatus == GameStatus.WHITE_TO_MOVE
+
     def castle(self, move):
         return self.halfCastle(move).finishCastle(move)
+    
     def halfCastle(self, move):
         clone = self.clone()
         midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
         clone.setPiece(midStep, self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
+    
     def finishCastle(self, move):
         clone = self.clone()
         midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
@@ -126,6 +140,7 @@ class Position():
         clone.halfClock = self.halfClock + 1 
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
         return clone
+    
     def next(self, move):
         source = move.source
         destination = move.destination
@@ -137,6 +152,7 @@ class Position():
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
         return clone
+    
     def findAll(self, pieceType):
         result = []
         for y, row in enumerate(self.boardState.squares):
@@ -144,24 +160,31 @@ class Position():
                 if currentPiece == pieceType:
                     result.append(Vector(x,y))
         return result
+
+
 class FENParsingError(ValueError):
     def __init__(self, reason, FENString):
         super().__init__(
             "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
             %(FENString, reason))
 
+
 class BoardState():
     def __init__(self):
         self.squares = [["-" for x in range(8)] for y in range(8)]
+    
     def clone(self):
         bs = BoardState()
         bs.squares = [[self.squares[y][x] for x in range(8)] for y in range(8)] 
         return bs
+    
     def fromEmpty():
         return BoardState()
+    
     def addPiece(self, vector, piece):
         assert(vector.isInsideChessboard())
         self.squares[vector.y][vector.x] = piece
+    
     def toString(self):
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]
@@ -169,12 +192,14 @@ class BoardState():
                 print(piece, end=" ")
             print("")
 
+
 class GameStatus(Enum):
     WHITE_TO_MOVE = 1
     BLACK_TO_MOVE = 2
     WHITE_IN_MATE = 3
     BLACK_IN_MATE = 4
     STALEMATE = 5
+
 
 class CastlingRights():
     def __init__(
@@ -187,6 +212,7 @@ class CastlingRights():
         self.whiteQueenSide = whiteQueenSide
         self.blackKingSide = blackKingSide
         self.blackQueenSide = blackQueenSide
+    
     def clone(self):
         return CastlingRights(
             self.whiteKingSide,
@@ -194,14 +220,17 @@ class CastlingRights():
             self.blackKingSide,
             self.blackQueenSide
         )
+    
     def __eq__(self, other):
         return \
             self.whiteKingSide == other.whiteKingSide and \
             self.whiteQueenSide == other.whiteQueenSide and \
             self.blackKingSide == other.blackKingSide and \
             self.blackQueenSide == other.blackQueenSide
+    
     def fromAllTrue():
         return CastlingRights()
+    
     def fromFEN(string):
         return CastlingRights(
             "K" in string,

@@ -17,6 +17,7 @@ class MoveGeneratorTestSuite():
             {"runnable": MoveGeneratorTestSuite.test10, "name": "Generate ambiguous queen moves"},
             {"runnable": MoveGeneratorTestSuite.test11, "name": "Generate castling moves"}
         ]
+
     def test1():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
@@ -37,6 +38,7 @@ class MoveGeneratorTestSuite():
         assert(fails(pos, "c3"))
         assert(fails(pos, "c4"))
         return True
+
     def test2():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -55,6 +57,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/6K1/8/8/8/8/1k6/r7 w - - 0 1", "Rb7+"))
         assert(fails("8/6K1/8/8/8/8/1k6/r7 w - - 0 1", "Ra1"))
         return True
+
     def test3():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -69,6 +72,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/8/2K5/8/3B4/5k2/8/8 w - - 0 1", "Bg2"))
         assert(fails("8/8/2K5/8/3B4/5k2/8/8 w - - 0 1", "Bd4"))
         return True
+
     def test4():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -85,6 +89,7 @@ class MoveGeneratorTestSuite():
         assert(fails(fourKnightsGame, "Nc3"))
         assert(fails(fourKnightsGame, "Nf3"))
         return True
+
     def test5():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -103,6 +108,7 @@ class MoveGeneratorTestSuite():
         assert(fails(scandanavian, "Qxb8"))
         assert(fails(scandanavian, "Qf6"))
         return True
+
     def test6():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -120,6 +126,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/8/8/5K2/8/8/1k6/3r4 w - - 4 3", "Ka8"))
         assert(fails("8/8/8/5K2/8/8/1k6/3r4 w - - 4 3", "Kh1"))
         return True
+
     def test7():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -146,6 +153,7 @@ class MoveGeneratorTestSuite():
         assert(fails(pos, "c3"))
         assert(fails(pos, "c2"))
         return True
+
     def test8():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
@@ -162,6 +170,7 @@ class MoveGeneratorTestSuite():
         assert(check4("8/R7/R4k2/8/8/R1K5/R7/8 w - - 0 1", "Ra8"))
         assert(check4("3R1R2/8/5k2/8/8/2K4R/8/7R w - - 0 1", "Rh8"))
         return True
+
     def test9():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
@@ -172,6 +181,7 @@ class MoveGeneratorTestSuite():
         assert(check2("7B/4k3/8/8/8/8/1BK5/8 w - - 0 1", "Bd4"))
         assert(check2("8/4k3/8/8/8/8/1BK5/B7 w - - 0 1", "Bd4"))
         return True
+
     def test10():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
@@ -183,20 +193,10 @@ class MoveGeneratorTestSuite():
         assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qd3"))
         assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qf5"))
         return True
+
     def test11():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos, move) != None and isinstance(res(pos, move)[0], CastlingMove)
         assert(res("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", "O-O"))
         assert(res("r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w - - 0 1", "O-O-O"))
         return True
-
-
-
-
-        
-
-
-        
-
-
-        

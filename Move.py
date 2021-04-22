@@ -18,8 +18,10 @@ class Move():
         self.isCheck = isCheck
         self.isCheckmate = isCheckmate
         self.promotionPiece = promotionPiece
+
     def __repr__(self):
         return self.toString()
+
     def clone(self):
         return Move(
             self.pieceType,
@@ -30,12 +32,16 @@ class Move():
             self.isCheckmate,
             self.promotionPiece
         )
+
     def color(self):
         return "black" if self.pieceType.isupper() else "white"
+
     def fromString(string):
         return Move.fromAN(string)
+
     def fromAN(string):
         return Move.fromAlgebreicNotation(string)
+
     def fromAlgebreicNotation(string):
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
@@ -61,6 +67,7 @@ class Move():
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
         return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+
     def fromEmpty():
         return Move(
             "",
@@ -71,6 +78,7 @@ class Move():
             False,
             Vector.fromNonExistent()
         )
+
     def toString(self):
         return "Move %s%s%s%s (%s%s)" % (
             self.pieceType,
@@ -80,9 +88,11 @@ class Move():
             "+" if self.isCheck else "",
             "#" if self.isCheckmate else ""
         )
+
     def setSource(self, vector):
         self.source = vector
         return self
+
 class MoveParsingError(ValueError):
     def __init__(self, moveString, message):
         super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))
