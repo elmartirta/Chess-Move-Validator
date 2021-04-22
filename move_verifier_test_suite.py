@@ -32,7 +32,8 @@ class MoveVerifierTestSuite():
         if not res.isLegal and "is being checked" in res.reason: 
             return True
         elif res.isLegal:
-            print("Should be declared Illegal, but is not: \n %s %s" % (position.boardState.toString(), moveList))
+            print("Should be declared Illegal, but is not: \n %s %s" 
+                % (position.boardState.toString(), moveList))
         else:
             print(res.reason)
             return False
@@ -142,9 +143,11 @@ class MoveVerifierTestSuite():
             MoveVerifierTestSuite.kingIsStuck(blackKingsJail)
         ])
     def test9():
-        #TODO: SMELL - Line Length
         kingsIndianAttack = Position.fromFEN("r1bqkbnr/pp1npppp/2p5/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 2 4")
-        newPos = MoveVerifierTestSuite.verifyGame(kingsIndianAttack, [CastlingMove.fromAN("O-O")]).updatedPosition
+        newPos = MoveVerifierTestSuite.verifyGame(
+            kingsIndianAttack, 
+            [CastlingMove.fromAN("O-O")]
+        ).updatedPosition
         assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "R"))
         assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "K"))
         assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "-"))
