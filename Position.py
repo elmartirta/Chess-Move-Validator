@@ -38,16 +38,23 @@ class Position():
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
     def fromForsythEdwardsNotation(string):
-        #TODO: SMELL - Line Length
         if (string == None): 
-            raise FENParsingError(string, "String is equal to None")
+            raise FENParsingError(
+                    "String is equal to None",
+                string) 
         if (string == ""): 
-            raise FENParsingError(string, "String is the empty String")
+            raise FENParsingError(
+                    "String is the empty String",
+                string) 
         if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
-            raise FENParsingError(string, "Forsyth Edwards Notation must be in the correct format")
+            raise FENParsingError(
+                    "Forsyth Edwards Notation must be in the correct format",
+                string) 
         fields = string.split(" ")
         if len(fields) != 6: 
-            raise FENParsingError(string, "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces")
+            raise FENParsingError(
+                    "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces",
+                string) 
         
         pos = Position()
         
@@ -71,8 +78,9 @@ class Position():
                     pos.boardState.addPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
                     pieceIndex += 1
                 else:
-                    #TODO: SMELL - Line Length
-                    raise FENParsingError(string, "Invalid character \"%s\" when parsing boardstate." % char)
+                    raise FENParsingError(
+                        "Invalid character \"%s\" when parsing boardstate." % char,
+                        string) 
 
         pos.gameStatus = GameStatus.WHITE_TO_MOVE if activeColorField == "w" else GameStatus.BLACK_TO_MOVE
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
@@ -81,7 +89,8 @@ class Position():
         pos.fullMove = int(fullMoveField)
         return pos
     def fromStartingPosition():
-        return Position.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+        return Position.fromFEN(
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     def setPiece(self, vector, string):
         if not vector.isInsideChessboard():
             return ValueError(vector)
@@ -136,10 +145,10 @@ class Position():
                     result.append(Vector(x,y))
         return result
 class FENParsingError(ValueError):
-    def __init__(self, FENString, message):
+    def __init__(self, reason, FENString):
         super().__init__(
             "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
-            %(FENString, message))
+            %(FENString, reason))
 
 class BoardState():
     def __init__(self):

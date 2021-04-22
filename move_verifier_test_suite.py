@@ -175,7 +175,6 @@ class MoveVerifierTestSuite():
             BDGambit_Bogoljubov, 
             [CastlingMove.fromAN("O-O-O")]
         ).updatedPosition
-        print(newPos.boardState.toString())
         assert(newPos.pieceTypeIs(Vector.fromAN("a1"), "-"))
         assert(newPos.pieceTypeIs(Vector.fromAN("b1"), "-"))
         assert(newPos.pieceTypeIs(Vector.fromAN("c1"), "K"))
