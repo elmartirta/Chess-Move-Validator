@@ -105,5 +105,6 @@ class MoveGenerator():
 
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
-        #TODO: SMELL - Line Length
-        super().__init__("Error trying to parse position \"%s\" and move %s. %s" % (positionFEN, moveAN, errorMessage))
+        super().__init__(
+            "Error trying to parse position \"%s\" and move %s. %s" 
+            % (positionFEN, moveAN, errorMessage))
