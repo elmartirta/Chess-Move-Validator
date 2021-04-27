@@ -49,22 +49,21 @@ class Position():
         if (string == ""): 
             raise FENParsingError(
                     "String is the empty String",
-                string) 
-        #TODO: SMELL - God Regex
-        #Holy shit this is a huge regex. Necessary? Maybe split it.
-        if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
-            raise FENParsingError(
-                    "Forsyth Edwards Notation must be in the correct format",
-                string) 
+                string)
         fields = string.split(" ")
         if len(fields) != 6: 
             raise FENParsingError(
                     "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces",
                 string) 
+
+        if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
+            raise FENParsingError(
+                    "Forsyth Edwards Notation must be in the correct format",
+                string) 
         
         pos = Position()
         
-        piecePlacementField = fields[0]
+        piecePlacementField = fields[0] 
         activeColorField = fields[1]
         castlingRightsField = fields[2]
         enPassantField = fields[3]
@@ -119,6 +118,7 @@ class Position():
         return self.pieceAt(vector).upper() == pieceType.upper()
 
     def isWhiteToMove(self):
+        #TODO: SMELL - Should be a boolean isWhiteToMove
         return self.gameStatus == GameStatus.WHITE_TO_MOVE
 
     def castle(self, move):
@@ -198,9 +198,9 @@ class BoardState():
 class GameStatus(Enum):
     WHITE_TO_MOVE = 1
     BLACK_TO_MOVE = 2
-    WHITE_IN_MATE = 3
-    BLACK_IN_MATE = 4
-    STALEMATE = 5
+    WHITE_IN_MATE = 3 #TODO: SMELL - Unused Code
+    BLACK_IN_MATE = 4 #TODO: SMELL - Unused Code
+    STALEMATE = 5 #TODO: SMELL - Unused Code
 
 
 class CastlingRights():

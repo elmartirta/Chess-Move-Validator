@@ -72,6 +72,7 @@ class Move():
         return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
 
     def fromEmpty():
+        #TODO: CODE SMELL - Unused code? What is this? Why would I use this?
         return Move(
             "",
             Vector.fromNonExistent(),
