@@ -22,12 +22,12 @@ class Vector():
         return Vector(self.x - other.x, self.y - other.y)
 
     def __mul__(self, scalar):
-        if not isinstance(scalar, int): 
+        if not isinstance(scalar, int): # TODO : SMELL - DEAD CODE
             raise TypeError("Vector scalar multiplication must use an int")
         return Vector(self.x * scalar, self.y * scalar)
 
     def __rmul__(self, scalar):
-        return (self * scalar)
+        return (self * scalar) # TODO : SMELL - DEAD CODE
 
     def __eq__(self, other):
         if self is None or other is None: return False
@@ -66,19 +66,19 @@ class Vector():
         return sourceRank + sourceFile
 
     def fromNonExistent():
-        return Vector(None, None)
+        return Vector(None, None) # TODO : SMELL - DEAD CODE
 
     def plus(self, x, y):
         return Vector(self.x + x, self.y + y)
 
     def minus(self, x, y):
-        return Vector(self.x - x, self.y - y)
+        return Vector(self.x - x, self.y - y) 
 
     def equals(self, x, y):
         return self == Vector(x,y)
 
     def times(self, scalar):
-        return self * scalar
+        return self * scalar # TODO : SMELL - DEAD CODE
 
     def toString(self):
         return str(self)
