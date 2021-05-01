@@ -172,6 +172,9 @@ class FENParsingError(ValueError):
 
 
 class BoardState():
+    # CODE SMELL - YAGNI, why not just have boardState be a naked member variable,
+    # and not a class in and of itself proper? AddPiece can be repurposed as a 
+    # method within Position. toString can be repurposed as a printBoard() method.
     def __init__(self):
         self.squares = [["-" for x in range(8)] for y in range(8)]
     
@@ -204,6 +207,8 @@ class GameStatus(Enum):
 
 
 class CastlingRights():
+    #TODO: SMELL - YAGNI - All of these can be member variables within the Positon
+    #class.
     def __init__(
             self, 
             whiteKingSide=True,
