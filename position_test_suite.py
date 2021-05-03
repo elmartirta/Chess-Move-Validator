@@ -19,7 +19,7 @@ class PositionTestSuite():
         pos = Position.fromStartingPosition()        
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
-        assert(pos.castlingRights == CastlingRights.fromAllTrue())
+        assert(pos.castlingRights != None)
         assert(pos.enPassantPawn == Vector.fromNonExistent())
         assert(pos.halfClock == 0)
         assert(pos.fullClock == 1)
@@ -59,7 +59,7 @@ class PositionTestSuite():
         pos = Position.fromFEN("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
-        assert(pos.castlingRights == CastlingRights.fromAllTrue())
+        assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
         assert(pos.enPassantPawn == Vector.fromNonExistent())
         return True
 
@@ -67,7 +67,7 @@ class PositionTestSuite():
         pos = Position.fromFEN("rnbqkbnr/ppp2ppp/8/2Ppp3/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 3")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
-        assert(pos.castlingRights == CastlingRights.fromAllTrue())
+        assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
         assert(pos.enPassantPawn == Vector.fromAlgebreicNotation("d6"))
         return True
 

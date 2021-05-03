@@ -2,7 +2,7 @@ import random
 import re
 from enum import Enum
 from vector import Vector
-
+from dataclasses import dataclass, replace
 
 class Position():
     def __init__(
@@ -15,7 +15,7 @@ class Position():
             fullClock=None):
         self.squares = squares or [["-" for x in range(8)] for y in range(8)]
         self.isWhiteToMove = isWhiteToMove or True
-        self.castlingRights = castlingRights or CastlingRights.fromAllTrue()
+        self.castlingRights = castlingRights or CastlingRights()
         self.enPassantPawn = enPassantPawn or Vector.fromNonExistent()
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
@@ -24,7 +24,7 @@ class Position():
         return Position(
             [[self.squares[y][x] for x in range(8)] for y in range(8)],
             self.isWhiteToMove,
-            self.castlingRights.clone(),
+            replace(self.castlingRights),
             self.enPassantPawn.clone(),
             self.halfClock,
             self.fullClock
@@ -172,38 +172,12 @@ class FENParsingError(ValueError):
             "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
             %(FENString, reason))
 
-
+@dataclass
 class CastlingRights():
-    #TODO: SMELL - YAGNI - All of these can be member variables within the Positon
-    #class.
-    def __init__(
-            self, 
-            whiteKingSide=True,
-            whiteQueenSide=True,
-            blackKingSide=True,
-            blackQueenSide=True):
-        self.whiteKingSide = whiteKingSide
-        self.whiteQueenSide = whiteQueenSide
-        self.blackKingSide = blackKingSide
-        self.blackQueenSide = blackQueenSide
-    
-    def clone(self):
-        return CastlingRights(
-            self.whiteKingSide,
-            self.whiteQueenSide,
-            self.blackKingSide,
-            self.blackQueenSide
-        )
-    
-    def __eq__(self, other):
-        return \
-            self.whiteKingSide == other.whiteKingSide and \
-            self.whiteQueenSide == other.whiteQueenSide and \
-            self.blackKingSide == other.blackKingSide and \
-            self.blackQueenSide == other.blackQueenSide
-    
-    def fromAllTrue():
-        return CastlingRights()
+    whiteKingSide: bool = True
+    whiteQueenSide: bool = True
+    blackKingSide: bool = True
+    blackQueenSide: bool = True
     
     def fromFEN(string):
         return CastlingRights(
