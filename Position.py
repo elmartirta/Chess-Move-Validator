@@ -121,16 +121,14 @@ class Position():
     
     def halfCastle(self, move):
         clone = self.clone()
-        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
-        clone.setPiece(midStep, self.pieceAt(move.source))
+        clone.setPiece(move.midStep(), self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     
     def finishCastle(self, move):
         clone = self.clone()
-        midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
-        clone.setPiece(move.destination, self.pieceAt(midStep))
-        clone.setPiece(midStep, self.pieceAt(move.rookLocation))
+        clone.setPiece(move.destination, self.pieceAt(move.midStep()))
+        clone.setPiece(move.midStep(), self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
         clone.enPassantPawn = Vector.fromNonExistent()
