@@ -30,7 +30,7 @@ class Position():
             self.fullClock
         )
 
-    def fromChess960(seed=None): # TODO : SMELL - DEAD CODE
+    def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
         return Position.fromFEN(
