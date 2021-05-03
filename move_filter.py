@@ -67,11 +67,7 @@ class MoveFilter():
                     and the destination is not empty""",
                 move)
         elif isinstance(move, CastlingMove):
-            # TODO: SMELL - Repeated Code
-            # Deriving a midstep is done in multiple places all over the codebase.
-            # It may be neccesary to define a midstep() method for the CastlingMove object
-            midStep = move.source + (Vector(1,0) if move.isKingsideCastling() else Vector(-1,0))
-            if not position.pieceAt(midStep) == "-":
+            if not position.pieceAt(move.midStep()) == "-":
                 return FilterResult.fail(
                         """Castling Blocked: There is a piece between the 
                         king's source and destination squares.""",

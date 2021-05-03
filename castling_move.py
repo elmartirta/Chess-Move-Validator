@@ -66,6 +66,8 @@ class CastlingMove(Move):
     def toString(self):
         return "Castling"+super().toString()
 
+    def midStep(self):
+        return self.source + (Vector(1,0) if self.isKingsideCastling() else Vector(-1,0))
 
 class CastlingDirection(Enum):
     KINGSIDE = 1
