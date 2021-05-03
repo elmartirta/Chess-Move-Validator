@@ -102,7 +102,7 @@ class MoveFilter():
         
     def checkIfKingInCheck(position, move, kingColor):
         kingSymbol = "K" if kingColor == "WHITE" else "k"
-        if not any(kingSymbol in row for row in position.boardState.squares):
+        if not any(kingSymbol in row for row in position.squares):
             raise FilterResult.fail(
                     """There is no king of the right color on the board""",
                 move)
@@ -190,5 +190,5 @@ class FilterResult():
 class FilterError(ValueError):
     def __init__(self, reason, move):
         super().__init__(
-            "The move %s is unable to be properly filtered, because: %s \n %s" \
-            % (move, reason, position.boardState.toString()))
+            "The move %s is unable to be properly filtered, because: %s" \
+            % (move, reason))
