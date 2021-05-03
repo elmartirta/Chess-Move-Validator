@@ -32,7 +32,7 @@ class MoveFilter():
                     (%s) does not match type of move piece (%s)."""
                     % (position.pieceTypeOf(move.source), move.pieceType),
                 move)
-        elif position.pieceIsWhite(move.source) != position.isWhiteToMove():
+        elif position.pieceIsWhite(move.source) != position.isWhiteToMove:
             return FilterResult.fail(
                     """Wrong Color: The color of the move's 
                     source piece does not match the color that
@@ -51,7 +51,7 @@ class MoveFilter():
             return FilterResult.accept(move)
  
     def checkIfDestinationIsOccupied(position, move):
-        if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove()):
+        if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove):
             return FilterResult.fail(
                     """Friendly Fire: The move involves a piece trying to 
                     capture a target of the same color.""",
@@ -93,11 +93,11 @@ class MoveFilter():
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
-        color = "WHITE" if position.isWhiteToMove() else "BLACK"
+        color = "WHITE" if position.isWhiteToMove else "BLACK"
         return MoveFilter.checkIfKingInCheck(position, move, color)
 
     def checkIfOppositeKingInCheck(position, move):
-        color = "BLACK" if position.isWhiteToMove() else "WHITE"
+        color = "BLACK" if position.isWhiteToMove else "WHITE"
         return MoveFilter.checkIfKingInCheck(position, move, color)
         
     def checkIfKingInCheck(position, move, kingColor):

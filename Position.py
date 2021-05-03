@@ -8,13 +8,13 @@ class Position():
     def __init__(
             self, 
             boardState=None, 
-            gameStatus=None, 
+            isWhiteToMove=None, 
             castlingRights=None, 
             enPassantPawn=None, 
             halfClock=None, 
             fullClock=None):
         self.boardState = boardState or BoardState.fromEmpty()
-        self.gameStatus = gameStatus or GameStatus.WHITE_TO_MOVE
+        self.isWhiteToMove = isWhiteToMove or True
         self.castlingRights = castlingRights or CastlingRights.fromAllTrue()
         self.enPassantPawn = enPassantPawn or Vector.fromNonExistent()
         self.halfClock = halfClock or 0
@@ -23,7 +23,7 @@ class Position():
     def clone(self):
         return Position(
             self.boardState.clone(),
-            self.gameStatus,
+            self.isWhiteToMove,
             self.castlingRights.clone(),
             self.enPassantPawn.clone(),
             self.halfClock,
@@ -87,7 +87,7 @@ class Position():
                         "Invalid character \"%s\" when parsing boardstate." % char,
                         string) 
 
-        pos.gameStatus = GameStatus.WHITE_TO_MOVE if activeColorField == "w" else GameStatus.BLACK_TO_MOVE
+        pos.isWhiteToMove = True if activeColorField == "w" else False
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
         pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else Vector.fromNonExistent()
         pos.halfClock = int(halfClockField) 
@@ -117,10 +117,6 @@ class Position():
     def pieceTypeIs(self, vector, pieceType):
         return self.pieceAt(vector).upper() == pieceType.upper()
 
-    def isWhiteToMove(self):
-        #TODO: SMELL - Should be a boolean isWhiteToMove
-        return self.gameStatus == GameStatus.WHITE_TO_MOVE
-
     def castle(self, move):
         return self.halfCastle(move).finishCastle(move)
     
@@ -137,10 +133,10 @@ class Position():
         clone.setPiece(move.destination, self.pieceAt(midStep))
         clone.setPiece(midStep, self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
-        clone.gameStatus = GameStatus.BLACK_TO_MOVE if self.isWhiteToMove() else GameStatus.WHITE_TO_MOVE
+        clone.isWhiteToMove = not self.isWhiteToMove
         clone.enPassantPawn = Vector.fromNonExistent()
         clone.halfClock = self.halfClock + 1 
-        clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
+        clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
     def next(self, move):
@@ -149,10 +145,10 @@ class Position():
         clone = self.clone()
         clone.setPiece(destination, self.pieceAt(source))
         clone.setPiece(source, "-")
-        clone.gameStatus = GameStatus.BLACK_TO_MOVE if self.isWhiteToMove() else GameStatus.WHITE_TO_MOVE
+        clone.isWhiteToMove = not self.isWhiteToMove
         clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else Vector.fromNonExistent()
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
-        clone.fullClock = self.fullClock + (0 if self.isWhiteToMove() else 1)
+        clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
     def findAll(self, pieceType):
@@ -196,14 +192,6 @@ class BoardState():
             for piece in rank:
                 print(piece, end=" ")
             print("")
-
-
-class GameStatus(Enum):
-    WHITE_TO_MOVE = 1
-    BLACK_TO_MOVE = 2
-    WHITE_IN_MATE = 3 #TODO: SMELL - Unused Code
-    BLACK_IN_MATE = 4 #TODO: SMELL - Unused Code
-    STALEMATE = 5 #TODO: SMELL - Unused Code
 
 
 class CastlingRights():
