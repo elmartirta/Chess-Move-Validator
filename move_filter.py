@@ -2,7 +2,7 @@ from move import Move
 from position import *
 from vector import Vector 
 from castling_move import CastlingMove
-
+import pdb
 
 class MoveFilter():
     def getPreMoveFilters():
@@ -86,12 +86,12 @@ class MoveFilter():
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
-        return MoveFilter.checkIfKingInCheck(position, move, position.isWhiteToMove)
+        return MoveFilter._checkIfKingInCheck(position, move, position.isWhiteToMove)
 
     def checkIfOppositeKingInCheck(position, move):
-        return MoveFilter.checkIfKingInCheck(position, move, not position.isWhiteToMove)
+        return MoveFilter._checkIfKingInCheck(position, move, not position.isWhiteToMove)
         
-    def checkIfKingInCheck(position, move, kingIsWhite):
+    def _checkIfKingInCheck(position, move, kingIsWhite):
         kingSymbol = "K" if kingIsWhite else "k"
         if not any(kingSymbol in row for row in position.squares):
             raise FilterResult.fail(
@@ -99,40 +99,34 @@ class MoveFilter():
                 move)
         kingLocations = position.findAll(kingSymbol)
 
-        #TODO: SMELL - Repeated Code
-        #The following for loop contains nested for loops that repeat code
-        # (for rook ..., for bishop ..., for queen ...)
+        def checkFor(attackerType, kingLocation, candidates):
+            for candidate in candidates:
+                if candidate != kingLocation \
+                        and position.pieceIsWhite(candidate) != kingIsWhite \
+                        and position.pieceTypeIs(candidate, attackerType) \
+                        and all(position.isEmptyAt(tile) for tile in king.between(candidate)):
+                    return FilterResult.fail(
+                            "The king on %s is being checked by the %s on %s"
+                            % (king.toAN(), attackerType, candidate.toAN()),
+                        move)
+
         for king in kingLocations:
-            isEnemy = lambda enemy, enemyType: \
-                position.pieceTypeIs(enemy, enemyType) \
-                and position.pieceIsWhite(enemy) != position.pieceIsWhite(king) \
-                and all(position.isEmptyAt(tile) for tile in king.between(enemy)) 
             xLine = [Vector(king.x, y) for y in range(0,8)]
             yLine = [Vector(x, king.y) for x in range(0,8)]
             orthogonals = xLine + yLine
-            for rook in orthogonals:
-                if rook != king and isEnemy(rook, "R"): 
-                    return FilterResult.fail(
-                            "The king on %s is being checked by the rook on %s"
-                            % (king, rook),
-                        move) 
+            error = checkFor("R", king, orthogonals)
+            if error: return error
+
             posPos = [king.plus( i, i) for i in range(1,8) if (king.plus( i, i)).isInsideChessboard()]
             posNeg = [king.plus(-i, i) for i in range(1,8) if (king.plus(-i, i)).isInsideChessboard()]
             NegPos = [king.plus( i,-i) for i in range(1,8) if (king.plus( i,-i)).isInsideChessboard()]
             NegNeg = [king.plus(-i,-i) for i in range(1,8) if (king.plus(-i,-i)).isInsideChessboard()]
             diagonals = posPos + posNeg + NegPos + NegNeg
-            for bishop in diagonals:
-                if bishop != king and isEnemy(bishop, "B"): 
-                    return FilterResult.fail(
-                            "The king on %s is being checked by the bishop on %s"
-                            % (king, bishop),
-                        move)
-            for queen in orthogonals + diagonals:
-                if queen != king and isEnemy(queen, "Q"): 
-                    return FilterResult.fail(
-                            "The king on %s is being checked by the queen on %s"
-                            % (king, queen),
-                        move)
+            error = checkFor("B", king, diagonals)
+            if error: return error
+            error = checkFor("Q", king, orthogonals + diagonals)
+            if error: return error
+
             knightSquares = [king + deltaN for deltaN in [
                     Vector( 1 , 2),
                     Vector(-1 , 2),
@@ -143,21 +137,15 @@ class MoveFilter():
                     Vector( 2 ,-1),
                     Vector(-2 ,-1)
                 ] if (king + deltaN).isInsideChessboard()]
-            for knight in knightSquares:
-                if isEnemy(knight, "n"):
-                    return FilterResult.fail(
-                            "The king on %s is being checked by the knight on %s"
-                            % (king, knight),
-                        move)
+            error = checkFor("N", king, knightSquares)
+            if error: return error
+
             blackPawns = [king + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (king + delta).isInsideChessboard()]
             whitePawns = [king + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (king + delta).isInsideChessboard()]
             pawns = blackPawns if kingIsWhite else whitePawns
-            for pawn in pawns:
-                if isEnemy(pawn, "p"):
-                    return FilterResult.fail(
-                            "The king on %s is being checked by the pawn on %s"
-                            % (king, pawn),
-                        move)
+            error = checkFor("P", king, pawns)
+            if error: return error
+            
             return FilterResult.accept(move)  
 
 

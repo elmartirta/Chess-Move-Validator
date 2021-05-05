@@ -160,7 +160,7 @@ class Position():
                     result.append(Vector(x,y))
         return result
     
-    def printBoard():
+    def printBoard(self):
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]
             for piece in rank:

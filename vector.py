@@ -95,8 +95,11 @@ class Vector():
             ((1 if self.x > 0 else -1) if self.x != 0 else 0),
             ((1 if self.y > 0 else -1) if self.y != 0 else 0)
         )
-        for deltaMagnitude in range(1, max(abs(self.x), abs(self.y))):
-            deltas.append(direction * deltaMagnitude)
+        
+        #TODO: SMELL - Cheap Lazy Hack to prevent knight moves from having walks
+        if abs(self.x) == abs(self.y) or self.x == 0 or self.y == 0:
+            for deltaMagnitude in range(1, max(abs(self.x), abs(self.y))):
+                deltas.append(direction * deltaMagnitude)
         return deltas
 
     def clone(self):
