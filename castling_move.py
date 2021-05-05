@@ -46,7 +46,7 @@ class CastlingMove(Move):
     def fromAlgebreicNotation(string):
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
         if castlingMatch:
-            e = Move.fromEmpty()
+            e = Move()
             return CastlingMove(
                 "K", 
                 e.source, 

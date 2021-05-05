@@ -4,17 +4,17 @@ from vector import Vector
 class Move():
     def __init__(
             self, 
-            pieceType, 
-            source, 
-            destination, 
-            isCapture, 
-            isCheck, 
-            isCheckmate, 
-            promotionPiece):
+            pieceType="", 
+            source=Vector.fromNonExistent(), 
+            destination=Vector.fromNonExistent(), 
+            isCapture=False, 
+            isCheck=False, 
+            isCheckmate=False, 
+            promotionPiece=Vector.fromNonExistent()):
         self.pieceType = pieceType
         self.source = source
         self.destination = destination
-        self.isCapture = isCapture 
+        self.isCapture = isCapture
         self.isCheck = isCheck
         self.isCheckmate = isCheckmate
         self.promotionPiece = promotionPiece
@@ -61,18 +61,6 @@ class Move():
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
         return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
-
-    def fromEmpty():
-        #TODO: CODE SMELL - Unused code? What is this? Why would I use this?
-        return Move(
-            "",
-            Vector.fromNonExistent(),
-            Vector.fromNonExistent(),
-            False,
-            False,
-            False,
-            Vector.fromNonExistent()
-        )
 
     def toString(self):
         return "Move %s%s%s%s (%s%s)" % (
