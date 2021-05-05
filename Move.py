@@ -33,9 +33,6 @@ class Move():
             self.promotionPiece
         )
 
-    def fromString(string):
-        return Move.fromAN(string) # TODO : SMELL - DEAD CODE
-
     def fromAN(string):
         return Move.fromAlgebreicNotation(string)
 
