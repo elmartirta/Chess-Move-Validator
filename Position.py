@@ -107,6 +107,10 @@ class Position():
             raise ValueError(vector)
         return self.squares[vector.y][vector.x]
 
+    def isEmptyAt(self, vector):
+        if not vector.isInsideChessboard():
+            raise ValueError
+        return self.pieceAt(vector) == "-"
     def pieceIsWhite(self, vector):
         return self.pieceAt(vector).isupper()
 

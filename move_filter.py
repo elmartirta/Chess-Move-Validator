@@ -56,18 +56,18 @@ class MoveFilter():
                     """Friendly Fire: The move involves a piece trying to 
                     capture a target of the same color.""",
                 move)
-        elif move.isCapture and position.pieceAt(move.destination) == "-":
+        elif move.isCapture and position.isEmptyAt(move.destination):
             return FilterResult.fail(
                     """Starved Attacker: Move is a capture, but there is no 
                     piece to capture on the destination square""",
                 move)
-        elif not move.isCapture and not position.pieceAt(move.destination) == "-":
+        elif not move.isCapture and not position.isEmptyAt(move.destination):
             return FilterResult.fail(
                     """Cramped Quarters: The Move is not a capture,
                     and the destination is not empty""",
                 move)
         elif isinstance(move, CastlingMove):
-            if not position.pieceAt(move.midStep()) == "-":
+            if not position.isEmptyAt(move.midStep()):
                 return FilterResult.fail(
                         """Castling Blocked: There is a piece between the 
                         king's source and destination squares.""",
@@ -78,10 +78,7 @@ class MoveFilter():
         if move.pieceType in "N":
             return FilterResult.accept(move)
         for candidate in move.source.between(move.destination):
-            # TODO: SMELL - Repeated Code
-            # Checking if a position is empty (by comparing the pieceAt a location to
-            # "-" happens throughout the codebase. An isEmpty function may be required.
-            if position.pieceAt(candidate) != "-":
+            if not position.isEmptyAt(candidate):
                 return FilterResult.fail(
                         """Obstructed: The piece %s at %s in the way of the move."""
                         % (position.pieceAt(candidate), candidate.toAN()),
@@ -111,7 +108,7 @@ class MoveFilter():
             isEnemy = lambda enemy, enemyType: \
                 position.pieceTypeIs(enemy, enemyType) \
                 and position.pieceIsWhite(enemy) != position.pieceIsWhite(king) \
-                and all(position.pieceAt(tile) == "-" for tile in king.between(enemy)) 
+                and all(position.isEmptyAt(tile) for tile in king.between(enemy)) 
             xLine = [Vector(king.x, y) for y in range(0,8)]
             yLine = [Vector(x, king.y) for x in range(0,8)]
             orthogonals = xLine + yLine

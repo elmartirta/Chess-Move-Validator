@@ -36,8 +36,8 @@ class MoveVerifierTestSuite():
         if not res.isLegal and "is being checked" in res.reason: 
             return True
         elif res.isLegal:
-            print("Should be declared Illegal, but is not: \n %s %s" 
-                % (position.boardState.toString(), moveList))
+            print("Should be declared Illegal, but is not: \n %s" 
+                % (moveList))
         else:
             print(res.reason)
             return False
