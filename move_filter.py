@@ -124,6 +124,7 @@ class MoveFilter():
             diagonals = posPos + posNeg + NegPos + NegNeg
             error = checkFor("B", king, diagonals)
             if error: return error #TODO: SMELL - Repeated Code:
+
             error = checkFor("Q", king, orthogonals + diagonals)
             if error: return error
 
@@ -145,7 +146,6 @@ class MoveFilter():
             pawns = blackPawns if kingIsWhite else whitePawns
             error = checkFor("P", king, pawns)
             if error: return error
-
             return FilterResult.accept(move)  
 
 
