@@ -86,15 +86,13 @@ class MoveFilter():
         return FilterResult.accept(move)
 
     def checkIfCurrentKingInCheck(position, move):
-        color = "WHITE" if position.isWhiteToMove else "BLACK"
-        return MoveFilter.checkIfKingInCheck(position, move, color)
+        return MoveFilter.checkIfKingInCheck(position, move, position.isWhiteToMove)
 
     def checkIfOppositeKingInCheck(position, move):
-        color = "BLACK" if position.isWhiteToMove else "WHITE"
-        return MoveFilter.checkIfKingInCheck(position, move, color)
+        return MoveFilter.checkIfKingInCheck(position, move, not position.isWhiteToMove)
         
-    def checkIfKingInCheck(position, move, kingColor):
-        kingSymbol = "K" if kingColor == "WHITE" else "k"
+    def checkIfKingInCheck(position, move, kingIsWhite):
+        kingSymbol = "K" if kingIsWhite else "k"
         if not any(kingSymbol in row for row in position.squares):
             raise FilterResult.fail(
                     """There is no king of the right color on the board""",
@@ -153,7 +151,7 @@ class MoveFilter():
                         move)
             blackPawns = [king + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (king + delta).isInsideChessboard()]
             whitePawns = [king + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (king + delta).isInsideChessboard()]
-            pawns = blackPawns if kingColor == "WHITE" else whitePawns
+            pawns = blackPawns if kingIsWhite else whitePawns
             for pawn in pawns:
                 if isEnemy(pawn, "p"):
                     return FilterResult.fail(
