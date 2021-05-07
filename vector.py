@@ -21,6 +21,14 @@ class Vector():
              raise TypeError("Vector subtraction must use vectors")
         return Vector(self.x - other.x, self.y - other.y)
 
+    def __mul__(self, scalar):
+        if not isinstance(scalar, int):
+            raise TypeError("Vector scalar multiplication must use an int")
+        return Vector(self.x * scalar, self.y * scalar)
+
+    def __rmul__(self, scalar):
+        return (self * scalar)
+
     def __eq__(self, other):
         if self is None or other is None: return False
         if not isinstance(other, Vector): 
@@ -68,6 +76,9 @@ class Vector():
 
     def equals(self, x, y):
         return self == Vector(x,y)
+
+    def times(self, scalar):
+        return self * scalar
 
     def toString(self):
         return str(self)
