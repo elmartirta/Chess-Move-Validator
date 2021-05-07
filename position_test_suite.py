@@ -6,16 +6,16 @@ from vector import Vector
 class PositionTestSuite():
     def getTests():
         return [
-            {"runnable": PositionTestSuite.test1, "name": "Chess Starting Position Initialized Correctly"},
-            {"runnable": PositionTestSuite.test2, "name": "Chess960 Initialized Correctly, 50 times."},
-            {"runnable": PositionTestSuite.test3, "name": "Double Bongcloud Initialized Correctly."},
-            {"runnable": PositionTestSuite.test4, "name": "Dutch Defense: Classical Variation Initialized Correctly."},
-            {"runnable": PositionTestSuite.test5, "name": "Scholar's Mate Initialized Correctly."},
-            {"runnable": PositionTestSuite.test6, "name": "En Passant Test Initialized Correctly (1. c4 e5 2. c5 d5)"},
-            {"runnable": PositionTestSuite.test7, "name": "Standard Position.next('e4') is actually 1. e4"}
+            {"runnable": PositionTestSuite.startPos, "name": "Chess Starting Position Initialized Correctly"},
+            {"runnable": PositionTestSuite.chess960, "name": "Chess960 Initialized Correctly, 50 times."},
+            {"runnable": PositionTestSuite.doblBong, "name": "Double Bongcloud Initialized Correctly."},
+            {"runnable": PositionTestSuite.dutchDef, "name": "Dutch Defense: Classical Variation Initialized Correctly."},
+            {"runnable": PositionTestSuite.scholMat, "name": "Scholar's Mate Initialized Correctly."},
+            {"runnable": PositionTestSuite.enPassant, "name": "En Passant Test Initialized Correctly (1. c4 e5 2. c5 d5)"},
+            {"runnable": PositionTestSuite.nextIsE4, "name": "Standard Position.next('e4') is actually 1. e4"}
         ]
 
-    def test1():
+    def startPos():
         pos = Position.fromStartingPosition()        
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
@@ -31,7 +31,7 @@ class PositionTestSuite():
 
         return True
 
-    def test2():
+    def chess960():
         for i in range(0, 50):
             pos = Position.fromChess960()
             assert(pos != None)
@@ -39,7 +39,7 @@ class PositionTestSuite():
             assert(pos.enPassantPawn == Vector.fromNonExistent())
         return True
 
-    def test3():
+    def doblBong():
         pos = Position.fromFEN("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 0 1")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
@@ -47,7 +47,7 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == Vector.fromNonExistent())
         return True
 
-    def test4():
+    def dutchDef():
         pos = Position.fromFEN("rnbq1rk1/ppp1b1pp/3ppn2/5p2/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
@@ -55,7 +55,7 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == Vector.fromNonExistent())
         return True
 
-    def test5():
+    def scholMat():
         pos = Position.fromFEN("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
@@ -63,7 +63,7 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == Vector.fromNonExistent())
         return True
 
-    def test6():
+    def enPassant():
         pos = Position.fromFEN("rnbqkbnr/ppp2ppp/8/2Ppp3/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 3")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
@@ -71,7 +71,7 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == Vector.fromAlgebreicNotation("d6"))
         return True
 
-    def test7():
+    def nextIsE4():
         pos = Position.fromStartingPosition()
         move = Move.fromAN("e4")
         move.source = Vector.fromAN("e2")

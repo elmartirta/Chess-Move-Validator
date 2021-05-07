@@ -4,15 +4,15 @@ from vector import Vector
 class VectorTestSuite:
     def getTests():
         return [
-            {"runnable": VectorTestSuite.test1, "name": "Vectors can be instantiated"},
-            {"runnable": VectorTestSuite.test2, "name": "Vectors can be instantiated from AN"},
-            {"runnable": VectorTestSuite.test3, "name": "Vectors can be equated"},
-            {"runnable": VectorTestSuite.test4, "name": "Algebreic Notation has correct values"},
-            {"runnable": VectorTestSuite.test5, "name": "Addition of Vectors"},
-            {"runnable": VectorTestSuite.test6, "name": "Subtraction of Vectors"}
+            {"runnable": VectorTestSuite.vecInit, "name": "Vectors can be instantiated"},
+            {"runnable": VectorTestSuite.vecInitAN, "name": "Vectors can be instantiated from AN"},
+            {"runnable": VectorTestSuite.vecEq, "name": "Vectors can be equated"},
+            {"runnable": VectorTestSuite.anValid, "name": "Algebreic Notation has correct values"},
+            {"runnable": VectorTestSuite.vecAdd, "name": "Addition of Vectors"},
+            {"runnable": VectorTestSuite.vecSub, "name": "Subtraction of Vectors"}
         ]
 
-    def test1():
+    def vecInit():
         assert(Vector(0,0) != None)
         assert(Vector(1,0) != None)
         assert(Vector(0,1) != None)
@@ -22,14 +22,14 @@ class VectorTestSuite:
         assert(Vector(1,1) != None)
         return True
     
-    def test2():
+    def vecInitAN():
         assert (Vector.fromAN("a1") != None)
         assert (Vector.fromAN("h8") != None)
         assert (Vector.fromAN("h2") != None)
         assert (Vector.fromAN("b4") != None)
         return True
     
-    def test3():
+    def vecEq():
         assert(Vector(0,0) == Vector(0,0))
         assert(Vector(1,0) == Vector(1,0))
         assert(Vector(0,2) == Vector(0,2))
@@ -40,7 +40,7 @@ class VectorTestSuite:
         assert(Vector(5,-4) != Vector(5,-3))
         return True
     
-    def test4():
+    def anValid():
         assert(Vector.fromAN("a1") == Vector(0,0))
         assert(Vector.fromAN("b1") == Vector(1,0))
         assert(Vector.fromAN("a2") == Vector(0,1))
@@ -51,7 +51,7 @@ class VectorTestSuite:
         assert(Vector.fromAN("h8") != Vector(7,8))
         return True
     
-    def test5():
+    def vecAdd():
         assert(Vector(0,0) + Vector(0,0) == Vector(0,0))
         assert(Vector(1,0) + Vector(0,0) == Vector(1,0))
         assert(Vector(0,1) + Vector(0,0) == Vector(0,1))
@@ -71,7 +71,7 @@ class VectorTestSuite:
             ]) == Vector.fromAN("d4"))
         return True
     
-    def test6():
+    def vecSub():
         assert(Vector(0,0) - Vector(0,0) == Vector(0,0))
         assert(Vector(4,0) - Vector(1,0) == Vector(3,0))
         assert(Vector(0,4) - Vector(0,1) == Vector(0,3))

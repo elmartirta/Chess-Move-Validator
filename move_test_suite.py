@@ -4,16 +4,16 @@ from vector import Vector
 class MoveTestSuite():
     def getTests():
         return [
-            {"runnable": MoveTestSuite.test1, "name": "Moves like : Ra1, Ra1+, Ra1#, Rxa1+"},
-            {"runnable": MoveTestSuite.test2, "name": "Moves like : Rba1, Rba1+, etc"},
-            {"runnable": MoveTestSuite.test3, "name": "Moves like : R1a2, R1a2+, etc"},
-            {"runnable": MoveTestSuite.test4, "name": "Moves like : Rb1a2, Rb1a2+, Rb1a2#, etc"},
-            {"runnable": MoveTestSuite.test5, "name": "Moves like : e4, e4#, e4+"},
-            {"runnable": MoveTestSuite.test6, "name": "Moves like : dxe4, dxe5#, dxe3+"},
-            {"runnable": MoveTestSuite.test7, "name": "Moves like : h8=Q, h8=Q+, h8=N#"}
+            {"runnable": MoveTestSuite.Ra1, "name": "Moves like : Ra1, Ra1+, Ra1#, Rxa1+"},
+            {"runnable": MoveTestSuite.Rba1, "name": "Moves like : Rba1, Rba1+, etc"},
+            {"runnable": MoveTestSuite.R1a1, "name": "Moves like : R1a2, R1a2+, etc"},
+            {"runnable": MoveTestSuite.Rb1a1, "name": "Moves like : Rb1a2, Rb1a2+, Rb1a2#, etc"},
+            {"runnable": MoveTestSuite.e4, "name": "Moves like : e4, e4#, e4+"},
+            {"runnable": MoveTestSuite.dxe4, "name": "Moves like : dxe4, dxe5#, dxe3+"},
+            {"runnable": MoveTestSuite.h8Q, "name": "Moves like : h8=Q, h8=Q+, h8=N#"},
         ]
 
-    def test1():
+    def Ra1():
         m = Move.fromAN("Ra1")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
@@ -44,7 +44,7 @@ class MoveTestSuite():
 
         return True
 
-    def test2():
+    def Rba1():
         m = Move.fromAN("Rba1")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
@@ -71,7 +71,7 @@ class MoveTestSuite():
 
         return True
 
-    def test3():
+    def R1a1():
         m = Move.fromAN("R1a1")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
@@ -98,7 +98,7 @@ class MoveTestSuite():
 
         return True
 
-    def test4():
+    def Rb1a1():
         m = Move.fromAN("Rb1a2")
         assert(m.pieceType == "R")
         assert(m.destination == Vector.fromAN("a2"))
@@ -125,7 +125,7 @@ class MoveTestSuite():
 
         return True
 
-    def test5():
+    def e4():
         m = Move.fromAN("e4")        
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("e4"))
@@ -142,7 +142,7 @@ class MoveTestSuite():
 
         return True
 
-    def test6():
+    def dxe4():
         m = Move.fromAN("dxe4#")        
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("e4"))
@@ -153,7 +153,7 @@ class MoveTestSuite():
 
         return True
 
-    def test7():
+    def h8Q():
         m = Move.fromAN("h8=Q")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("h8"))
@@ -180,7 +180,7 @@ class MoveTestSuite():
 
         return True
 
-    def test8():
+    def fxh8Q():
         m = Move.fromAN("bxc8=B")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("c8"))
