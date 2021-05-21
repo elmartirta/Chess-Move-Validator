@@ -4,13 +4,13 @@ from vector import Vector
 class Move():
     def __init__(
             self, 
-            pieceType: str = "", 
-            source: Vector = None, 
-            destination: Vector = None, 
-            isCapture: bool = False, 
-            isCheck: bool = False, 
-            isCheckmate: bool = False, 
-            promotionPiece: str = None):
+            pieceType="", 
+            source=None, 
+            destination=None, 
+            isCapture=False, 
+            isCheck=False, 
+            isCheckmate=False, 
+            promotionPiece=None):
         self.pieceType = pieceType
         self.source = source
         self.destination = destination
@@ -33,12 +33,10 @@ class Move():
             self.promotionPiece
         )
 
-    @classmethod
-    def fromAN(cls, string: str):
-        return cls.fromAlgebreicNotation(string)
+    def fromAN(string):
+        return Move.fromAlgebreicNotation(string)
 
-    @classmethod
-    def fromAlgebreicNotation(cls, string: str):
+    def fromAlgebreicNotation(string):
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -62,7 +60,7 @@ class Move():
                 promotionPiece = pawnMatch.group(6)
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
-        return cls(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+        return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
 
     def toString(self):
         return "Move %s%s%s%s (%s%s)" % (
@@ -74,10 +72,10 @@ class Move():
             "#" if self.isCheckmate else ""
         )
 
-    def setSource(self, vector: Vector):
+    def setSource(self, vector):
         self.source = vector
         return self
 
 class MoveParsingError(ValueError):
-    def __init__(self, moveString: str, message: str):
+    def __init__(self, moveString, message):
         super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))

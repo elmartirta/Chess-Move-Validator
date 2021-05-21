@@ -1,22 +1,18 @@
-from __future__ import annotations
 import random 
 import re
 from enum import Enum
 from vector import Vector
 from dataclasses import dataclass, replace
-from move import Move
-from castling_move import CastlingMove
-
 
 class Position():
     def __init__(
             self, 
-            squares = None, 
-            isWhiteToMove: bool = None, 
-            castlingRights: CastlingRights = None, 
-            enPassantPawn: Vector = None, 
-            halfClock: int = None, 
-            fullClock: int = None):
+            squares=None, 
+            isWhiteToMove=None, 
+            castlingRights=None, 
+            enPassantPawn=None, 
+            halfClock=None, 
+            fullClock=None):
         self.squares = squares or [["-" for x in range(8)] for y in range(8)]
         self.isWhiteToMove = isWhiteToMove or True
         self.castlingRights = castlingRights or CastlingRights()
@@ -34,20 +30,18 @@ class Position():
             self.fullClock
         )
 
-    @classmethod
-    def fromChess960(cls, seed: int = None):
+    def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
-        return cls.fromFEN(
+        return Position.fromFEN(
             "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
             (shuffled_pieces, shuffled_pieces.upper())
         )
-    @classmethod
-    def fromFEN(cls, string: str):
-        return cls.fromForsythEdwardsNotation(string)
 
-    @classmethod
-    def fromForsythEdwardsNotation(cls, string: str):
+    def fromFEN(string):
+        return Position.fromForsythEdwardsNotation(string)
+
+    def fromForsythEdwardsNotation(string):
         if (string == None): 
             raise FENParsingError(
                     "String is equal to None",
@@ -67,14 +61,14 @@ class Position():
                     "Forsyth Edwards Notation must be in the correct format",
                 string) 
         
-        pos = cls()
+        pos = Position()
         
         piecePlacementField = fields[0] 
         activeColorField = fields[1]
         castlingRightsField = fields[2]
         enPassantField = fields[3]
         halfClockField = fields[4]
-        fullClockField = fields[5]
+        fullMoveField = fields[5]
 
         rows = piecePlacementField.split("/")
         for rowIndex in range(0, len(rows)):
@@ -97,51 +91,46 @@ class Position():
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
         pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else None
         pos.halfClock = int(halfClockField) 
-        pos.fullClock = int(fullClockField)
+        pos.fullMove = int(fullMoveField)
         return pos
 
-    @classmethod
-    def fromStartingPosition(cls):
-        return cls.fromFEN(
+    def fromStartingPosition():
+        return Position.fromFEN(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
-    def setPiece(self, vector: Vector, pieceType: str):
-        if vector.y and vector.x and vector.isInsideChessboard():
-            self.squares[vector.y][vector.x] = pieceType
-        else:
-            return NotImplementedError
+    def setPiece(self, vector, pieceType):
+        assert(vector.isInsideChessboard())
+        self.squares[vector.y][vector.x] = pieceType
 
-    def pieceAt(self, vector: Vector):
-        if vector.x is None or vector.y is None or not vector.isInsideChessboard(): 
+    def pieceAt(self, vector):
+        if not vector.isInsideChessboard(): 
             raise ValueError(vector)
         return self.squares[vector.y][vector.x]
 
-    def isEmptyAt(self, vector: Vector):
+    def isEmptyAt(self, vector):
         if not vector.isInsideChessboard():
             raise ValueError
         return self.pieceAt(vector) == "-"
-    def pieceIsWhite(self, vector: Vector):
+    def pieceIsWhite(self, vector):
         return self.pieceAt(vector).isupper()
 
-    def pieceTypeOf(self, vector: Vector):
+    def pieceTypeOf(self, vector):
         return self.pieceAt(vector).upper()
 
-    def pieceTypeIs(self, vector: Vector, pieceType: str):
+    def pieceTypeIs(self, vector, pieceType):
         return self.pieceAt(vector).upper() == pieceType.upper()
 
-    def castle(self, move: CastlingMove):
+    def castle(self, move):
         return self.halfCastle(move).finishCastle(move)
     
-    def halfCastle(self, move: CastlingMove):
+    def halfCastle(self, move):
         clone = self.clone()
-        if move.source is None: raise NotImplementedError
         clone.setPiece(move.midStep(), self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     
-    def finishCastle(self, move: CastlingMove):
+    def finishCastle(self, move):
         clone = self.clone()
-        if move.destination is None or move.source is None or move.rookLocation is None: raise NotImplementedError
         clone.setPiece(move.destination, self.pieceAt(move.midStep()))
         clone.setPiece(move.midStep(), self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
@@ -151,22 +140,19 @@ class Position():
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
-    def next(self, move: Move):
-        if move.source is None: raise NotImplementedError
-        if move.destination is None: raise NotImplementedError
+    def next(self, move):
         source = move.source
         destination = move.destination
         clone = self.clone()
         clone.setPiece(destination, self.pieceAt(source))
         clone.setPiece(source, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
-        if (destination.y is None or source.y is None): raise NotImplementedError
         clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else None
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
-    def findAll(self, pieceType: str):
+    def findAll(self, pieceType):
         result = []
         for y, row in enumerate(self.squares):
             for x, currentPiece in enumerate(row):
@@ -195,9 +181,8 @@ class CastlingRights():
     blackKingSide: bool = True
     blackQueenSide: bool = True
     
-    @classmethod
-    def fromFEN(cls, string:str):
-        return cls(
+    def fromFEN(string):
+        return CastlingRights(
             "K" in string,
             "Q" in string,
             "k" in string,

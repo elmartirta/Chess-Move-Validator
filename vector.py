@@ -1,8 +1,5 @@
-from __future__ import annotations
-from typing import Optional
-
 class Vector():
-    def __init__(self, x:Optional[int], y:Optional[int]):
+    def __init__(self, x:int, y:int):
         self.x = x
         self.y = y
 
@@ -41,12 +38,10 @@ class Vector():
     def __repr__(self):
         return "Vector(%s, %s)" % (str(self.x), str(self.y))
 
-    @classmethod
-    def fromAN(cls, text:str):
-        return cls.fromAlgebreicNotation(text)
+    def fromAN(text):
+        return Vector.fromAlgebreicNotation(text)
 
-    @classmethod
-    def fromAlgebreicNotation(cls, text:str):
+    def fromAlgebreicNotation(text):
         toX = lambda chr : ord(chr.lower()) - 97
         toY = lambda chr : int(chr)-1
         if text is None or len(text) == 0:
@@ -61,7 +56,7 @@ class Vector():
         else:
             raise ANParsingError(text, "Length of the text is longer than 2")
 
-        return cls(x,y)
+        return Vector(x,y)
     def toAN(self):
         return self.toAlgebreicNotation()
 
@@ -70,33 +65,25 @@ class Vector():
         sourceFile = str(self.y+1) if not self.y is None else ""
         return sourceRank + sourceFile
 
-    def plus(self, x:int, y:int):
-        if self.x is None or self.y is None:
-            raise NotImplementedError()
+    def plus(self, x, y):
         return Vector(self.x + x, self.y + y)
 
-    def minus(self, x:int, y:int):
-        if self.x is None or self.y is None:
-            raise NotImplementedError()
+    def minus(self, x, y):
         return Vector(self.x - x, self.y - y) 
 
-    def equals(self, x:int, y:int):
-        if self.x is None or self.y is None:
-            raise NotImplementedError()
+    def equals(self, x, y):
         return self == Vector(x,y)
 
-    def times(self, scalar:int):
+    def times(self, scalar):
         return self * scalar
 
     def toString(self):
         return str(self)
 
     def isInsideChessboard(self):
-        if self.x is None or self.y is None:
-            return False
         return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
 
-    def between(self, other: Vector):
+    def between(self, other):
         return [self + delta for delta in (other - self).walk()]
 
     def walk(self):
@@ -118,5 +105,5 @@ class Vector():
 
         
 class ANParsingError(ValueError):
-    def __init__(self, ANText:str, errorMessage:str):
+    def __init__(self, ANText, errorMessage):
         super().__init__("Error trying to parse AN \"%s\": %s" % (ANText, errorMessage))
