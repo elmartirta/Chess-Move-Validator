@@ -93,10 +93,11 @@ class Vector():
             ((1 if self.y > 0 else -1) if self.y != 0 else 0)
         )
         
-        #TODO: SMELL - Cheap Lazy Hack to prevent knight moves from having walks
         if abs(self.x) == abs(self.y) or self.x == 0 or self.y == 0:
             for deltaMagnitude in range(1, max(abs(self.x), abs(self.y))):
                 deltas.append(direction * deltaMagnitude)
+        else:
+            raise NotImplementedError("Walks are only defined in the diagonals and orthoganals.")
         return deltas
 
     def clone(self):

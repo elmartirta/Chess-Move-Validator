@@ -104,7 +104,9 @@ class MoveFilter():
                 if candidate != kingLocation \
                         and position.pieceTypeIs(candidate, attackerType) \
                         and position.pieceIsWhite(candidate) != kingIsWhite \
-                        and all(position.isEmptyAt(tile) for tile in king.between(candidate)):
+                        and (
+                            attackerType not in "RBQ" \
+                            or all(position.isEmptyAt(tile) for tile in king.between(candidate))):
                     return FilterResult.fail(
                             "The king on %s is being checked by the %s on %s"
                             % (king.toAN(), attackerType, candidate.toAN()),
