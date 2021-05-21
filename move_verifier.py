@@ -39,6 +39,7 @@ class MoveVerifier():
                     % (move, [result.reason for result in filteredMoves]),
                 position, move)
         elif len(legalMoves) > 1:
+
             return VerificationResult.fail(
                     "Ambiguous Move: The move %s leads to multiple valid moves [%s]"
                     % (move, legalMoves),
