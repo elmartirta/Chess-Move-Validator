@@ -5,12 +5,12 @@ class Move():
     def __init__(
             self, 
             pieceType="", 
-            source=Vector.fromNonExistent(), 
-            destination=Vector.fromNonExistent(), 
+            source=None, 
+            destination=None, 
             isCapture=False, 
             isCheck=False, 
             isCheckmate=False, 
-            promotionPiece=Vector.fromNonExistent()):
+            promotionPiece=None):
         self.pieceType = pieceType
         self.source = source
         self.destination = destination

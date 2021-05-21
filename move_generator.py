@@ -92,7 +92,7 @@ class MoveGenerator():
         homeRow = [Vector(x, homeIndex) for x in range(0,8)]
         homeRow = [position.pieceTypeOf(tile) for tile in homeRow]
         kingSymbol = "K" if position.isWhiteToMove else "k"
-        king = Vector.fromNonExistent()
+        king = None
         if not kingSymbol in homeRow:
             king = None
         else:

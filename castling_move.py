@@ -56,7 +56,7 @@ class CastlingMove(Move):
                 "#" in string, 
                 e.promotionPiece, 
                 CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE, 
-                Vector.fromNonExistent())
+                None)
         else:
             return Move.fromAlgebreicNotation(string)
 

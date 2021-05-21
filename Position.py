@@ -16,7 +16,7 @@ class Position():
         self.squares = squares or [["-" for x in range(8)] for y in range(8)]
         self.isWhiteToMove = isWhiteToMove or True
         self.castlingRights = castlingRights or CastlingRights()
-        self.enPassantPawn = enPassantPawn or Vector.fromNonExistent()
+        self.enPassantPawn = enPassantPawn or None
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
 
@@ -25,7 +25,7 @@ class Position():
             [[self.squares[y][x] for x in range(8)] for y in range(8)],
             self.isWhiteToMove,
             replace(self.castlingRights),
-            self.enPassantPawn.clone(),
+            self.enPassantPawn.clone() if self.enPassantPawn else None,
             self.halfClock,
             self.fullClock
         )
@@ -89,7 +89,7 @@ class Position():
 
         pos.isWhiteToMove = True if activeColorField == "w" else False
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
-        pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else Vector.fromNonExistent()
+        pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else None
         pos.halfClock = int(halfClockField) 
         pos.fullMove = int(fullMoveField)
         return pos
@@ -135,7 +135,7 @@ class Position():
         clone.setPiece(move.midStep(), self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
-        clone.enPassantPawn = Vector.fromNonExistent()
+        clone.enPassantPawn = None
         clone.halfClock = self.halfClock + 1 
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
@@ -147,7 +147,7 @@ class Position():
         clone.setPiece(destination, self.pieceAt(source))
         clone.setPiece(source, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
-        clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else Vector.fromNonExistent()
+        clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else None
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone

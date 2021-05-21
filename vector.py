@@ -1,5 +1,5 @@
 class Vector():
-    def __init__(self, x, y):
+    def __init__(self, x:int, y:int):
         self.x = x
         self.y = y
 
@@ -64,9 +64,6 @@ class Vector():
         sourceRank = chr(self.x+97) if not self.x is None else ""
         sourceFile = str(self.y+1) if not self.y is None else ""
         return sourceRank + sourceFile
-
-    def fromNonExistent():
-        return Vector(None, None) # TODO : SMELL - DEAD CODE
 
     def plus(self, x, y):
         return Vector(self.x + x, self.y + y)

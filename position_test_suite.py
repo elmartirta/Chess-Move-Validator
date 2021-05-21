@@ -20,7 +20,7 @@ class PositionTestSuite():
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights != None)
-        assert(pos.enPassantPawn == Vector.fromNonExistent())
+        assert(pos.enPassantPawn == None)
         assert(pos.halfClock == 0)
         assert(pos.fullClock == 1)
 
@@ -36,7 +36,7 @@ class PositionTestSuite():
             pos = Position.fromChess960()
             assert(pos != None)
             assert(pos.squares != None)
-            assert(pos.enPassantPawn == Vector.fromNonExistent())
+            assert(pos.enPassantPawn == None)
         return True
 
     def doblBong():
@@ -44,7 +44,7 @@ class PositionTestSuite():
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("-"))
-        assert(pos.enPassantPawn == Vector.fromNonExistent())
+        assert(pos.enPassantPawn == None)
         return True
 
     def dutchDef():
@@ -52,7 +52,7 @@ class PositionTestSuite():
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("-"))
-        assert(pos.enPassantPawn == Vector.fromNonExistent())
+        assert(pos.enPassantPawn == None)
         return True
 
     def scholMat():
@@ -60,7 +60,7 @@ class PositionTestSuite():
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
-        assert(pos.enPassantPawn == Vector.fromNonExistent())
+        assert(pos.enPassantPawn == None)
         return True
 
     def enPassant():
