@@ -3,6 +3,8 @@ from move_generator import MoveGenerator
 from castling_move import CastlingMove
 
 class MoveGeneratorTestSuite():
+
+    @staticmethod
     def getTests():
         return [
             {"runnable": MoveGeneratorTestSuite.allTob3, "name": "Generate Moves from all pieces to B3"},
@@ -18,6 +20,7 @@ class MoveGeneratorTestSuite():
             {"runnable": MoveGeneratorTestSuite.castle, "name": "Generate castling moves"}
         ]
 
+    @staticmethod
     def allTob3():
         pos = "8/1R3B2/8/6k1/8/5Q2/1PKN4/8 w - - 0 1"
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
@@ -39,6 +42,7 @@ class MoveGeneratorTestSuite():
         assert(fails(pos, "c4"))
         return True
 
+    @staticmethod
     def rGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -58,6 +62,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/6K1/8/8/8/8/1k6/r7 w - - 0 1", "Ra1"))
         return True
 
+    @staticmethod
     def bGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -73,6 +78,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/8/2K5/8/3B4/5k2/8/8 w - - 0 1", "Bd4"))
         return True
 
+    @staticmethod
     def nGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -90,6 +96,7 @@ class MoveGeneratorTestSuite():
         assert(fails(fourKnightsGame, "Nf3"))
         return True
 
+    @staticmethod
     def qGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -109,6 +116,7 @@ class MoveGeneratorTestSuite():
         assert(fails(scandanavian, "Qf6"))
         return True
 
+    @staticmethod
     def kGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -127,6 +135,7 @@ class MoveGeneratorTestSuite():
         assert(fails("8/8/8/5K2/8/8/1k6/3r4 w - - 4 3", "Kh1"))
         return True
 
+    @staticmethod
     def pGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos,move) != None and len(res(pos,move)) != 0
@@ -154,6 +163,7 @@ class MoveGeneratorTestSuite():
         assert(fails(pos, "c2"))
         return True
 
+    @staticmethod
     def rAmbGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
@@ -171,6 +181,7 @@ class MoveGeneratorTestSuite():
         assert(check4("3R1R2/8/5k2/8/8/2K4R/8/7R w - - 0 1", "Rh8"))
         return True
 
+    @staticmethod
     def bAmbGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
@@ -182,6 +193,7 @@ class MoveGeneratorTestSuite():
         assert(check2("8/4k3/8/8/8/8/1BK5/B7 w - - 0 1", "Bd4"))
         return True
 
+    @staticmethod
     def qAmbGen():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check2 = lambda pos, move: res(pos,move) != None and len(res(pos,move)) == 2
@@ -194,6 +206,7 @@ class MoveGeneratorTestSuite():
         assert(check4("6k1/3Q4/8/1Q6/8/7Q/1K6/5Q2 w - - 0 1", "Qf5"))
         return True
 
+    @staticmethod
     def castle():
         res = lambda pos, move: MoveGenerator.generateMoveListFromFEN(pos, move)
         check = lambda pos, move: res(pos, move) != None and isinstance(res(pos, move)[0], CastlingMove)

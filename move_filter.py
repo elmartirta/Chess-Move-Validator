@@ -5,6 +5,7 @@ from castling_move import CastlingMove
 import pdb
 
 class MoveFilter():
+    @staticmethod
     def getPreMoveFilters():
         return [
             MoveFilter.checkSourcePiece,
@@ -14,14 +15,17 @@ class MoveFilter():
             MoveFilter.checkIfCurrentKingInCheck
         ]
 
+    @staticmethod
     def getMidCastleFilters():
         return [MoveFilter.checkIfCurrentKingInCheck]
 
+    @staticmethod
     def getPostMoveFilters():
         return [MoveFilter.checkIfOppositeKingInCheck]
 
-    def checkSourcePiece(position, move):
-        if move.source.x == None or move.source.y == None:
+    @staticmethod
+    def checkSourcePiece(position: Position, move: Move):
+        if move.source is None or move.source.x is None or move.source.y is None:
             raise FilterError(
                     """Which Piece? The Source file is not instantiated, 
                     leading to ambiguity.""",
@@ -41,7 +45,10 @@ class MoveFilter():
         else:
             return FilterResult.accept(move)
 
-    def checkIfMoveWithinLegalBounds(position, move):
+    @staticmethod
+    def checkIfMoveWithinLegalBounds(position: Position, move: Move):
+        if move.destination is None:
+            raise NotImplementedError()
         if not move.destination.isInsideChessboard():
             return FilterResult.fail(
                     """Out of Bounds: The move's destination is not 
@@ -50,7 +57,10 @@ class MoveFilter():
         else:
             return FilterResult.accept(move)
  
-    def checkIfDestinationIsOccupied(position, move):
+    @staticmethod
+    def checkIfDestinationIsOccupied(position: Position, move: Move):
+        if move.source is None or move.destination is None:
+            raise NotImplementedError()
         if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove):
             return FilterResult.fail(
                     """Friendly Fire: The move involves a piece trying to 
@@ -74,24 +84,31 @@ class MoveFilter():
                     move) 
         return FilterResult.accept(move)
     
-    def checkIfPathIsOccupied(position, move):
+    @staticmethod
+    def checkIfPathIsOccupied(position: Position, move: Move):
         if move.pieceType in "N":
             return FilterResult.accept(move)
-        for candidate in move.source.between(move.destination):
-            if not position.isEmptyAt(candidate):
-                return FilterResult.fail(
-                        """Obstructed: The piece %s at %s in the way of the move."""
-                        % (position.pieceAt(candidate), candidate.toAN()),
-                    move)
+        if move.source and move.destination:
+            for candidate in move.source.between(move.destination):
+                if not position.isEmptyAt(candidate):
+                    return FilterResult.fail(
+                            """Obstructed: The piece %s at %s in the way of the move."""
+                            % (position.pieceAt(candidate), candidate.toAN()),
+                        move)
+        else:
+            return NotImplementedError()
         return FilterResult.accept(move)
 
-    def checkIfCurrentKingInCheck(position, move):
+    @staticmethod
+    def checkIfCurrentKingInCheck(position: Position, move: Move):
         return MoveFilter._checkIfKingInCheck(position, move, position.isWhiteToMove)
 
-    def checkIfOppositeKingInCheck(position, move):
+    @staticmethod
+    def checkIfOppositeKingInCheck(position: Position, move: Move):
         return MoveFilter._checkIfKingInCheck(position, move, not position.isWhiteToMove)
         
-    def _checkIfKingInCheck(position, move, kingIsWhite):
+    @staticmethod
+    def _checkIfKingInCheck(position: Position, move: Move, kingIsWhite: bool):
         kingSymbol = "K" if kingIsWhite else "k"
         if not any(kingSymbol in row for row in position.squares):
             raise FilterResult.fail(
@@ -99,7 +116,7 @@ class MoveFilter():
                 move)
         kingLocations = position.findAll(kingSymbol)
 
-        def checkFor(attackerType, kingLocation, candidates):
+        def checkFor(attackerType: str, kingLocation: Vector, candidates):
             for candidate in candidates:
                 if candidate != kingLocation \
                         and position.pieceTypeIs(candidate, attackerType) \
@@ -151,15 +168,17 @@ class MoveFilter():
 
 
 class FilterResult():
-    def __init__(self, reason, move, isLegal=True):
+    def __init__(self, reason: str, move: Move, isLegal: bool = True):
         self.reason = reason
         self.move = move
         self.isLegal = isLegal
 
-    def accept(move):
+    @staticmethod
+    def accept(move: Move):
         return FilterResult("", move, True)
 
-    def fail(reason, move):
+    @staticmethod
+    def fail(reason: str, move: Move):
         assert(isinstance(reason, str))
         return FilterResult(
                 "The move %s fails the filtration process because: %s"
@@ -168,7 +187,7 @@ class FilterResult():
 
 
 class FilterError(ValueError):
-    def __init__(self, reason, move):
+    def __init__(self, reason: str, move: Move):
         super().__init__(
             "The move %s is unable to be properly filtered, because: %s" \
             % (move, reason))

@@ -3,11 +3,13 @@ from move_filter import MoveFilter
 from position import Position
 from move import Move
 from castling_move import CastlingMove
+from typing import Iterable
 import enum
 
 
 class MoveVerifier():
-    def verifyGame(position, moveList):
+    @staticmethod
+    def verifyGame(position: Position, moveList: Iterable[Move]):
         currentPosition = position
         for move in moveList:
             result = MoveVerifier.verifyMove(currentPosition, move)
@@ -16,12 +18,14 @@ class MoveVerifier():
             currentPosition = result.updatedPosition
         return result
 
-    def verifyMoveFromFEN(positionFEN, moveAN):
+    @staticmethod
+    def verifyMoveFromFEN(positionFEN: str, moveAN: str):
         return MoveVerifier.verifyMove(
             Position.fromFEN(positionFEN), 
             Move.fromAN(moveAN))
 
-    def verifyMove(position, move):
+    @staticmethod
+    def verifyMove(position: Position, move: Move):
         filteredMoves = []
         for candidate in MoveGenerator.generateMoveList(position, move):
             filteredMoves.append(
@@ -50,7 +54,8 @@ class MoveVerifier():
         else:
             return NotImplementedError("Impossible Code")
     
-    def verifyCandidate(position, move):
+    @staticmethod
+    def verifyCandidate(position: Position, move: Move):
         def checkAllFilters(filters, position, move):
             for moveFilter in filters:
                 filterResult = moveFilter(position, move)
@@ -75,15 +80,17 @@ class MoveVerifier():
 
 
 class VerificationResult():
-    def __init__(self, reason, updatedPosition, move, isLegal):
+    def __init__(self, reason: str, updatedPosition: Position, move: Move, isLegal: bool):
         self.reason = reason
         self.updatedPosition = updatedPosition
         self.move = move
         self.isLegal = isLegal
 
-    def accept(position, move):
+    @staticmethod
+    def accept(position: Position, move: Move):
         return VerificationResult("", position, move, True)
 
-    def fail(reason, position, move):
+    @staticmethod
+    def fail(reason:str, position: Position, move: Move):
         assert(isinstance(reason, str))
         return VerificationResult(reason, position, move, False)
