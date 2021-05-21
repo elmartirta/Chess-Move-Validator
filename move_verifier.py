@@ -22,34 +22,33 @@ class MoveVerifier():
             Move.fromAN(moveAN))
 
     def verifyMove(position, move):
-        candidates = MoveGenerator.generateMoveList(position, move)
-        #TODO: SMELL - Mysterious Name
-        #What is result? Result of what?
-        results = []
-        for candidate in candidates:
-            finalResult = MoveVerifier.verifyCandidate(position, candidate)
-            results.append(finalResult)
-        legalMoves = [result for result in results if result.isLegal == True]
-        if len(legalMoves) == 0:
-            if (len(results) == 1):
-                assert(isinstance(results[0].reason, str))
-                return VerificationResult.fail(
-                        "Illegal Move: The move %s is illegal because %s"
-                        % (move, results[0].reason),
-                   position, move)
-            else: 
-                return VerificationResult.fail(
-                        "No Legal Moves: The move %s is illegal because %s"
-                        % (move, [result.reason for result in results]),
-                    position, move)
-        elif len(legalMoves) == 1:
-            validMove = legalMoves[0]
-            return VerificationResult.accept(validMove.updatedPosition, validMove)
-        else:
+        filteredMoves = []
+        for candidate in MoveGenerator.generateMoveList(position, move):
+            filteredMoves.append(
+                MoveVerifier.verifyCandidate(position, candidate)
+            )
+
+        legalMoves = [m for m in filteredMoves if m.isLegal]
+        if len(legalMoves) == 0 and len(filteredMoves) == 1:
+            return VerificationResult.fail(
+                    "Illegal Move: The move %s is illegal because %s"
+                    % (move, filteredMoves[0].reason),
+                position, move)
+        elif len(legalMoves) == 0: 
+            return VerificationResult.fail(
+                    "No Legal Moves: The move %s is illegal because %s"
+                    % (move, [result.reason for result in filteredMoves]),
+                position, move)
+        elif len(legalsMoves) > 1:
             return VerificationResult.fail(
                     "Ambiguous Move: The move %s leads to multiple valid moves [%s]"
                     % (move, legalMoves),
                 position, move)
+        elif len(legalMoves) == 1:
+            validMove = legalMoves[0]
+            return VerificationResult.accept(validMove.updatedPosition, validMove)
+        else:
+            return NotImplementedError("Impossible Code")
     
     def verifyCandidate(position, move):
         def checkAllFilters(filters, position, move):
