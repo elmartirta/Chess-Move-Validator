@@ -2,6 +2,7 @@ from vector import Vector
 
 
 class VectorTestSuite:
+    @staticmethod
     def getTests():
         return [
             {"runnable": VectorTestSuite.vecInit, "name": "Vectors can be instantiated"},
@@ -12,6 +13,7 @@ class VectorTestSuite:
             {"runnable": VectorTestSuite.vecSub, "name": "Subtraction of Vectors"}
         ]
 
+    @staticmethod
     def vecInit():
         assert(Vector(0,0) != None)
         assert(Vector(1,0) != None)
@@ -22,6 +24,7 @@ class VectorTestSuite:
         assert(Vector(1,1) != None)
         return True
     
+    @staticmethod
     def vecInitAN():
         assert (Vector.fromAN("a1") != None)
         assert (Vector.fromAN("h8") != None)
@@ -29,6 +32,7 @@ class VectorTestSuite:
         assert (Vector.fromAN("b4") != None)
         return True
     
+    @staticmethod
     def vecEq():
         assert(Vector(0,0) == Vector(0,0))
         assert(Vector(1,0) == Vector(1,0))
@@ -40,6 +44,7 @@ class VectorTestSuite:
         assert(Vector(5,-4) != Vector(5,-3))
         return True
     
+    @staticmethod
     def anValid():
         assert(Vector.fromAN("a1") == Vector(0,0))
         assert(Vector.fromAN("b1") == Vector(1,0))
@@ -51,6 +56,7 @@ class VectorTestSuite:
         assert(Vector.fromAN("h8") != Vector(7,8))
         return True
     
+    @staticmethod
     def vecAdd():
         assert(Vector(0,0) + Vector(0,0) == Vector(0,0))
         assert(Vector(1,0) + Vector(0,0) == Vector(1,0))
@@ -71,6 +77,7 @@ class VectorTestSuite:
             ]) == Vector.fromAN("d4"))
         return True
     
+    @staticmethod
     def vecSub():
         assert(Vector(0,0) - Vector(0,0) == Vector(0,0))
         assert(Vector(4,0) - Vector(1,0) == Vector(3,0))
