@@ -20,16 +20,7 @@ class Position():
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
 
-    def clone(self):
-        return Position(
-            [[self.squares[y][x] for x in range(8)] for y in range(8)],
-            self.isWhiteToMove,
-            replace(self.castlingRights),
-            self.enPassantPawn.clone() if self.enPassantPawn else None,
-            self.halfClock,
-            self.fullClock
-        )
-
+    @staticmethod
     def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
@@ -38,9 +29,11 @@ class Position():
             (shuffled_pieces, shuffled_pieces.upper())
         )
 
+    @staticmethod
     def fromFEN(string):
         return Position.fromForsythEdwardsNotation(string)
 
+    @staticmethod
     def fromForsythEdwardsNotation(string):
         if (string == None): 
             raise FENParsingError(
@@ -94,9 +87,21 @@ class Position():
         pos.fullMove = int(fullMoveField)
         return pos
 
+    @staticmethod
     def fromStartingPosition():
         return Position.fromFEN(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+            
+    def clone(self):
+        return Position(
+            [[self.squares[y][x] for x in range(8)] for y in range(8)],
+            self.isWhiteToMove,
+            replace(self.castlingRights),
+            self.enPassantPawn.clone() if self.enPassantPawn else None,
+            self.halfClock,
+            self.fullClock
+        )
+
 
     def setPiece(self, vector, pieceType):
         assert(vector.isInsideChessboard())
