@@ -21,7 +21,7 @@ class Position():
         self.fullClock = fullClock or 1
 
     @classmethod
-    def fromChess960(seed=None):
+    def fromChess960(cls, seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
         return cls.fromFEN(
@@ -30,7 +30,7 @@ class Position():
         )
 
     @classmethod
-    def fromFEN(string):
+    def fromFEN(cls, string):
         return cls.fromForsythEdwardsNotation(string)
 
     @classmethod
