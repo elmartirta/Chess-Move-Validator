@@ -20,21 +20,21 @@ class Position():
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
 
-    @staticmethod
+    @classmethod
     def fromChess960(seed=None):
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
-        return Position.fromFEN(
+        return cls.fromFEN(
             "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
             (shuffled_pieces, shuffled_pieces.upper())
         )
 
-    @staticmethod
+    @classmethod
     def fromFEN(string):
-        return Position.fromForsythEdwardsNotation(string)
+        return cls.fromForsythEdwardsNotation(string)
 
-    @staticmethod
-    def fromForsythEdwardsNotation(string):
+    @classmethod
+    def fromForsythEdwardsNotation(cls, string):
         if (string == None): 
             raise FENParsingError(
                     "String is equal to None",
@@ -54,7 +54,7 @@ class Position():
                     "Forsyth Edwards Notation must be in the correct format",
                 string) 
         
-        pos = Position()
+        pos = cls()
         
         piecePlacementField = fields[0] 
         activeColorField = fields[1]
@@ -87,9 +87,9 @@ class Position():
         pos.fullMove = int(fullMoveField)
         return pos
 
-    @staticmethod
-    def fromStartingPosition():
-        return Position.fromFEN(
+    @classmethod
+    def fromStartingPosition(cls):
+        return cls.fromFEN(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
             
     def clone(self):
