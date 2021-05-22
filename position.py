@@ -91,7 +91,7 @@ class Position():
     def fromStartingPosition(cls):
         return cls.fromFEN(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-            
+    
     def clone(self):
         return Position(
             [[self.squares[y][x] for x in range(8)] for y in range(8)],
@@ -186,8 +186,9 @@ class CastlingRights():
     blackKingSide: bool = True
     blackQueenSide: bool = True
     
-    def fromFEN(string):
-        return CastlingRights(
+    @classmethod
+    def fromFEN(cls, string):
+        return cls(
             "K" in string,
             "Q" in string,
             "k" in string,
