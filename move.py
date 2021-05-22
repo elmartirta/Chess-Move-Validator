@@ -33,10 +33,12 @@ class Move():
             self.promotionPiece
         )
 
-    def fromAN(string):
-        return Move.fromAlgebreicNotation(string)
+    @classmethod
+    def fromAN(cls, string):
+        return cls.fromAlgebreicNotation(string)
 
-    def fromAlgebreicNotation(string):
+    @classmethod
+    def fromAlgebreicNotation(cls, string):
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -60,7 +62,7 @@ class Move():
                 promotionPiece = pawnMatch.group(6)
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
-        return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+        return cls(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
 
     def toString(self):
         return "Move %s%s%s%s (%s%s)" % (
