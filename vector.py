@@ -38,10 +38,12 @@ class Vector():
     def __repr__(self):
         return "Vector(%s, %s)" % (str(self.x), str(self.y))
 
-    def fromAN(text):
-        return Vector.fromAlgebreicNotation(text)
+    @classmethod
+    def fromAN(cls, text):
+        return cls.fromAlgebreicNotation(text)
 
-    def fromAlgebreicNotation(text):
+    @classmethod
+    def fromAlgebreicNotation(cls, text):
         toX = lambda chr : ord(chr.lower()) - 97
         toY = lambda chr : int(chr)-1
         if text is None or len(text) == 0:
@@ -55,8 +57,8 @@ class Vector():
             x,y = toX(text[0]), toY(text[1])
         else:
             raise ANParsingError(text, "Length of the text is longer than 2")
+        return cls(x,y)
 
-        return Vector(x,y)
     def toAN(self):
         return self.toAlgebreicNotation()
 
