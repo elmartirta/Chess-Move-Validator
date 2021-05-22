@@ -40,14 +40,16 @@ class CastlingMove(Move):
             self.rookLocation
         )
 
-    def fromAN(string):
-        return CastlingMove.fromAlgebreicNotation(string)
+    @classmethod
+    def fromAN(cls, string):
+        return cls.fromAlgebreicNotation(string)
 
-    def fromAlgebreicNotation(string):
+    @classmethod
+    def fromAlgebreicNotation(cls, string):
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
         if castlingMatch:
-            e = Move()
-            return CastlingMove(
+            e = Move() #TODO: SMELL - Cheap Hack - Try to use super() here instead.
+            return cls(
                 "K", 
                 e.source, 
                 e.destination, 
