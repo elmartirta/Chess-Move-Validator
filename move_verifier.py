@@ -7,6 +7,7 @@ import enum
 
 
 class MoveVerifier():
+    @staticmethod
     def verifyGame(position, moveList):
         currentPosition = position
         for move in moveList:
@@ -16,11 +17,13 @@ class MoveVerifier():
             currentPosition = result.updatedPosition
         return result
 
+    @staticmethod
     def verifyMoveFromFEN(positionFEN, moveAN):
         return MoveVerifier.verifyMove(
             Position.fromFEN(positionFEN), 
             Move.fromAN(moveAN))
 
+    @staticmethod
     def verifyMove(position, move):
         filteredMoves = []
         for candidate in MoveGenerator.generateMoveList(position, move):
@@ -50,6 +53,7 @@ class MoveVerifier():
         else:
             return NotImplementedError("Impossible Code")
     
+    @staticmethod
     def verifyCandidate(position, move):
         def checkAllFilters(filters, position, move):
             for moveFilter in filters:
@@ -81,9 +85,11 @@ class VerificationResult():
         self.move = move
         self.isLegal = isLegal
 
+    @staticmethod
     def accept(position, move):
         return VerificationResult("", position, move, True)
 
+    @staticmethod
     def fail(reason, position, move):
         assert(isinstance(reason, str))
         return VerificationResult(reason, position, move, False)
