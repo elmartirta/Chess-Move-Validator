@@ -14,7 +14,7 @@ class Vector():
             other.y is None):
             raise ValueError(
                 "Cannot add vectors that contain missing values"
-            )
+            )#TODO : SMELL - Repeated Code
         return Vector(self.x + other.x, self.y + other.y)
 
     def __radd__(self, other: Vector) -> Vector:
@@ -30,7 +30,7 @@ class Vector():
             other.y is None):
             raise ValueError(
                 "Cannot subtract vectors that contain missing values"
-            )     
+            )#TODO : SMELL - Repeated Code
         return Vector(self.x - other.x, self.y - other.y)
 
     def __mul__(self, scalar: int) -> Vector:
@@ -38,7 +38,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Cannot perform scalar multiplication on vectors that contain missing values"
-            ) 
+            ) #TODO : SMELL - Repeated Code
         return Vector(self.x * scalar, self.y * scalar)
 
     def __rmul__(self, scalar: int) -> Vector:
@@ -86,7 +86,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Missing Value in vector"+self.toString()
-            )
+            )#TODO : SMELL - Repeated Code
         return Vector(self.x + x, self.y + y)
 
     def minus(self, x: int, y: int) -> Vector:
@@ -94,7 +94,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Missing Value in vector"+self.toString()
-            )
+            )#TODO : SMELL - Repeated Code
         return Vector(self.x - x, self.y - y) 
 
     def equals(self, x: int, y: int) -> bool:
@@ -102,7 +102,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Missing Value in vector"+self.toString()
-            )
+            )#TODO : SMELL - Repeated Code
         return self == Vector(x,y)
 
     def times(self, scalar: int) -> Vector:
@@ -110,7 +110,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Missing Value in vector"+self.toString()
-            )
+            )#TODO : SMELL - Repeated Code
         return self * scalar
 
     def toString(self) -> str:
@@ -121,7 +121,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Missing Value in vector"+self.toString()
-            )
+            )#TODO : SMELL - Repeated Code
         return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
 
     def between(self, other: Vector) -> Iterable[Vector]:
@@ -129,7 +129,7 @@ class Vector():
             self.y is None):
             raise ValueError(
                 "Missing Value in vector"+self.toString()
-            )
+            )#TODO : SMELL - Repeated Code
         return [self + delta for delta in (other - self).walk()]
 
     def walk(self) -> Iterable[Vector]:
