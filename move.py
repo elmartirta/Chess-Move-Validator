@@ -1,17 +1,18 @@
 from __future__ import annotations
+from typing import Optional
 from vector import Vector
 import re
 
 class Move():
     def __init__(
             self, 
-            pieceType="", 
-            source=None, 
-            destination=None, 
-            isCapture=False, 
-            isCheck=False, 
-            isCheckmate=False, 
-            promotionPiece=None):
+            pieceType: str = "", 
+            source: Optional[Vector] = None, 
+            destination: Optional[Vector] = None, 
+            isCapture: bool = False, 
+            isCheck: bool = False, 
+            isCheckmate: bool = False, 
+            promotionPiece: Optional[str] = None):
         self.pieceType = pieceType
         self.source = source
         self.destination = destination
@@ -35,11 +36,11 @@ class Move():
         )
 
     @classmethod
-    def fromAN(cls, string) -> Move:
+    def fromAN(cls, string: str) -> Move:
         return cls.fromAlgebreicNotation(string)
 
     @classmethod
-    def fromAlgebreicNotation(cls, string) -> Move:
+    def fromAlgebreicNotation(cls, string: str) -> Move:
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -70,15 +71,15 @@ class Move():
             self.pieceType,
             self.source.toAN() if self.source else "None",
             "x" if self.isCapture else "->",
-            self.destination.toAN(),
+            self.destination.toAN() if self.destination else "None",
             "+" if self.isCheck else "",
             "#" if self.isCheckmate else ""
         )
 
-    def setSource(self, vector) -> Move:
+    def setSource(self, vector: Vector) -> Move:
         self.source = vector
         return self
 
 class MoveParsingError(ValueError):
-    def __init__(self, moveString, message):
+    def __init__(self, moveString: str, message: str):
         super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))
