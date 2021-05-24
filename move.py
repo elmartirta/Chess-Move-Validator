@@ -1,5 +1,6 @@
-import re
+from __future__ import annotations
 from vector import Vector
+import re
 
 class Move():
     def __init__(
@@ -22,7 +23,7 @@ class Move():
     def __repr__(self):
         return self.toString()
 
-    def clone(self):
+    def clone(self) -> Move:
         return Move(
             self.pieceType,
             self.source,
@@ -34,11 +35,11 @@ class Move():
         )
 
     @classmethod
-    def fromAN(cls, string):
+    def fromAN(cls, string) -> Move:
         return cls.fromAlgebreicNotation(string)
 
     @classmethod
-    def fromAlgebreicNotation(cls, string):
+    def fromAlgebreicNotation(cls, string) -> Move:
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -64,7 +65,7 @@ class Move():
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
         return cls(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
 
-    def toString(self):
+    def toString(self) -> str:
         return "Move %s%s%s%s (%s%s)" % (
             self.pieceType,
             self.source.toAN() if self.source else "None",
@@ -74,7 +75,7 @@ class Move():
             "#" if self.isCheckmate else ""
         )
 
-    def setSource(self, vector):
+    def setSource(self, vector) -> Move:
         self.source = vector
         return self
 
