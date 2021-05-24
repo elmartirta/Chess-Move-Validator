@@ -1,3 +1,4 @@
+from __future__ import annotations
 from vector import Vector
 from move import Move
 from enum import Enum
@@ -27,7 +28,7 @@ class CastlingMove(Move):
         self.castlingDirection = castlingDirection
         self.rookLocation = rookLocation
 
-    def clone(self):
+    def clone(self) -> CastlingMove:
         return CastlingMove(
             self.pieceType,
             self.source,
@@ -41,11 +42,11 @@ class CastlingMove(Move):
         )
 
     @classmethod
-    def fromAN(cls, string):
+    def fromAN(cls, string) -> CastlingMove | Move:
         return cls.fromAlgebreicNotation(string)
 
     @classmethod
-    def fromAlgebreicNotation(cls, string):
+    def fromAlgebreicNotation(cls, string) -> CastlingMove | Move:
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
         if castlingMatch:
             e = Move() #TODO: SMELL - Cheap Hack - Try to use super() here instead.
@@ -62,13 +63,14 @@ class CastlingMove(Move):
         else:
             return Move.fromAlgebreicNotation(string)
 
-    def isKingsideCastling(self):
+    def isKingsideCastling(self) -> bool:
         return self.castlingDirection == CastlingDirection.KINGSIDE
 
-    def toString(self):
+    def toString(self) -> str:
         return "Castling"+super().toString()
 
-    def midStep(self):
+    def midStep(self) -> Vector:
+        if self.source is None: raise ValueError
         return self.source + (Vector(1,0) if self.isKingsideCastling() else Vector(-1,0))
 
 class CastlingDirection(Enum):
