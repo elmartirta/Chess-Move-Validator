@@ -63,7 +63,7 @@ class Position():
         castlingRightsField = fields[2]
         enPassantField = fields[3]
         halfClockField = fields[4]
-        fullMoveField = fields[5]
+        fullClockField = fields[5]
 
         rows = piecePlacementField.split("/")
         for rowIndex in range(0, len(rows)):
@@ -86,7 +86,7 @@ class Position():
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
         pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else None
         pos.halfClock = int(halfClockField) 
-        pos.fullMove = int(fullMoveField)
+        pos.fullClock = int(fullClockField)
         return pos
 
     @classmethod
