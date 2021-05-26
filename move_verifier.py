@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import List
 from move_generator import MoveGenerator
 from move_filter import MoveFilter
 from position import Position
@@ -8,7 +10,7 @@ import enum
 
 class MoveVerifier():
     @staticmethod
-    def verifyGame(position, moveList):
+    def verifyGame(position: Position, moveList: List[Move]) -> VerificationResult:
         currentPosition = position
         for move in moveList:
             result = MoveVerifier.verifyMove(currentPosition, move)
@@ -18,19 +20,19 @@ class MoveVerifier():
         return result
 
     @staticmethod
-    def verifyMoveFromFEN(positionFEN, moveAN):
+    def verifyMoveFromFEN(positionFEN: str, moveAN: str) -> VerificationResult:
         return MoveVerifier.verifyMove(
             Position.fromFEN(positionFEN), 
             Move.fromAN(moveAN))
 
     @staticmethod
-    def verifyMove(position, move):
-        filteredMoves = []
+    def verifyMove(position: Position, move: Move) -> VerificationResult:
+        filteredMoves: List[VerificationResult] = [] #TODO: SMELL - Misrepresentative Name
         for candidate in MoveGenerator.generateMoveList(position, move):
             filteredMoves.append(
                 MoveVerifier.verifyCandidate(position, candidate)
             )
-        legalMoves = [m for m in filteredMoves if m.isLegal]
+        legalMoves: List[VerificationResult] = [m for m in filteredMoves if m.isLegal] #TODO: SMELL - Misrepresentative Name
         if len(legalMoves) == 0 and len(filteredMoves) == 1:
             return VerificationResult.fail(
                     "Illegal Move: The move %s is illegal because %s"
@@ -48,13 +50,13 @@ class MoveVerifier():
                     % (move, legalMoves),
                 position, move)
         elif len(legalMoves) == 1:
-            validMove = legalMoves[0]
-            return VerificationResult.accept(validMove.updatedPosition, validMove)
+            validMove = legalMoves[0] #TODO: SMELL - Mysterious Name
+            return VerificationResult.accept(validMove.updatedPosition, validMove.move) 
         else:
-            return NotImplementedError("Impossible Code")
+            raise NotImplementedError("Impossible Code")
     
     @staticmethod
-    def verifyCandidate(position, move):
+    def verifyCandidate(position: Position, move: Move) -> VerificationResult:
         def checkAllFilters(filters, position, move):
             for moveFilter in filters:
                 filterResult = moveFilter(position, move)
@@ -79,17 +81,17 @@ class MoveVerifier():
 
 
 class VerificationResult():
-    def __init__(self, reason, updatedPosition, move, isLegal):
+    def __init__(self, reason: str, updatedPosition: Position, move: Move, isLegal: bool):
         self.reason = reason
         self.updatedPosition = updatedPosition
         self.move = move
         self.isLegal = isLegal
 
     @staticmethod
-    def accept(position, move):
+    def accept(position: Position, move: Move) -> VerificationResult:
         return VerificationResult("", position, move, True)
 
     @staticmethod
-    def fail(reason, position, move):
+    def fail(reason: str, position: Position, move: Move) -> VerificationResult:
         assert(isinstance(reason, str))
         return VerificationResult(reason, position, move, False)
