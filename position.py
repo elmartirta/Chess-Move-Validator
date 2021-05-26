@@ -2,19 +2,21 @@ from __future__ import annotations
 import random 
 import re
 from enum import Enum
-from typing import Iterable
+from typing import Iterable, List, Optional
 from vector import Vector
+from move import Move
+from castling_move import CastlingMove
 from dataclasses import dataclass, replace
 
 class Position():
     def __init__(
             self, 
-            squares=None, 
-            isWhiteToMove=None, 
-            castlingRights=None, 
-            enPassantPawn=None, 
-            halfClock=None, 
-            fullClock=None):
+            squares: List[List[str]] = None, 
+            isWhiteToMove: bool = None, 
+            castlingRights: CastlingRights = None, 
+            enPassantPawn: Optional[Vector] = None, 
+            halfClock: int = None,
+            fullClock: int = None):
         self.squares = squares or [["-" for x in range(8)] for y in range(8)]
         self.isWhiteToMove = isWhiteToMove or True
         self.castlingRights = castlingRights or CastlingRights()
@@ -23,7 +25,7 @@ class Position():
         self.fullClock = fullClock or 1
 
     @classmethod
-    def fromChess960(cls, seed=None) -> Position:
+    def fromChess960(cls, seed: int = None) -> Position:
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
         return cls.fromFEN(
@@ -32,11 +34,11 @@ class Position():
         )
 
     @classmethod
-    def fromFEN(cls, string) -> Position:
+    def fromFEN(cls, string: str) -> Position:
         return cls.fromForsythEdwardsNotation(string)
 
     @classmethod
-    def fromForsythEdwardsNotation(cls, string) -> Position:
+    def fromForsythEdwardsNotation(cls, string: str) -> Position:
         if (string == None): 
             raise FENParsingError(
                     "String is equal to None",
@@ -104,41 +106,47 @@ class Position():
             self.fullClock
         )
 
-    def setPiece(self, vector, pieceType) -> Position:
+    def setPiece(self, vector: Vector, pieceType: str) -> Position:
         assert(vector.isInsideChessboard())
+        if vector.y is None or vector.x is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         self.squares[vector.y][vector.x] = pieceType
         return self
 
-    def pieceAt(self, vector) -> str:
-        if not vector.isInsideChessboard(): 
-            raise ValueError(vector)
+    def pieceAt(self, vector: Vector) -> str:
+        if (not vector.isInsideChessboard() or
+            vector.y is None or 
+            vector.x is None): 
+                raise ValueError(vector) #TODO: SMELL - Lazy Error Writing
         return self.squares[vector.y][vector.x]
 
-    def isEmptyAt(self, vector) -> bool:
+    def isEmptyAt(self, vector: Vector) -> bool:
         if not vector.isInsideChessboard():
             raise ValueError
         return self.pieceAt(vector) == "-"
 
-    def pieceIsWhite(self, vector) -> bool:
+    def pieceIsWhite(self, vector: Vector) -> bool:
         return self.pieceAt(vector).isupper()
 
-    def pieceTypeOf(self, vector) -> str:
+    def pieceTypeOf(self, vector: Vector) -> str:
         return self.pieceAt(vector).upper()
 
-    def pieceTypeIs(self, vector, pieceType) -> bool:
+    def pieceTypeIs(self, vector: Vector, pieceType: str) -> bool:
         return self.pieceAt(vector).upper() == pieceType.upper()
 
-    def castle(self, move) -> Position:
+    def castle(self, move: CastlingMove) -> Position:
         return self.halfCastle(move).finishCastle(move)
     
-    def halfCastle(self, move) -> Position:
+    def halfCastle(self, move: CastlingMove) -> Position:
         clone = self.clone()
+        if move.source is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone.setPiece(move.midStep(), self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     
-    def finishCastle(self, move) -> Position:
+    def finishCastle(self, move: CastlingMove) -> Position:
         clone = self.clone()
+        if move.source is None or move.destination is None or move.rookLocation is None: 
+            raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone.setPiece(move.destination, self.pieceAt(move.midStep()))
         clone.setPiece(move.midStep(), self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
@@ -148,19 +156,21 @@ class Position():
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
-    def next(self, move) -> Position:
+    def next(self, move: Move) -> Position:
+        if move.source is None or move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         source = move.source
         destination = move.destination
         clone = self.clone()
         clone.setPiece(destination, self.pieceAt(source))
         clone.setPiece(source, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
+        if destination.y is None or source.y is None: raise ValueError #TODO: SMELL - Lazy Error Writing
         clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else None
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
-    def findAll(self, pieceType) -> Iterable[Vector]:
+    def findAll(self, pieceType: str) -> Iterable[Vector]:
         result = []
         for y, row in enumerate(self.squares):
             for x, currentPiece in enumerate(row):
@@ -177,7 +187,7 @@ class Position():
 
 
 class FENParsingError(ValueError):
-    def __init__(self, reason, FENString):
+    def __init__(self, reason: str, FENString: str):
         super().__init__(
             "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
             %(FENString, reason))
@@ -191,7 +201,7 @@ class CastlingRights():
     blackQueenSide: bool = True
     
     @classmethod
-    def fromFEN(cls, string) -> CastlingRights:
+    def fromFEN(cls, string: str) -> CastlingRights:
         return cls(
             "K" in string,
             "Q" in string,
