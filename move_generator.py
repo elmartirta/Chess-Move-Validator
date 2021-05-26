@@ -1,3 +1,4 @@
+from typing import List
 from position import Position
 from move import Move
 from vector import Vector 
@@ -5,11 +6,13 @@ from castling_move import CastlingMove
 
 
 class MoveGenerator():
-    def generateMoveListFromFEN(positionFEN, moveAN):
+    @staticmethod
+    def generateMoveListFromFEN(positionFEN: str, moveAN: str) -> List[Move]:
         return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), CastlingMove.fromAN(moveAN))
 
-    def generateMoveList(position, move):
-        moveList = []
+    @staticmethod
+    def generateMoveList(position: Position, move: Move) -> List[Move]:
+        moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
         if isinstance(move, CastlingMove): MoveGenerator.addCastlingCandidates(moveList, position, move)
@@ -23,7 +26,9 @@ class MoveGenerator():
             raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
         return moveList
     
-    def addRookCandidates(moveList, position, move):
+    @staticmethod
+    def addRookCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+        if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         for i in range(0,8):
             for candidate in [
                     Vector(move.destination.x, i), 
@@ -33,7 +38,9 @@ class MoveGenerator():
                 if position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     
-    def addBishopCandidates(moveList, position, move):
+    @staticmethod
+    def addBishopCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+        if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         for i in range(1,10):
             for delta in [
                     Vector( i, i),
@@ -44,8 +51,11 @@ class MoveGenerator():
                 if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     
-    def addKnightCandidates(moveList, position, move):
+    @staticmethod
+    def addKnightCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+        if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         for n in [Vector(1,2), Vector(2,1)]:
+            if n.x is None or n.y is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
             for delta in [
                     Vector( n.x, n.y),
                     Vector(-n.x, n.y),
@@ -55,7 +65,9 @@ class MoveGenerator():
                 if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     
-    def addKingCandidates(moveList, position, move):
+    @staticmethod
+    def addKingCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+        if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         for dx in [1,0,-1]:
             for dy in [1,0,-1]:
                 if dx == 0 and dy == 0: continue
@@ -64,11 +76,14 @@ class MoveGenerator():
                 if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.clone().setSource(candidate))
     
-    def addQueenCandidates(moveList, position, move):
+    @staticmethod
+    def addQueenCandidates(moveList: List[Move], position: Position, move: Move) -> None:
         MoveGenerator.addBishopCandidates(moveList, position, move)
         MoveGenerator.addRookCandidates(moveList, position, move)
 
-    def addPawnCandidates(moveList, position, move):
+    @staticmethod
+    def addPawnCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+        if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         destination = move.destination
       
         deltas = []
@@ -87,10 +102,11 @@ class MoveGenerator():
             if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
 
-    def addCastlingCandidates(moveList, position, move):
+    @staticmethod
+    def addCastlingCandidates(moveList: List[Move], position: Position, move: CastlingMove) -> None:
         homeIndex = 0 if position.isWhiteToMove else 7
-        homeRow = [Vector(x, homeIndex) for x in range(0,8)]
-        homeRow = [position.pieceTypeOf(tile) for tile in homeRow]
+        homeRow_temp = [Vector(x, homeIndex) for x in range(0,8)]
+        homeRow = [position.pieceTypeOf(tile) for tile in homeRow_temp]
         kingSymbol = "K" if position.isWhiteToMove else "k"
         king = None
         if not kingSymbol in homeRow:
@@ -106,6 +122,7 @@ class MoveGenerator():
                     rook = rookCandidate
                     break        
         output = move.clone()
+        if king is None: raise ValueError() #TODO - Lazy Error Writing
         output.source = king
         output.destination = king + (Vector(2,0) if move.isKingsideCastling() else Vector(-2, 0))
         output.rookLocation = rook

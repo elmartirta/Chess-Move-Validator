@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, Optional
+from typing import List, Optional
 
 
 class Vector():
@@ -124,7 +124,7 @@ class Vector():
             )#TODO : SMELL - Repeated Code
         return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
 
-    def between(self, other: Vector) -> Iterable[Vector]:
+    def between(self, other: Vector) -> List[Vector]:
         if (self.x is None or 
             self.y is None):
             raise ValueError(
@@ -132,7 +132,7 @@ class Vector():
             )#TODO : SMELL - Repeated Code
         return [self + delta for delta in (other - self).walk()]
 
-    def walk(self) -> Iterable[Vector]:
+    def walk(self) -> List[Vector]:
         if (self.x is None or 
             self.y is None):
             raise ValueError(
