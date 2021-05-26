@@ -11,7 +11,7 @@ class MoveGenerator():
     def generateMoveList(position, move):
         moveList = []
         if move.pieceType == None: 
-            raise MoveGenerationError(positionFEN, moveAN, "PieceType is None")
+            raise MoveGenerationError(position, move, "PieceType is None")
         if isinstance(move, CastlingMove): MoveGenerator.addCastlingCandidates(moveList, position, move)
         elif (move.pieceType in "rR"): MoveGenerator.addRookCandidates(moveList, position, move)
         elif (move.pieceType in "bB"): MoveGenerator.addBishopCandidates(moveList, position, move)
@@ -20,7 +20,7 @@ class MoveGenerator():
         elif (move.pieceType in "kK"): MoveGenerator.addKingCandidates(moveList, position, move)
         elif (move.pieceType in "pP"): MoveGenerator.addPawnCandidates(moveList, position, move)
         else:
-            raise MoveGenerationError(positionFEN, moveAN, "Unsupported Piece type: " + move.pieceType)
+            raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
         return moveList
     
     def addRookCandidates(moveList, position, move):
