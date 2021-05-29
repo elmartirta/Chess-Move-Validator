@@ -124,34 +124,12 @@ class MoveFilter():
 
         for king in kingLocations:
             error = None
-            xLine = [Vector(king.x, y) for y in range(0,8)]
-            yLine = [Vector(x, king.y) for x in range(0,8)]
-            orthogonals = xLine + yLine
-            error = error or checkFor("R", king, orthogonals)
+            error = error or checkFor("R", king, position.getOrthogonalsTargeting(king))
+            error = error or checkFor("B", king, position.getDiagonalsTargeting(king))
+            error = error or checkFor("Q", king, position.getOrthogonalsTargeting(king) + position.getDiagonalsTargeting(king))
+            error = error or checkFor("N", king, position.getKnightSquaresTargeting(king))
 
-            posPos = [king.plus( i, i) for i in range(1,8) if (king.plus( i, i)).isInsideChessboard()]
-            posNeg = [king.plus(-i, i) for i in range(1,8) if (king.plus(-i, i)).isInsideChessboard()]
-            NegPos = [king.plus( i,-i) for i in range(1,8) if (king.plus( i,-i)).isInsideChessboard()]
-            NegNeg = [king.plus(-i,-i) for i in range(1,8) if (king.plus(-i,-i)).isInsideChessboard()]
-            diagonals = posPos + posNeg + NegPos + NegNeg
-            error = error or checkFor("B", king, diagonals)
-            error = error or checkFor("Q", king, orthogonals + diagonals)
-
-            knightSquares = [king + deltaN for deltaN in [
-                    Vector( 1 , 2),
-                    Vector(-1 , 2),
-                    Vector( 1 ,-2),
-                    Vector(-1 ,-2),
-                    Vector( 2 , 1),
-                    Vector(-2 , 1),
-                    Vector( 2 ,-1),
-                    Vector(-2 ,-1)
-                ] if (king + deltaN).isInsideChessboard()]
-            error = error or checkFor("N", king, knightSquares)
-
-            blackPawns = [king + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (king + delta).isInsideChessboard()]
-            whitePawns = [king + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (king + delta).isInsideChessboard()]
-            pawns = blackPawns if kingIsWhite else whitePawns
+            pawns = position.getBlackPawnsTargeting(king) if kingIsWhite else position.getWhitePawnsTargeting(king)
             error = error or  checkFor("P", king, pawns)
             
             if error: 

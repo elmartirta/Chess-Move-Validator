@@ -185,6 +185,39 @@ class Position():
                 print(piece, end=" ")
             print("")
 
+    def getOrthogonalsTargeting(self, target: Vector) -> List[Vector]:
+        xLine = [Vector(target.x, y) for y in range(0,8)]
+        yLine = [Vector(x, target.y) for x in range(0,8)]
+        orthogonals = xLine + yLine
+        return orthogonals
+    
+    def getDiagonalsTargeting(self, target: Vector) -> List[Vector]:
+        posPos = [target.plus( i, i) for i in range(1,8) if (target.plus( i, i)).isInsideChessboard()]
+        posNeg = [target.plus(-i, i) for i in range(1,8) if (target.plus(-i, i)).isInsideChessboard()]
+        NegPos = [target.plus( i,-i) for i in range(1,8) if (target.plus( i,-i)).isInsideChessboard()]
+        NegNeg = [target.plus(-i,-i) for i in range(1,8) if (target.plus(-i,-i)).isInsideChessboard()]
+        diagonals = posPos + posNeg + NegPos + NegNeg
+        return diagonals
+    
+    def getKnightSquaresTargeting(self, target: Vector) -> List[Vector]:
+        knightSquares = [target + deltaN for deltaN in [
+            Vector( 1 , 2),
+            Vector(-1 , 2),
+            Vector( 1 ,-2),
+            Vector(-1 ,-2),
+            Vector( 2 , 1),
+            Vector(-2 , 1),
+            Vector( 2 ,-1),
+            Vector(-2 ,-1)
+        ] if (target + deltaN).isInsideChessboard()]
+        return knightSquares
+    
+    def getWhitePawnsTargeting(self, target: Vector) -> List[Vector]:
+        return [target + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (target + delta).isInsideChessboard()]
+    
+    def getBlackPawnsTargeting(self, target: Vector):
+        return [target + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (target + delta).isInsideChessboard()]
+
 
 class FENParsingError(ValueError):
     def __init__(self, reason: str, FENString: str):
