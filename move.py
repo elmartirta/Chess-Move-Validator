@@ -1,41 +1,23 @@
 from __future__ import annotations
+from dataclasses import dataclass, replace
 from typing import Optional
 from vector import Vector
 
 
+@dataclass
 class Move():
-    def __init__(
-            self, 
-            pieceType: str = "", 
-            source: Optional[Vector] = None, 
-            destination: Optional[Vector] = None, 
-            isCapture: bool = False, 
-            isCheck: bool = False, 
-            isCheckmate: bool = False, 
-            promotionPiece: Optional[str] = None):
-        self.pieceType = pieceType
-        self.source = source
-        self.destination = destination
-        self.isCapture = isCapture
-        self.isCheck = isCheck
-        self.isCheckmate = isCheckmate
-        self.promotionPiece = promotionPiece
+    pieceType: str
+    source: Optional[Vector]
+    destination: Optional[Vector]
+    isCapture: bool = False
+    isCheck: bool = False
+    isCheckmate: bool = False
+    promotionPiece: Optional[str] = None
+
+    def clone(self):
+        return replace(self)
 
     def __repr__(self):
-        return self.toString()
-
-    def clone(self) -> Move:
-        return Move(
-            self.pieceType,
-            self.source,
-            self.destination,
-            self.isCapture,
-            self.isCheck,
-            self.isCheckmate,
-            self.promotionPiece
-        )
-
-    def toString(self) -> str:
         return "Move %s%s%s%s (%s%s)" % (
             self.pieceType,
             self.source.toAN() if self.source else "None",

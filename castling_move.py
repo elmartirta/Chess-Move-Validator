@@ -1,51 +1,31 @@
 from __future__ import annotations
+from dataclasses import dataclass, replace
 from typing import Optional
 from vector import Vector
 from move import Move
 from enum import Enum
 
 
-class CastlingMove(Move):
-    def __init__(
-            self, 
-            pieceType: str, 
-            source: Optional[Vector], 
-            destination: Optional[Vector], 
-            isCapture: bool, 
-            isCheck: bool, 
-            isCheckmate: bool, 
-            promotionPiece: None, 
-            castlingDirection: CastlingDirection, 
-            rookLocation: Optional[Vector]):
-        super().__init__(
-            pieceType, 
-            source, 
-            destination, 
-            isCapture, 
-            isCheck, 
-            isCheckmate, 
-            promotionPiece)
-        self.castlingDirection = castlingDirection
-        self.rookLocation = rookLocation
-
-    def clone(self) -> CastlingMove:
-        return CastlingMove(
-            self.pieceType,
-            self.source,
-            self.destination,
-            self.isCapture,
-            self.isCheck,
-            self.isCheckmate,
-            None,
-            self.castlingDirection,
-            self.rookLocation
-        )
+@dataclass
+class CastlingMove():
+    pieceType: str
+    source: Optional[Vector]
+    destination: Optional[Vector]
+    isCapture: bool
+    isCheck: bool
+    isCheckmate: bool 
+    promotionPiece: Optional[Vector]
+    castlingDirection: CastlingDirection
+    rookLocation: Optional[Vector]
 
     def isKingsideCastling(self) -> bool:
         return self.castlingDirection == CastlingDirection.KINGSIDE
+    
+    def clone(self):
+        return replace(self)
 
-    def toString(self) -> str:
-        return "Castling"+super().toString()
+    def __repr__(self) -> str:
+        return "Castling"+super().__repr__()
 
     def midStep(self) -> Vector:
         if self.source is None: raise ValueError
