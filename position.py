@@ -1,12 +1,11 @@
 from __future__ import annotations
 import random 
-import re
-from enum import Enum
 from typing import Iterable, List, Optional
 from vector import Vector
 from move import Move
 from castling_move import CastlingMove
 from dataclasses import dataclass, replace
+
 
 class Position():
     def __init__(
@@ -23,78 +22,6 @@ class Position():
         self.enPassantPawn = enPassantPawn or None
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
-
-    @classmethod
-    def fromChess960(cls, seed: int = None) -> Position:
-        if seed: random.seed(seed)
-        shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
-        return cls.fromFEN(
-            "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
-            (shuffled_pieces, shuffled_pieces.upper())
-        )
-
-    @classmethod
-    def fromFEN(cls, string: str) -> Position:
-        return cls.fromForsythEdwardsNotation(string)
-
-    @classmethod
-    def fromForsythEdwardsNotation(cls, string: str) -> Position:
-        if (string == None): 
-            raise FENParsingError(
-                    "String is equal to None",
-                string) 
-        if (string == ""): 
-            raise FENParsingError(
-                    "String is the empty String",
-                string)
-        fields = string.split(" ")
-        if len(fields) != 6: 
-            raise FENParsingError(
-                    "\Forsyth-Edwards Notation must have 6 fields, separated by 6 spaces",
-                string) 
-
-        if not re.fullmatch("([rnbqkpRNBQKP\d]{1,8}\/){7}[rnbqkpRNBQKP\d]{1,8} [wb] [KQkq-]{1,4} [a-h\-]\d* \d \d\d*", string):
-            raise FENParsingError(
-                    "Forsyth Edwards Notation must be in the correct format",
-                string) 
-        
-        pos = cls()
-        
-        piecePlacementField = fields[0] 
-        activeColorField = fields[1]
-        castlingRightsField = fields[2]
-        enPassantField = fields[3]
-        halfClockField = fields[4]
-        fullClockField = fields[5]
-
-        rows = piecePlacementField.split("/")
-        for rowIndex in range(0, len(rows)):
-            row = rows[rowIndex]
-            pieceIndex = 0
-            for char in row:
-                if pieceIndex >= 8: 
-                    break
-                if char.isdigit():
-                    pieceIndex += int(char)
-                elif char.isalpha():
-                    pos.setPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
-                    pieceIndex += 1
-                else:
-                    raise FENParsingError(
-                        "Invalid character \"%s\" when parsing boardstate." % char,
-                        string) 
-
-        pos.isWhiteToMove = True if activeColorField == "w" else False
-        pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
-        pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else None
-        pos.halfClock = int(halfClockField) 
-        pos.fullClock = int(fullClockField)
-        return pos
-
-    @classmethod
-    def fromStartingPosition(cls) -> Position:
-        return cls.fromFEN(
-            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     
     def clone(self) -> Position:
         return Position(
@@ -217,13 +144,6 @@ class Position():
     
     def getBlackPawnsTargeting(self, target: Vector):
         return [target + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (target + delta).isInsideChessboard()]
-
-
-class FENParsingError(ValueError):
-    def __init__(self, reason: str, FENString: str):
-        super().__init__(
-            "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
-            %(FENString, reason))
 
 
 @dataclass

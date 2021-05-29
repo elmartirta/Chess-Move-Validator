@@ -22,8 +22,8 @@ class MoveVerifier():
     @staticmethod
     def verifyMoveFromFEN(positionFEN: str, moveAN: str) -> VerificationResult:
         return MoveVerifier.verifyMove(
-            Position.fromFEN(positionFEN), 
-            Move.fromAN(moveAN))
+            NotationParser.parsePosition(positionFEN), 
+            NotationParser.parseAlgebreicNotation(moveAN))
 
     @staticmethod
     def verifyMove(position: Position, move: Move) -> VerificationResult:

@@ -68,10 +68,10 @@ class Vector():
 
     @classmethod
     def fromAN(cls, text: str) -> Vector:
-        return cls.fromAlgebreicNotation(text)
+        return cls.parseAlgebreicNotation(text)
 
     @classmethod
-    def fromAlgebreicNotation(cls, text: str) -> Vector:
+    def parseAlgebreicNotation(cls, text: str) -> Vector:
         toX = lambda chr : ord(chr.lower()) - 97
         toY = lambda chr : int(chr)-1
         if text is None or len(text) == 0:

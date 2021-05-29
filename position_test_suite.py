@@ -1,3 +1,4 @@
+from notation_parser import NotationParser
 from position import *
 from move import *
 from vector import Vector
@@ -18,7 +19,7 @@ class PositionTestSuite():
 
     @staticmethod
     def startPos():
-        pos = Position.fromStartingPosition()        
+        pos = NotationParser.fromStartingPosition()        
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights != None)
@@ -36,7 +37,7 @@ class PositionTestSuite():
     @staticmethod
     def chess960():
         for i in range(0, 50):
-            pos = Position.fromChess960()
+            pos = NotationParser.fromChess960()
             assert(pos != None)
             assert(pos.squares != None)
             assert(pos.enPassantPawn == None)
@@ -44,7 +45,7 @@ class PositionTestSuite():
 
     @staticmethod
     def doblBong():
-        pos = Position.fromFEN("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 0 1")
+        pos = NotationParser.parsePosition("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 0 1")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("-"))
@@ -53,7 +54,7 @@ class PositionTestSuite():
 
     @staticmethod
     def dutchDef():
-        pos = Position.fromFEN("rnbq1rk1/ppp1b1pp/3ppn2/5p2/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7")
+        pos = NotationParser.parsePosition("rnbq1rk1/ppp1b1pp/3ppn2/5p2/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("-"))
@@ -62,7 +63,7 @@ class PositionTestSuite():
 
     @staticmethod
     def scholMat():
-        pos = Position.fromFEN("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
+        pos = NotationParser.parsePosition("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
@@ -71,17 +72,17 @@ class PositionTestSuite():
 
     @staticmethod
     def enPassant():
-        pos = Position.fromFEN("rnbqkbnr/ppp2ppp/8/2Ppp3/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 3")
+        pos = NotationParser.parsePosition("rnbqkbnr/ppp2ppp/8/2Ppp3/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 3")
         assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
-        assert(pos.enPassantPawn == Vector.fromAlgebreicNotation("d6"))
+        assert(pos.enPassantPawn == Vector.parseAlgebreicNotation("d6"))
         return True
 
     @staticmethod
     def nextIsE4():
-        pos = Position.fromStartingPosition()
-        move = Move.fromAN("e4")
+        pos = NotationParser.fromStartingPosition()
+        move = NotationParser.parseAlgebreicNotation("e4")
         move.source = Vector.fromAN("e2")
         nextPos = pos.next(move)
         assert(nextPos.pieceAt(Vector.fromAN("e4")) == "P")

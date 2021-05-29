@@ -1,3 +1,4 @@
+from notation_parser import NotationParser
 from move import Move
 from vector import Vector
 
@@ -16,28 +17,28 @@ class MoveTestSuite():
 
     @staticmethod
     def Ra1():
-        m = Move.fromAN("Ra1")
+        m = NotationParser.parseAlgebreicNotation("Ra1")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
         assert(m.isCapture == False)
         assert(m.isCheck == False)
         assert(m.isCheckmate == False)
 
-        m = Move.fromAN("Ba1+")
+        m = NotationParser.parseAlgebreicNotation("Ba1+")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "B")
         assert(m.isCapture == False)
         assert(m.isCheck == True)
         assert(m.isCheckmate == False)
 
-        m = Move.fromAN("Rxa1#")
+        m = NotationParser.parseAlgebreicNotation("Rxa1#")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
         assert(m.isCapture == True)
         assert(m.isCheck == False)
         assert(m.isCheckmate == True)
 
-        m = Move.fromAN("Pxa1#")
+        m = NotationParser.parseAlgebreicNotation("Pxa1#")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "P")
         assert(m.isCapture == True)
@@ -48,7 +49,7 @@ class MoveTestSuite():
 
     @staticmethod
     def Rba1():
-        m = Move.fromAN("Rba1")
+        m = NotationParser.parseAlgebreicNotation("Rba1")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
         assert(m.source == Vector.fromAN("b"))
@@ -56,7 +57,7 @@ class MoveTestSuite():
         assert(m.isCheck == False)
         assert(m.isCheckmate == False)
 
-        m = Move.fromAN("Qbxa1#")
+        m = NotationParser.parseAlgebreicNotation("Qbxa1#")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "Q")
         assert(m.source == Vector.fromAN("b"))
@@ -64,7 +65,7 @@ class MoveTestSuite():
         assert(m.isCheck == False)
         assert(m.isCheckmate == True)
 
-        m = Move.fromAN("Bbxa1#")
+        m = NotationParser.parseAlgebreicNotation("Bbxa1#")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "B")
         assert(m.source == Vector.fromAN("b"))
@@ -76,7 +77,7 @@ class MoveTestSuite():
 
     @staticmethod
     def R1a1():
-        m = Move.fromAN("R1a1")
+        m = NotationParser.parseAlgebreicNotation("R1a1")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "R")
         assert(m.source == Vector.fromAN("1"))
@@ -84,7 +85,7 @@ class MoveTestSuite():
         assert(m.isCheck == False)
         assert(m.isCheckmate == False)
 
-        m = Move.fromAN("Q8xa1#")
+        m = NotationParser.parseAlgebreicNotation("Q8xa1#")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "Q")
         assert(m.source == Vector.fromAN("8"))
@@ -92,7 +93,7 @@ class MoveTestSuite():
         assert(m.isCheck == False)
         assert(m.isCheckmate == True)
 
-        m = Move.fromAN("B4xa1#")
+        m = NotationParser.parseAlgebreicNotation("B4xa1#")
         assert(m.destination == Vector.fromAN("a1"))
         assert(m.pieceType == "B")
         assert(m.source == Vector.fromAN("4"))
@@ -104,7 +105,7 @@ class MoveTestSuite():
 
     @staticmethod
     def Rb1a1():
-        m = Move.fromAN("Rb1a2")
+        m = NotationParser.parseAlgebreicNotation("Rb1a2")
         assert(m.pieceType == "R")
         assert(m.destination == Vector.fromAN("a2"))
         assert(m.source == Vector.fromAN("b1"))
@@ -112,7 +113,7 @@ class MoveTestSuite():
         assert(m.isCheck == False)
         assert(m.isCheckmate == False)
 
-        m = Move.fromAN("Ba1xh8#")
+        m = NotationParser.parseAlgebreicNotation("Ba1xh8#")
         assert(m.pieceType == "B")
         assert(m.destination == Vector.fromAN("h8"))
         assert(m.source == Vector.fromAN("a1"))
@@ -120,7 +121,7 @@ class MoveTestSuite():
         assert(m.isCheck == False)
         assert(m.isCheckmate == True)
 
-        m = Move.fromAN("Ba2h8+")
+        m = NotationParser.parseAlgebreicNotation("Ba2h8+")
         assert(m.pieceType == "B")
         assert(m.destination == Vector.fromAN("h8"))
         assert(m.source == Vector.fromAN("a2"))
@@ -132,14 +133,14 @@ class MoveTestSuite():
 
     @staticmethod
     def e4():
-        m = Move.fromAN("e4")        
+        m = NotationParser.parseAlgebreicNotation("e4")        
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("e4"))
         assert(m.isCapture == False)
         assert(m.isCheck == False)
         assert(m.isCheckmate == False)
 
-        m = Move.fromAN("e4+")        
+        m = NotationParser.parseAlgebreicNotation("e4+")        
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("e4"))
         assert(m.isCapture == False)
@@ -150,7 +151,7 @@ class MoveTestSuite():
 
     @staticmethod
     def dxe4():
-        m = Move.fromAN("dxe4#")        
+        m = NotationParser.parseAlgebreicNotation("dxe4#")        
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("e4"))
         assert(m.source == Vector.fromAN("d"))
@@ -162,7 +163,7 @@ class MoveTestSuite():
 
     @staticmethod
     def h8Q():
-        m = Move.fromAN("h8=Q")
+        m = NotationParser.parseAlgebreicNotation("h8=Q")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("h8"))
         assert(m.isCapture == False)
@@ -170,7 +171,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == False)
         assert(m.promotionPiece == "Q")
 
-        m = Move.fromAN("a8=R+")
+        m = NotationParser.parseAlgebreicNotation("a8=R+")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("a8"))
         assert(m.isCapture == False)
@@ -178,7 +179,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == False)
         assert(m.promotionPiece == "R")
 
-        m = Move.fromAN("f8=N#")
+        m = NotationParser.parseAlgebreicNotation("f8=N#")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("f8"))
         assert(m.isCapture == False)
@@ -190,7 +191,7 @@ class MoveTestSuite():
 
     @staticmethod
     def fxh8Q():
-        m = Move.fromAN("bxc8=B")
+        m = NotationParser.parseAlgebreicNotation("bxc8=B")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("c8"))
         assert(m.source == Vector.fromAN("c"))
@@ -199,7 +200,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == False)
         assert(m.promotionPiece == "B")
 
-        m = Move.fromAN("bxa8=Q+")
+        m = NotationParser.parseAlgebreicNotation("bxa8=Q+")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("a8"))
         assert(m.source == Vector.fromAN("b"))
@@ -208,7 +209,7 @@ class MoveTestSuite():
         assert(m.isCheckmate == False)
         assert(m.promotionPiece == "Q")
 
-        m = Move.fromAN("gxh8=R#")
+        m = NotationParser.parseAlgebreicNotation("gxh8=R#")
         assert(m.pieceType == "P")
         assert(m.destination == Vector.fromAN("h8"))
         assert(m.source == Vector.fromAN("g"))

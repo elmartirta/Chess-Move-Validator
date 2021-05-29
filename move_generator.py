@@ -1,3 +1,4 @@
+from notation_parser import NotationParser
 from typing import List
 from position import Position
 from move import Move
@@ -8,7 +9,10 @@ from castling_move import CastlingMove
 class MoveGenerator():
     @staticmethod
     def generateMoveListFromFEN(positionFEN: str, moveAN: str) -> List[Move]:
-        return MoveGenerator.generateMoveList(Position.fromFEN(positionFEN), CastlingMove.fromAN(moveAN))
+        return MoveGenerator.generateMoveList(
+            NotationParser.parsePosition(positionFEN),
+            NotationParser.parseAlgebreicNotation(moveAN)
+        )
 
     @staticmethod
     def generateMoveList(position: Position, move: Move) -> List[Move]:
