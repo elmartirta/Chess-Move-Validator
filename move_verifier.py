@@ -5,7 +5,6 @@ from move_filter import MoveFilter
 from position import Position
 from move import Move
 from castling_move import CastlingMove
-import enum
 
 
 class MoveVerifier():
@@ -18,12 +17,6 @@ class MoveVerifier():
                 break
             currentPosition = result.updatedPosition
         return result
-
-    @staticmethod
-    def verifyMoveFromFEN(positionFEN: str, moveAN: str) -> VerificationResult:
-        return MoveVerifier.verifyMove(
-            NotationParser.parsePosition(positionFEN), 
-            NotationParser.parseAlgebreicNotation(moveAN))
 
     @staticmethod
     def verifyMove(position: Position, move: Move) -> VerificationResult:
