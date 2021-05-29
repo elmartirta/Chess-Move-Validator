@@ -2,7 +2,7 @@ import random
 from typing import Union
 from vector import Vector
 from position import CastlingRights, Position
-from castling_move import CastlingDirection, CastlingMove
+from castling_move import CastlingMove
 from move import Move
 import re
 
@@ -30,7 +30,7 @@ class NotationParser():
                 "+" in string, 
                 "#" in string, 
                 None, 
-                CastlingDirection.QUEENSIDE if castlingMatch.group(1) else CastlingDirection.KINGSIDE, 
+                False if castlingMatch.group(1) else True, 
                 None)
         elif basicMatch:
             pieceType = basicMatch.group(1)
