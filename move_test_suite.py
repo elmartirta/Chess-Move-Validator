@@ -2,7 +2,6 @@ from move import Move
 from vector import Vector
 
 class MoveTestSuite():
-    @staticmethod
     def getTests():
         return [
             {"runnable": MoveTestSuite.Ra1, "name": "Moves like : Ra1, Ra1+, Ra1#, Rxa1+"},
@@ -14,7 +13,6 @@ class MoveTestSuite():
             {"runnable": MoveTestSuite.h8Q, "name": "Moves like : h8=Q, h8=Q+, h8=N#"},
         ]
 
-    @staticmethod
     def Ra1():
         m = Move.fromAN("Ra1")
         assert(m.destination == Vector.fromAN("a1"))
@@ -46,7 +44,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def Rba1():
         m = Move.fromAN("Rba1")
         assert(m.destination == Vector.fromAN("a1"))
@@ -74,7 +71,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def R1a1():
         m = Move.fromAN("R1a1")
         assert(m.destination == Vector.fromAN("a1"))
@@ -102,7 +98,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def Rb1a1():
         m = Move.fromAN("Rb1a2")
         assert(m.pieceType == "R")
@@ -130,7 +125,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def e4():
         m = Move.fromAN("e4")        
         assert(m.pieceType == "P")
@@ -148,7 +142,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def dxe4():
         m = Move.fromAN("dxe4#")        
         assert(m.pieceType == "P")
@@ -160,7 +153,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def h8Q():
         m = Move.fromAN("h8=Q")
         assert(m.pieceType == "P")
@@ -188,7 +180,6 @@ class MoveTestSuite():
 
         return True
 
-    @staticmethod
     def fxh8Q():
         m = Move.fromAN("bxc8=B")
         assert(m.pieceType == "P")

@@ -4,7 +4,6 @@ from vector import Vector
 
 
 class PositionTestSuite():
-    @staticmethod
     def getTests():
         return [
             {"runnable": PositionTestSuite.startPos, "name": "Chess Starting Position Initialized Correctly"},
@@ -16,7 +15,6 @@ class PositionTestSuite():
             {"runnable": PositionTestSuite.nextIsE4, "name": "Standard Position.next('e4') is actually 1. e4"}
         ]
 
-    @staticmethod
     def startPos():
         pos = Position.fromStartingPosition()        
         assert(pos.squares != None)
@@ -33,7 +31,6 @@ class PositionTestSuite():
 
         return True
 
-    @staticmethod
     def chess960():
         for i in range(0, 50):
             pos = Position.fromChess960()
@@ -42,7 +39,6 @@ class PositionTestSuite():
             assert(pos.enPassantPawn == None)
         return True
 
-    @staticmethod
     def doblBong():
         pos = Position.fromFEN("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 0 1")
         assert(pos.squares != None)
@@ -51,7 +47,6 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == None)
         return True
 
-    @staticmethod
     def dutchDef():
         pos = Position.fromFEN("rnbq1rk1/ppp1b1pp/3ppn2/5p2/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7")
         assert(pos.squares != None)
@@ -60,7 +55,6 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == None)
         return True
 
-    @staticmethod
     def scholMat():
         pos = Position.fromFEN("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
         assert(pos.squares != None)
@@ -69,7 +63,6 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == None)
         return True
 
-    @staticmethod
     def enPassant():
         pos = Position.fromFEN("rnbqkbnr/ppp2ppp/8/2Ppp3/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 3")
         assert(pos.squares != None)
@@ -78,7 +71,6 @@ class PositionTestSuite():
         assert(pos.enPassantPawn == Vector.fromAlgebreicNotation("d6"))
         return True
 
-    @staticmethod
     def nextIsE4():
         pos = Position.fromStartingPosition()
         move = Move.fromAN("e4")
