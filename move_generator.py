@@ -1,5 +1,5 @@
 from notation_parser import NotationParser
-from typing import List
+from typing import List, Union
 from position import Position
 from move import Move
 from vector import Vector 
@@ -15,7 +15,7 @@ class MoveGenerator():
         )
 
     @staticmethod
-    def generateMoveList(position: Position, move: Move) -> List[Move]:
+    def generateMoveList(position: Position, move: Union[Move, CastlingMove]) -> List[Move]:
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
@@ -101,7 +101,7 @@ class MoveGenerator():
             rook = None
             kingPos = homeRow.index(kingSymbol)
             king = Vector(kingPos, homeIndex)
-            edge = Vector(7, homeIndex) if move.isKingsideCastling() else Vector(0, homeIndex)
+            edge = Vector(7, homeIndex) if move.isKingsideCastling else Vector(0, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
                 if position.pieceTypeOf(rookCandidate) == "R" \
                         and position.pieceIsWhite(rookCandidate) == (position.isWhiteToMove):
@@ -110,7 +110,7 @@ class MoveGenerator():
         output = move.clone()
         if king is None: raise ValueError() #TODO - Lazy Error Writing
         output.source = king
-        output.destination = king + (Vector(2,0) if move.isKingsideCastling() else Vector(-2, 0))
+        output.destination = king + (Vector(2,0) if move.isKingsideCastling else Vector(-2, 0))
         output.rookLocation = rook
         return moveList.append(output)
 
