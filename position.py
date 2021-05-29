@@ -113,8 +113,8 @@ class Position():
             print("")
 
     def getOrthogonalsTargeting(self, target: Vector) -> List[Vector]:
-        xLine = [Vector(target.x, y) for y in range(0,8)]
-        yLine = [Vector(x, target.y) for x in range(0,8)]
+        xLine = [Vector(target.x, y) for y in range(0,8) if y != target.y]
+        yLine = [Vector(x, target.y) for x in range(0,8) if x != target.x]
         orthogonals = xLine + yLine
         return orthogonals
     
@@ -145,7 +145,13 @@ class Position():
     def getBlackPawnsTargeting(self, target: Vector):
         return [target + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (target + delta).isInsideChessboard()]
 
-
+    def getKingsTargeting(self, target:Vector):
+        kingSquares = [target + deltaN for deltaN in [
+            Vector(-1, 1), Vector(0, 1), Vector(1, 1),
+            Vector(-1, 0), Vector(1, 0),
+            Vector(-1,-1), Vector(0,-1), Vector(1,-1)
+        ] if (target + deltaN).isInsideChessboard()]
+        return kingSquares
 @dataclass
 class CastlingRights():
     whiteKingSide: bool = True
