@@ -3,7 +3,7 @@ from move_test_suite import MoveTestSuite
 from position_test_suite import PositionTestSuite
 from move_generator_test_suite import MoveGeneratorTestSuite
 from move_verifier_test_suite import MoveVerifierTestSuite
-from colorama import Fore, Style
+from colorama import Fore, Style # type: ignore
 import traceback
 
 
@@ -70,7 +70,7 @@ def runTests():
                     test["name"])
                 )
     print(
-        "%s%d out of %d tests passed! %s\n (%d percent success rate)" 
+        "\n%s%d out of %d tests passed! %s\n (%d percent success rate)\n" 
         % (
             Fore.GREEN if allTestsPassed == True else Fore.RED,
             testsPassed, 
@@ -79,7 +79,10 @@ def runTests():
             (testsPassed * 100 / testsRun)
         ))
     print("[%s]" % summaryString)
-    print()
+    if allTestsPassed:
+        print("\nAll Tests Passed!!!\n")
+    else:
+        print("\n===TEST FAILURE===\n")
     
     
 if __name__ == "__main__":

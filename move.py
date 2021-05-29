@@ -1,16 +1,18 @@
-import re
+from __future__ import annotations
+from typing import Optional
 from vector import Vector
+import re
 
 class Move():
     def __init__(
             self, 
-            pieceType="", 
-            source=None, 
-            destination=None, 
-            isCapture=False, 
-            isCheck=False, 
-            isCheckmate=False, 
-            promotionPiece=None):
+            pieceType: str = "", 
+            source: Optional[Vector] = None, 
+            destination: Optional[Vector] = None, 
+            isCapture: bool = False, 
+            isCheck: bool = False, 
+            isCheckmate: bool = False, 
+            promotionPiece: Optional[str] = None):
         self.pieceType = pieceType
         self.source = source
         self.destination = destination
@@ -22,7 +24,7 @@ class Move():
     def __repr__(self):
         return self.toString()
 
-    def clone(self):
+    def clone(self) -> Move:
         return Move(
             self.pieceType,
             self.source,
@@ -33,10 +35,12 @@ class Move():
             self.promotionPiece
         )
 
-    def fromAN(string):
-        return Move.fromAlgebreicNotation(string)
+    @classmethod
+    def fromAN(cls, string: str) -> Move:
+        return cls.fromAlgebreicNotation(string)
 
-    def fromAlgebreicNotation(string):
+    @classmethod
+    def fromAlgebreicNotation(cls, string: str) -> Move:
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -60,22 +64,22 @@ class Move():
                 promotionPiece = pawnMatch.group(6)
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
-        return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+        return cls(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
 
-    def toString(self):
+    def toString(self) -> str:
         return "Move %s%s%s%s (%s%s)" % (
             self.pieceType,
             self.source.toAN() if self.source else "None",
             "x" if self.isCapture else "->",
-            self.destination.toAN(),
+            self.destination.toAN() if self.destination else "None",
             "+" if self.isCheck else "",
             "#" if self.isCheckmate else ""
         )
 
-    def setSource(self, vector):
+    def setSource(self, vector: Vector) -> Move:
         self.source = vector
         return self
 
 class MoveParsingError(ValueError):
-    def __init__(self, moveString, message):
+    def __init__(self, moveString: str, message: str):
         super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))

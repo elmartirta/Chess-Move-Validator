@@ -1,18 +1,22 @@
+from __future__ import annotations
 import random 
 import re
 from enum import Enum
+from typing import Iterable, List, Optional
 from vector import Vector
+from move import Move
+from castling_move import CastlingMove
 from dataclasses import dataclass, replace
 
 class Position():
     def __init__(
             self, 
-            squares=None, 
-            isWhiteToMove=None, 
-            castlingRights=None, 
-            enPassantPawn=None, 
-            halfClock=None, 
-            fullClock=None):
+            squares: List[List[str]] = None, 
+            isWhiteToMove: bool = None, 
+            castlingRights: CastlingRights = None, 
+            enPassantPawn: Optional[Vector] = None, 
+            halfClock: int = None,
+            fullClock: int = None):
         self.squares = squares or [["-" for x in range(8)] for y in range(8)]
         self.isWhiteToMove = isWhiteToMove or True
         self.castlingRights = castlingRights or CastlingRights()
@@ -20,28 +24,21 @@ class Position():
         self.halfClock = halfClock or 0
         self.fullClock = fullClock or 1
 
-    def clone(self):
-        return Position(
-            [[self.squares[y][x] for x in range(8)] for y in range(8)],
-            self.isWhiteToMove,
-            replace(self.castlingRights),
-            self.enPassantPawn.clone() if self.enPassantPawn else None,
-            self.halfClock,
-            self.fullClock
-        )
-
-    def fromChess960(seed=None):
+    @classmethod
+    def fromChess960(cls, seed: int = None) -> Position:
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
-        return Position.fromFEN(
+        return cls.fromFEN(
             "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
             (shuffled_pieces, shuffled_pieces.upper())
         )
 
-    def fromFEN(string):
-        return Position.fromForsythEdwardsNotation(string)
+    @classmethod
+    def fromFEN(cls, string: str) -> Position:
+        return cls.fromForsythEdwardsNotation(string)
 
-    def fromForsythEdwardsNotation(string):
+    @classmethod
+    def fromForsythEdwardsNotation(cls, string: str) -> Position:
         if (string == None): 
             raise FENParsingError(
                     "String is equal to None",
@@ -61,14 +58,14 @@ class Position():
                     "Forsyth Edwards Notation must be in the correct format",
                 string) 
         
-        pos = Position()
+        pos = cls()
         
         piecePlacementField = fields[0] 
         activeColorField = fields[1]
         castlingRightsField = fields[2]
         enPassantField = fields[3]
         halfClockField = fields[4]
-        fullMoveField = fields[5]
+        fullClockField = fields[5]
 
         rows = piecePlacementField.split("/")
         for rowIndex in range(0, len(rows)):
@@ -91,46 +88,65 @@ class Position():
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
         pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else None
         pos.halfClock = int(halfClockField) 
-        pos.fullMove = int(fullMoveField)
+        pos.fullClock = int(fullClockField)
         return pos
 
-    def fromStartingPosition():
-        return Position.fromFEN(
+    @classmethod
+    def fromStartingPosition(cls) -> Position:
+        return cls.fromFEN(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    
+    def clone(self) -> Position:
+        return Position(
+            [[self.squares[y][x] for x in range(8)] for y in range(8)],
+            self.isWhiteToMove,
+            replace(self.castlingRights),
+            self.enPassantPawn.clone() if self.enPassantPawn else None,
+            self.halfClock,
+            self.fullClock
+        )
 
-    def setPiece(self, vector, pieceType):
+    def setPiece(self, vector: Vector, pieceType: str) -> Position:
         assert(vector.isInsideChessboard())
+        if vector.y is None or vector.x is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         self.squares[vector.y][vector.x] = pieceType
+        return self
 
-    def pieceAt(self, vector):
-        if not vector.isInsideChessboard(): 
-            raise ValueError(vector)
+    def pieceAt(self, vector: Vector) -> str:
+        if (not vector.isInsideChessboard() or
+            vector.y is None or 
+            vector.x is None): 
+                raise ValueError(vector) #TODO: SMELL - Lazy Error Writing
         return self.squares[vector.y][vector.x]
 
-    def isEmptyAt(self, vector):
+    def isEmptyAt(self, vector: Vector) -> bool:
         if not vector.isInsideChessboard():
             raise ValueError
         return self.pieceAt(vector) == "-"
-    def pieceIsWhite(self, vector):
+
+    def pieceIsWhite(self, vector: Vector) -> bool:
         return self.pieceAt(vector).isupper()
 
-    def pieceTypeOf(self, vector):
+    def pieceTypeOf(self, vector: Vector) -> str:
         return self.pieceAt(vector).upper()
 
-    def pieceTypeIs(self, vector, pieceType):
+    def pieceTypeIs(self, vector: Vector, pieceType: str) -> bool:
         return self.pieceAt(vector).upper() == pieceType.upper()
 
-    def castle(self, move):
+    def castle(self, move: CastlingMove) -> Position:
         return self.halfCastle(move).finishCastle(move)
     
-    def halfCastle(self, move):
+    def halfCastle(self, move: CastlingMove) -> Position:
         clone = self.clone()
+        if move.source is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone.setPiece(move.midStep(), self.pieceAt(move.source))
         clone.setPiece(move.source, "-")
         return clone
     
-    def finishCastle(self, move):
+    def finishCastle(self, move: CastlingMove) -> Position:
         clone = self.clone()
+        if move.source is None or move.destination is None or move.rookLocation is None: 
+            raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone.setPiece(move.destination, self.pieceAt(move.midStep()))
         clone.setPiece(move.midStep(), self.pieceAt(move.rookLocation))
         clone.setPiece(move.rookLocation, "-")
@@ -140,19 +156,21 @@ class Position():
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
-    def next(self, move):
+    def next(self, move: Move) -> Position:
+        if move.source is None or move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         source = move.source
         destination = move.destination
         clone = self.clone()
         clone.setPiece(destination, self.pieceAt(source))
         clone.setPiece(source, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
+        if destination.y is None or source.y is None: raise ValueError #TODO: SMELL - Lazy Error Writing
         clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else None
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
     
-    def findAll(self, pieceType):
+    def findAll(self, pieceType: str) -> Iterable[Vector]:
         result = []
         for y, row in enumerate(self.squares):
             for x, currentPiece in enumerate(row):
@@ -160,7 +178,7 @@ class Position():
                     result.append(Vector(x,y))
         return result
     
-    def printBoard(self):
+    def printBoard(self) -> None:
         for rankIndex in range(len(self.squares)-1,-1,-1):
             rank = self.squares[rankIndex]
             for piece in rank:
@@ -169,10 +187,11 @@ class Position():
 
 
 class FENParsingError(ValueError):
-    def __init__(self, reason, FENString):
+    def __init__(self, reason: str, FENString: str):
         super().__init__(
             "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
             %(FENString, reason))
+
 
 @dataclass
 class CastlingRights():
@@ -181,8 +200,9 @@ class CastlingRights():
     blackKingSide: bool = True
     blackQueenSide: bool = True
     
-    def fromFEN(string):
-        return CastlingRights(
+    @classmethod
+    def fromFEN(cls, string: str) -> CastlingRights:
+        return cls(
             "K" in string,
             "Q" in string,
             "k" in string,

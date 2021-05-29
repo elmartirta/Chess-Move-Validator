@@ -5,6 +5,7 @@ from castling_move import CastlingMove
 import pdb
 
 class MoveFilter():
+    @staticmethod
     def getPreMoveFilters():
         return [
             MoveFilter.checkSourcePiece,
@@ -14,12 +15,15 @@ class MoveFilter():
             MoveFilter.checkIfCurrentKingInCheck
         ]
 
+    @staticmethod
     def getMidCastleFilters():
         return [MoveFilter.checkIfCurrentKingInCheck]
 
+    @staticmethod
     def getPostMoveFilters():
         return [MoveFilter.checkIfOppositeKingInCheck]
 
+    @staticmethod
     def checkSourcePiece(position, move):
         if move.source.x == None or move.source.y == None:
             raise FilterError(
@@ -41,6 +45,7 @@ class MoveFilter():
         else:
             return FilterResult.accept(move)
 
+    @staticmethod
     def checkIfMoveWithinLegalBounds(position, move):
         if not move.destination.isInsideChessboard():
             return FilterResult.fail(
@@ -50,6 +55,7 @@ class MoveFilter():
         else:
             return FilterResult.accept(move)
  
+    @staticmethod
     def checkIfDestinationIsOccupied(position, move):
         if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove):
             return FilterResult.fail(
@@ -74,6 +80,7 @@ class MoveFilter():
                     move) 
         return FilterResult.accept(move)
     
+    @staticmethod
     def checkIfPathIsOccupied(position, move):
         if move.pieceType in "N":
             return FilterResult.accept(move)
@@ -85,12 +92,15 @@ class MoveFilter():
                     move)
         return FilterResult.accept(move)
 
+    @staticmethod
     def checkIfCurrentKingInCheck(position, move):
         return MoveFilter._checkIfKingInCheck(position, move, position.isWhiteToMove)
 
+    @staticmethod
     def checkIfOppositeKingInCheck(position, move):
         return MoveFilter._checkIfKingInCheck(position, move, not position.isWhiteToMove)
         
+    @staticmethod
     def _checkIfKingInCheck(position, move, kingIsWhite):
         kingSymbol = "K" if kingIsWhite else "k"
         if not any(kingSymbol in row for row in position.squares):
@@ -156,9 +166,11 @@ class FilterResult():
         self.move = move
         self.isLegal = isLegal
 
+    @staticmethod
     def accept(move):
         return FilterResult("", move, True)
 
+    @staticmethod
     def fail(reason, move):
         assert(isinstance(reason, str))
         return FilterResult(
