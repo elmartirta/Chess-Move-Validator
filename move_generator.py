@@ -1,3 +1,4 @@
+from board import Board
 from notation_parser import NotationParser
 from typing import List, Union
 from position import Position
@@ -19,53 +20,54 @@ class MoveGenerator():
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
+        board = position.board
         if isinstance(move, CastlingMove): MoveGenerator.addCastlingCandidates(moveList, position, move)
-        elif (move.pieceType in "rR"): MoveGenerator.addRookCandidates(moveList, position, move)
-        elif (move.pieceType in "bB"): MoveGenerator.addBishopCandidates(moveList, position, move)
-        elif (move.pieceType in "qQ"): MoveGenerator.addQueenCandidates(moveList, position, move)
-        elif (move.pieceType in "nN"): MoveGenerator.addKnightCandidates(moveList, position, move)
-        elif (move.pieceType in "kK"): MoveGenerator.addKingCandidates(moveList, position, move)
+        elif (move.pieceType in "rR"): MoveGenerator.addRookCandidates(moveList, board, move)
+        elif (move.pieceType in "bB"): MoveGenerator.addBishopCandidates(moveList, board, move)
+        elif (move.pieceType in "qQ"): MoveGenerator.addQueenCandidates(moveList, board, move)
+        elif (move.pieceType in "nN"): MoveGenerator.addKnightCandidates(moveList, board, move)
+        elif (move.pieceType in "kK"): MoveGenerator.addKingCandidates(moveList, board, move)
         elif (move.pieceType in "pP"): MoveGenerator.addPawnCandidates(moveList, position, move)
         else:
             raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
         return moveList
     
     @staticmethod
-    def addRookCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+    def addRookCandidates(moveList: List[Move], board: Board, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        rookLocations = position.board.getOrthogonalsTargeting(move.destination)
+        rookLocations = board.getOrthogonalsTargeting(move.destination)
         for candidate in rookLocations:
             if candidate == move.destination: 
                 continue
-            if position.board.pieceTypeIs(candidate, move.pieceType):
+            if board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
-    def addBishopCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+    def addBishopCandidates(moveList: List[Move], board: Board, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        bishopLocations = position.board.getDiagonalsTargeting(move.destination)
+        bishopLocations = board.getDiagonalsTargeting(move.destination)
         for candidate in bishopLocations:
-            if position.board.pieceTypeIs(candidate, move.pieceType):
+            if board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
-    def addKnightCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+    def addKnightCandidates(moveList: List[Move], board: Board, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        for candidate in position.board.getKnightSquaresTargeting(move.destination):
-            if position.board.pieceTypeIs(candidate, move.pieceType):
+        for candidate in board.getKnightSquaresTargeting(move.destination):
+            if board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
-    def addKingCandidates(moveList: List[Move], position: Position, move: Move) -> None:
+    def addKingCandidates(moveList: List[Move], board: Board, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        for candidate in position.board.getKingsTargeting(move.destination):
-            if candidate.isInsideChessboard() and position.board.pieceTypeIs(candidate, move.pieceType):
+        for candidate in board.getKingsTargeting(move.destination):
+            if candidate.isInsideChessboard() and board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
-    def addQueenCandidates(moveList: List[Move], position: Position, move: Move) -> None:
-        MoveGenerator.addBishopCandidates(moveList, position, move)
-        MoveGenerator.addRookCandidates(moveList, position, move)
+    def addQueenCandidates(moveList: List[Move], board: Board, move: Move) -> None:
+        MoveGenerator.addBishopCandidates(moveList, board, move)
+        MoveGenerator.addRookCandidates(moveList, board, move)
 
     @staticmethod
     def addPawnCandidates(moveList: List[Move], position: Position, move: Move) -> None:
