@@ -8,26 +8,26 @@ from castling_move import CastlingMove
 
 
 class MoveGenerator():
-    @staticmethod
-    def generateMoveListFromFEN(positionFEN: str, moveAN: str) -> List[Move]:
-        return MoveGenerator.generateMoveList(
+    @classmethod
+    def generateMoveListFromFEN(cls, positionFEN: str, moveAN: str) -> List[Move]:
+        return cls.generateMoveList(
             NotationParser.parsePosition(positionFEN),
             NotationParser.parseAlgebreicNotation(moveAN)
         )
 
-    @staticmethod
-    def generateMoveList(position: Position, move: Union[Move, CastlingMove]) -> List[Move]:
+    @classmethod
+    def generateMoveList(cls, position: Position, move: Union[Move, CastlingMove]) -> List[Move]:
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
         board = position.board
-        if isinstance(move, CastlingMove): MoveGenerator.addCastlingCandidates(moveList, position, move)
-        elif (move.pieceType in "rR"): MoveGenerator.addRookCandidates(moveList, board, move)
-        elif (move.pieceType in "bB"): MoveGenerator.addBishopCandidates(moveList, board, move)
-        elif (move.pieceType in "qQ"): MoveGenerator.addQueenCandidates(moveList, board, move)
-        elif (move.pieceType in "nN"): MoveGenerator.addKnightCandidates(moveList, board, move)
-        elif (move.pieceType in "kK"): MoveGenerator.addKingCandidates(moveList, board, move)
-        elif (move.pieceType in "pP"): MoveGenerator.addPawnCandidates(moveList, position, move)
+        if isinstance(move, CastlingMove): cls.addCastlingCandidates(moveList, position, move)
+        elif (move.pieceType in "rR"): cls.addRookCandidates(moveList, board, move)
+        elif (move.pieceType in "bB"): cls.addBishopCandidates(moveList, board, move)
+        elif (move.pieceType in "qQ"): cls.addQueenCandidates(moveList, board, move)
+        elif (move.pieceType in "nN"): cls.addKnightCandidates(moveList, board, move)
+        elif (move.pieceType in "kK"): cls.addKingCandidates(moveList, board, move)
+        elif (move.pieceType in "pP"): cls.addPawnCandidates(moveList, position, move)
         else:
             raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
         return moveList
