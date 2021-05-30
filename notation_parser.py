@@ -89,7 +89,7 @@ class NotationParser():
                 if char.isdigit():
                     pieceIndex += int(char)
                 elif char.isalpha():
-                    pos.setPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
+                    pos.board.setPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
                     pieceIndex += 1
                 else:
                     raise FENParsingError(

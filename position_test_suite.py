@@ -26,10 +26,10 @@ class PositionTestSuite():
         assert(pos.halfClock == 0)
         assert(pos.fullClock == 1)
 
-        assert(pos.pieceAt(Vector.fromAN("e1")) == "K")
-        assert(pos.pieceAt(Vector.fromAN("d1")) == "Q")
-        assert(pos.pieceAt(Vector.fromAN("a2")) == "P")
-        assert(pos.pieceAt(Vector.fromAN("a8")) == "r")
+        assert(pos.board.pieceAt(Vector.fromAN("e1")) == "K")
+        assert(pos.board.pieceAt(Vector.fromAN("d1")) == "Q")
+        assert(pos.board.pieceAt(Vector.fromAN("a2")) == "P")
+        assert(pos.board.pieceAt(Vector.fromAN("a8")) == "r")
 
         return True
 
@@ -79,5 +79,5 @@ class PositionTestSuite():
         move = NotationParser.parseAlgebreicNotation("e4")
         move.source = Vector.fromAN("e2")
         nextPos = pos.next(move)
-        assert(nextPos.pieceAt(Vector.fromAN("e4")) == "P")
+        assert(nextPos.board.pieceAt(Vector.fromAN("e4")) == "P")
         return True

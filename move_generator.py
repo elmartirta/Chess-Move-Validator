@@ -33,33 +33,33 @@ class MoveGenerator():
     @staticmethod
     def addRookCandidates(moveList: List[Move], position: Position, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        rookLocations = position.getOrthogonalsTargeting(move.destination)
+        rookLocations = position.board.getOrthogonalsTargeting(move.destination)
         for candidate in rookLocations:
             if candidate == move.destination: 
                 continue
-            if position.pieceTypeIs(candidate, move.pieceType):
+            if position.board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
     def addBishopCandidates(moveList: List[Move], position: Position, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        bishopLocations = position.getDiagonalsTargeting(move.destination)
+        bishopLocations = position.board.getDiagonalsTargeting(move.destination)
         for candidate in bishopLocations:
-            if position.pieceTypeIs(candidate, move.pieceType):
+            if position.board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
     def addKnightCandidates(moveList: List[Move], position: Position, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        for candidate in position.getKnightSquaresTargeting(move.destination):
-            if position.pieceTypeIs(candidate, move.pieceType):
+        for candidate in position.board.getKnightSquaresTargeting(move.destination):
+            if position.board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
     def addKingCandidates(moveList: List[Move], position: Position, move: Move) -> None:
         if move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        for candidate in position.getKingsTargeting(move.destination):
-            if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
+        for candidate in position.board.getKingsTargeting(move.destination):
+            if candidate.isInsideChessboard() and position.board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
     
     @staticmethod
@@ -85,14 +85,14 @@ class MoveGenerator():
 
         for delta in deltas:
             candidate = move.destination + delta
-            if candidate.isInsideChessboard() and position.pieceTypeIs(candidate, move.pieceType):
+            if candidate.isInsideChessboard() and position.board.pieceTypeIs(candidate, move.pieceType):
                 moveList.append(move.clone().setSource(candidate))
 
     @staticmethod
     def addCastlingCandidates(moveList: List[Move], position: Position, move: CastlingMove) -> None:
         homeIndex = 0 if position.isWhiteToMove else 7
         homeRow_temp = [Vector(x, homeIndex) for x in range(0,8)]
-        homeRow = [position.pieceTypeOf(tile) for tile in homeRow_temp]
+        homeRow = [position.board.pieceTypeOf(tile) for tile in homeRow_temp]
         kingSymbol = "K" if position.isWhiteToMove else "k"
         king = None
         if not kingSymbol in homeRow:
@@ -103,8 +103,8 @@ class MoveGenerator():
             king = Vector(kingPos, homeIndex)
             edge = Vector(7, homeIndex) if move.isKingsideCastling else Vector(0, homeIndex)
             for rookCandidate in king.between(edge) + [edge]:
-                if position.pieceTypeOf(rookCandidate) == "R" \
-                        and position.pieceIsWhite(rookCandidate) == (position.isWhiteToMove):
+                if position.board.pieceTypeOf(rookCandidate) == "R" \
+                        and position.board.pieceIsWhite(rookCandidate) == (position.isWhiteToMove):
                     rook = rookCandidate
                     break        
         output = move.clone()

@@ -30,13 +30,13 @@ class MoveFilter():
                     """Which Piece? The Source file is not instantiated, 
                     leading to ambiguity.""",
                 move) 
-        elif position.pieceTypeOf(move.source) != move.pieceType:
+        elif position.board.pieceTypeOf(move.source) != move.pieceType:
             raise FilterError(
                     """Hustler's Piece: Type of source Piece 
                     (%s) does not match type of move piece (%s)."""
-                    % (position.pieceTypeOf(move.source), move.pieceType),
+                    % (position.board.pieceTypeOf(move.source), move.pieceType),
                 move)
-        elif position.pieceIsWhite(move.source) != position.isWhiteToMove:
+        elif position.board.pieceIsWhite(move.source) != position.isWhiteToMove:
             return FilterResult.fail(
                     """Wrong Color: The color of the move's 
                     source piece does not match the color that
@@ -57,23 +57,23 @@ class MoveFilter():
  
     @staticmethod
     def checkIfDestinationIsOccupied(position, move):
-        if move.isCapture and (position.pieceIsWhite(move.destination) == position.isWhiteToMove):
+        if move.isCapture and (position.board.pieceIsWhite(move.destination) == position.isWhiteToMove):
             return FilterResult.fail(
                     """Friendly Fire: The move involves a piece trying to 
                     capture a target of the same color.""",
                 move)
-        elif move.isCapture and position.isEmptyAt(move.destination):
+        elif move.isCapture and position.board.isEmptyAt(move.destination):
             return FilterResult.fail(
                     """Starved Attacker: Move is a capture, but there is no 
                     piece to capture on the destination square""",
                 move)
-        elif not move.isCapture and not position.isEmptyAt(move.destination):
+        elif not move.isCapture and not position.board.isEmptyAt(move.destination):
             return FilterResult.fail(
                     """Cramped Quarters: The Move is not a capture,
                     and the destination is not empty""",
                 move)
         elif isinstance(move, CastlingMove):
-            if not position.isEmptyAt(move.midStep()):
+            if not position.board.isEmptyAt(move.midStep()):
                 return FilterResult.fail(
                         """Castling Blocked: There is a piece between the 
                         king's source and destination squares.""",
@@ -85,10 +85,10 @@ class MoveFilter():
         if move.pieceType in "N":
             return FilterResult.accept(move)
         for candidate in move.source.between(move.destination):
-            if not position.isEmptyAt(candidate):
+            if not position.board.isEmptyAt(candidate):
                 return FilterResult.fail(
                         """Obstructed: The piece %s at %s in the way of the move."""
-                        % (position.pieceAt(candidate), candidate.toAN()),
+                        % (position.board.pieceAt(candidate), candidate.toAN()),
                     move)
         return FilterResult.accept(move)
 
@@ -103,20 +103,20 @@ class MoveFilter():
     @staticmethod
     def _checkIfKingInCheck(position, move, kingIsWhite):
         kingSymbol = "K" if kingIsWhite else "k"
-        if len(position.findAll(kingSymbol)) == 0:
+        if len(position.board.findAll(kingSymbol)) == 0:
             raise FilterResult.fail(
                     """There is no king of the right color on the board""",
                 move)
-        kingLocations = position.findAll(kingSymbol)
+        kingLocations = position.board.findAll(kingSymbol)
 
         def checkFor(attackerType, kingLocation, candidates):
             for candidate in candidates:
                 if candidate != kingLocation \
-                        and position.pieceTypeIs(candidate, attackerType) \
-                        and position.pieceIsWhite(candidate) != kingIsWhite \
+                        and position.board.pieceTypeIs(candidate, attackerType) \
+                        and position.board.pieceIsWhite(candidate) != kingIsWhite \
                         and (
                             attackerType not in "RBQ" \
-                            or all(position.isEmptyAt(tile) for tile in king.between(candidate))):
+                            or all(position.board.isEmptyAt(tile) for tile in king.between(candidate))):
                     return FilterResult.fail(
                             "The king on %s is being checked by the %s on %s"
                             % (king.toAN(), attackerType, candidate.toAN()),
@@ -124,12 +124,12 @@ class MoveFilter():
 
         for king in kingLocations:
             error = None
-            error = error or checkFor("R", king, position.getOrthogonalsTargeting(king))
-            error = error or checkFor("B", king, position.getDiagonalsTargeting(king))
-            error = error or checkFor("Q", king, position.getOrthogonalsTargeting(king) + position.getDiagonalsTargeting(king))
-            error = error or checkFor("N", king, position.getKnightSquaresTargeting(king))
+            error = error or checkFor("R", king, position.board.getOrthogonalsTargeting(king))
+            error = error or checkFor("B", king, position.board.getDiagonalsTargeting(king))
+            error = error or checkFor("Q", king, position.board.getOrthogonalsTargeting(king) + position.board.getDiagonalsTargeting(king))
+            error = error or checkFor("N", king, position.board.getKnightSquaresTargeting(king))
 
-            pawns = position.getBlackPawnsTargeting(king) if kingIsWhite else position.getWhitePawnsTargeting(king)
+            pawns = position.board.getBlackPawnsTargeting(king) if kingIsWhite else position.board.getWhitePawnsTargeting(king)
             error = error or  checkFor("P", king, pawns)
             
             if error: 

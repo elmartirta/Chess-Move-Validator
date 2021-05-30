@@ -178,9 +178,9 @@ class MoveVerifierTestSuite():
             kingsIndianAttack, 
             [NotationParser.parseAlgebreicNotation("O-O")]
         ).updatedPosition
-        assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "R"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "K"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "-"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("f1"), "R"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("g1"), "K"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("h1"), "-"))
         return True
 
     @staticmethod
@@ -214,12 +214,12 @@ class MoveVerifierTestSuite():
             BDGambit_Bogoljubov, 
             [NotationParser.parseAlgebreicNotation("O-O-O")]
         ).updatedPosition
-        assert(newPos.pieceTypeIs(Vector.fromAN("a1"), "-"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("b1"), "-"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("c1"), "K"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("d1"), "R"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("e1"), "-"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("f1"), "B"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("g1"), "-"))
-        assert(newPos.pieceTypeIs(Vector.fromAN("h1"), "R"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("a1"), "-"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("b1"), "-"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("c1"), "K"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("d1"), "R"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("e1"), "-"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("f1"), "B"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("g1"), "-"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("h1"), "R"))
         return True
