@@ -103,7 +103,7 @@ class MoveFilter():
     @staticmethod
     def _checkIfKingInCheck(position, move, kingIsWhite):
         kingSymbol = "K" if kingIsWhite else "k"
-        if not any(kingSymbol in row for row in position.squares):
+        if len(position.findAll(kingSymbol)) == 0:
             raise FilterResult.fail(
                     """There is no king of the right color on the board""",
                 move)

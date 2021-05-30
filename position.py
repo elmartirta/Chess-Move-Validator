@@ -152,6 +152,8 @@ class Position():
             Vector(-1,-1), Vector(0,-1), Vector(1,-1)
         ] if (target + deltaN).isInsideChessboard()]
         return kingSquares
+
+
 @dataclass
 class CastlingRights():
     whiteKingSide: bool = True
