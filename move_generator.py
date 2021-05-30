@@ -29,12 +29,19 @@ class MoveGenerator():
             if move.destination is None:
                 raise ValueError("There is no destination for the move: " + str(move))
             destination = move.destination
-            if (move.pieceType in "rR"): candidates = cls._addRookCandidates(board, destination)
-            elif (move.pieceType in "bB"): candidates = cls._addBishopCandidates(board, destination)
-            elif (move.pieceType in "qQ"): candidates = cls._addQueenCandidates(board, destination)
-            elif (move.pieceType in "nN"): candidates = cls._addKnightCandidates(board, destination)
-            elif (move.pieceType in "kK"): candidates = cls._addKingCandidates(board, destination)
-            elif (move.pieceType in "pP"): candidates = cls._addPawnCandidates(moveList, position, move)
+            if (move.pieceType in "rR"): 
+                candidates = board.getOrthogonalsTargeting(destination)
+            elif (move.pieceType in "bB"): 
+                candidates = board.getDiagonalsTargeting(destination)
+            elif (move.pieceType in "qQ"): 
+                candidates =  board.getOrthogonalsTargeting(destination)
+                candidates += board.getDiagonalsTargeting(destination)
+            elif (move.pieceType in "nN"): 
+                candidates = board.getKnightSquaresTargeting(destination)
+            elif (move.pieceType in "kK"): 
+                candidates = board.getKingsTargeting(destination)
+            elif (move.pieceType in "pP"): 
+                candidates = cls._addPawnCandidates(moveList, position, move)
             else:
                 raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
 
@@ -46,21 +53,6 @@ class MoveGenerator():
         
         return moveList
     
-    @staticmethod
-    def _addRookCandidates(board: Board, destination: Vector) -> List[Vector]:
-        return board.getOrthogonalsTargeting(destination)
-
-    @staticmethod
-    def _addBishopCandidates(board: Board, destination: Vector) -> List[Vector]:
-        return board.getDiagonalsTargeting(destination)
-    
-    @staticmethod
-    def _addKnightCandidates(board: Board, destination: Vector) -> List[Vector]:
-        return board.getKnightSquaresTargeting(destination)
-    
-    @staticmethod
-    def _addKingCandidates(board: Board, destination: Vector) -> List[Vector]:
-        return board.getKingsTargeting(destination)
     
     @staticmethod
     def _addQueenCandidates(board: Board, destination: Vector) -> List[Vector]:
@@ -71,7 +63,7 @@ class MoveGenerator():
 
     @staticmethod
     def _addPawnCandidates(moveList: List[Move], position: Position, move: Move) -> List[Vector]:
-        if move.destination is None: return ValueError()
+        if move.destination is None: raise ValueError() #TODO: Lazy Error Writing
         destination = move.destination
       
         deltas = []
