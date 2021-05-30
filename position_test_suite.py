@@ -20,7 +20,6 @@ class PositionTestSuite():
     @staticmethod
     def startPos():
         pos = NotationParser.fromStartingPosition()        
-        assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights != None)
         assert(pos.enPassantPawn == None)
@@ -39,14 +38,12 @@ class PositionTestSuite():
         for i in range(0, 50):
             pos = NotationParser.fromChess960()
             assert(pos != None)
-            assert(pos.squares != None)
             assert(pos.enPassantPawn == None)
         return True
 
     @staticmethod
     def doblBong():
         pos = NotationParser.parsePosition("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 0 1")
-        assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("-"))
         assert(pos.enPassantPawn == None)
@@ -55,7 +52,6 @@ class PositionTestSuite():
     @staticmethod
     def dutchDef():
         pos = NotationParser.parsePosition("rnbq1rk1/ppp1b1pp/3ppn2/5p2/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7")
-        assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("-"))
         assert(pos.enPassantPawn == None)
@@ -64,7 +60,6 @@ class PositionTestSuite():
     @staticmethod
     def scholMat():
         pos = NotationParser.parsePosition("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 0 1")
-        assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
         assert(pos.enPassantPawn == None)
@@ -73,7 +68,6 @@ class PositionTestSuite():
     @staticmethod
     def enPassant():
         pos = NotationParser.parsePosition("rnbqkbnr/ppp2ppp/8/2Ppp3/8/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 3")
-        assert(pos.squares != None)
         assert(pos.isWhiteToMove)
         assert(pos.castlingRights == CastlingRights.fromFEN("KQkq"))
         assert(pos.enPassantPawn == Vector.parseAlgebreicNotation("d6"))

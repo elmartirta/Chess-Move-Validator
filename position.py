@@ -10,13 +10,13 @@ from dataclasses import dataclass, replace
 class Position():
     def __init__(
             self, 
-            squares: List[List[str]] = None, 
+            _squares: List[List[str]] = None, 
             isWhiteToMove: bool = None, 
             castlingRights: CastlingRights = None, 
             enPassantPawn: Optional[Vector] = None, 
             halfClock: int = None,
             fullClock: int = None):
-        self.squares = squares or [["-" for x in range(8)] for y in range(8)]
+        self._squares = _squares or [["-" for x in range(8)] for y in range(8)]
         self.isWhiteToMove = isWhiteToMove or True
         self.castlingRights = castlingRights or CastlingRights()
         self.enPassantPawn = enPassantPawn or None
@@ -25,7 +25,7 @@ class Position():
     
     def clone(self) -> Position:
         return Position(
-            [[self.squares[y][x] for x in range(8)] for y in range(8)],
+            [[self._squares[y][x] for x in range(8)] for y in range(8)],
             self.isWhiteToMove,
             replace(self.castlingRights),
             self.enPassantPawn.clone() if self.enPassantPawn else None,
@@ -36,7 +36,7 @@ class Position():
     def setPiece(self, vector: Vector, pieceType: str) -> Position:
         assert(vector.isInsideChessboard())
         if vector.y is None or vector.x is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
-        self.squares[vector.y][vector.x] = pieceType
+        self._squares[vector.y][vector.x] = pieceType
         return self
 
     def pieceAt(self, vector: Vector) -> str:
@@ -44,7 +44,7 @@ class Position():
             vector.y is None or 
             vector.x is None): 
                 raise ValueError(vector) #TODO: SMELL - Lazy Error Writing
-        return self.squares[vector.y][vector.x]
+        return self._squares[vector.y][vector.x]
 
     def isEmptyAt(self, vector: Vector) -> bool:
         if not vector.isInsideChessboard():
@@ -99,15 +99,15 @@ class Position():
     
     def findAll(self, pieceType: str) -> Iterable[Vector]:
         result = []
-        for y, row in enumerate(self.squares):
+        for y, row in enumerate(self._squares):
             for x, currentPiece in enumerate(row):
                 if currentPiece == pieceType:
                     result.append(Vector(x,y))
         return result
     
     def printBoard(self) -> None:
-        for rankIndex in range(len(self.squares)-1,-1,-1):
-            rank = self.squares[rankIndex]
+        for rankIndex in range(len(self._squares)-1,-1,-1):
+            rank = self._squares[rankIndex]
             for piece in rank:
                 print(piece, end=" ")
             print("")
