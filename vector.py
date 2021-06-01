@@ -47,20 +47,30 @@ class Vector():
 
     @classmethod
     def parseAlgebreicNotation(cls, text: str) -> Vector | UnfinishedVector:
-        toX = lambda chr : ord(chr.lower()) - 97
-        toY = lambda chr : int(chr)-1
-        if text is None or len(text) == 0:
+        if text is None:
+            return UnfinishedVector(None, None)
+        elif len(text) == 0:
             return UnfinishedVector(None, None)
         elif len(text) == 1:
-            if text[0].isalpha():
-                return UnfinishedVector(toX(text[0]), None)
+            if text.isalpha():
+                return UnfinishedVector(cls._alphaToX(text), None)
             else:
-                return UnfinishedVector(None, toY(text[0]))
+                return UnfinishedVector(None, cls._numericToY(text))
         elif len(text) == 2:
-            return Vector(toX(text[0]), toY(text[1]))
+            return Vector(
+                cls._alphaToX(text[0]), 
+                cls._numericToY(text[1]))
         else:
             raise ANParsingError(text, "Length of the text is longer than 2")
 
+    @staticmethod
+    def _alphaToX(chr: str) -> int:
+        return ord(chr.lower()) - 97
+
+    @staticmethod
+    def _numericToY(chr: str) -> int:
+        return int(chr)-1
+        
     def toAN(self) -> str:
         return self.toAlgebreicNotation()
 
