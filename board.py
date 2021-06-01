@@ -14,15 +14,12 @@ class Board():
 
     def setPiece(self, vector: Vector, pieceType: str) -> Board:
         assert(vector.isInsideChessboard())
-        if vector.y is None or vector.x is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         self._squares[vector.y][vector.x] = pieceType
         return self
 
     def pieceAt(self, vector: Vector) -> str:
-        if (not vector.isInsideChessboard() or
-            vector.y is None or 
-            vector.x is None): 
-                raise ValueError(vector) #TODO: SMELL - Lazy Error Writing
+        if (not vector.isInsideChessboard()): 
+            raise ValueError(vector)
         return self._squares[vector.y][vector.x]
 
     def isEmptyAt(self, vector: Vector) -> bool:

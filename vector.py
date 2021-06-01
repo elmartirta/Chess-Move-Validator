@@ -79,8 +79,8 @@ class Vector():
         return self.toAlgebreicNotation()
 
     def toAlgebreicNotation(self) -> str:
-        sourceRank = chr(self.x+97) if not self.x is None else ""
-        sourceFile = str(self.y+1) if not self.y is None else ""
+        sourceRank = chr(self.x+97)
+        sourceFile = str(self.y+1)
         return sourceRank + sourceFile
 
     def plus(self, x: int, y: int) -> Vector:

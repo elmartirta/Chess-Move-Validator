@@ -73,7 +73,6 @@ class Position():
         clone.board.setPiece(destination, self.board.pieceAt(source))
         clone.board.setPiece(source, "-")
         clone.isWhiteToMove = not self.isWhiteToMove
-        if destination.y is None or source.y is None: raise ValueError #TODO: SMELL - Lazy Error Writing
         clone.enPassantPawn = destination if move.pieceType == "P" and abs(destination.y - source.y) == 2 else None
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
