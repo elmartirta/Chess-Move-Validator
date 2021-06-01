@@ -103,7 +103,7 @@ class Vector():
         return str(self)
 
     def isInsideChessboard(self) -> bool:
-        return self.x >= 0 and self.x <= 7 and self.y >= 0 and self.y <= 7
+        return 7 >= self.x >= 0 and 7 >= self.y >= 0
 
     def between(self, other: Vector) -> List[Vector]:
         return [self + delta for delta in (other - self).walk()]
