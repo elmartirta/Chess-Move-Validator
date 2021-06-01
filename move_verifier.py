@@ -1,15 +1,15 @@
 from __future__ import annotations
-from typing import List
+from typing import List, Union
 from move_generator import MoveGenerator
 from move_filter import MoveFilter
 from position import Position
-from move import Move
+from move import Move, UnfinishedMove
 from castling_move import CastlingMove
 
 
 class MoveVerifier():
     @staticmethod
-    def verifyGame(position: Position, moveList: List[Move]) -> VerificationResult:
+    def verifyGame(position: Position, moveList: List[UnfinishedMove]) -> VerificationResult:
         currentPosition = position
         for move in moveList:
             result = MoveVerifier.verifyMove(currentPosition, move)
@@ -19,7 +19,7 @@ class MoveVerifier():
         return result
 
     @staticmethod
-    def verifyMove(position: Position, move: Move) -> VerificationResult:
+    def verifyMove(position: Position, move: UnfinishedMove) -> VerificationResult:
         filteredMoves: List[VerificationResult] = [] #TODO: SMELL - Misrepresentative Name
         for candidate in MoveGenerator.generateMoveList(position, move):
             filteredMoves.append(
@@ -74,17 +74,17 @@ class MoveVerifier():
 
 
 class VerificationResult():
-    def __init__(self, reason: str, updatedPosition: Position, move: Move, isLegal: bool):
+    def __init__(self, reason: str, updatedPosition: Position, move: Union[UnfinishedMove | Move], isLegal: bool):
         self.reason = reason
         self.updatedPosition = updatedPosition
         self.move = move
         self.isLegal = isLegal
 
     @staticmethod
-    def accept(position: Position, move: Move) -> VerificationResult:
+    def accept(position: Position, move: Union[UnfinishedMove | Move]) -> VerificationResult:
         return VerificationResult("", position, move, True)
 
     @staticmethod
-    def fail(reason: str, position: Position, move: Move) -> VerificationResult:
+    def fail(reason: str, position: Position, move: Union[UnfinishedMove | Move]) -> VerificationResult:
         assert(isinstance(reason, str))
         return VerificationResult(reason, position, move, False)

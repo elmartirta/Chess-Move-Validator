@@ -2,7 +2,7 @@ from board import Board
 from notation_parser import NotationParser
 from typing import List, Union
 from position import Position
-from move import Move
+from move import Move, UnfinishedMove
 from vector import Vector 
 from castling_move import CastlingMove
 
@@ -16,7 +16,7 @@ class MoveGenerator():
         )
 
     @classmethod
-    def generateMoveList(cls, position: Position, move: Union[Move, CastlingMove]) -> List[Move]:
+    def generateMoveList(cls, position: Position, move: Union[UnfinishedMove, CastlingMove]) -> List[Move]:
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
@@ -45,17 +45,17 @@ class MoveGenerator():
             else:
                 raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
 
-        for candidate in candidates:
-            if candidate == move.destination: 
-                continue
-            if board.pieceTypeIs(candidate, move.pieceType):
-                moveList.append(move.clone().setSource(candidate))
+            for candidate in candidates:
+                if candidate == move.destination: 
+                    continue
+                if board.pieceTypeIs(candidate, move.pieceType):
+                    moveList.append(move.complete(candidate))
         
         return moveList
     
 
     @staticmethod
-    def _addPawnCandidates(moveList: List[Move], position: Position, move: Move) -> List[Vector]:
+    def _addPawnCandidates(moveList: List[Move], position: Position, move: UnfinishedMove) -> List[Vector]:
         if move.destination is None: raise ValueError() #TODO: Lazy Error Writing
         destination = move.destination
       

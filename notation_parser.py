@@ -3,13 +3,13 @@ from typing import Union
 from vector import UnfinishedVector, Vector
 from position import CastlingRights, Position
 from castling_move import CastlingMove
-from move import Move
+from move import UnfinishedMove
 import re
 
 
 class NotationParser():
     @classmethod
-    def parseAlgebreicNotation(cls, string: str) -> Union[Move,  CastlingMove]:
+    def parseAlgebreicNotation(cls, string: str) -> Union[UnfinishedMove,  CastlingMove]:
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -49,7 +49,7 @@ class NotationParser():
         
         if isinstance(destination, UnfinishedVector): raise ValueError() #TODO: SMELL - Lazy Error Writing
 
-        return Move(
+        return UnfinishedMove(
             pieceType, 
             source, 
             destination, 
