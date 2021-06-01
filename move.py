@@ -20,9 +20,9 @@ class Move():
     def __repr__(self):
         return "Move %s%s%s%s (%s%s)" % (
             self.pieceType,
-            self.source.toAN() if self.source else "None",
+            self.source.toAN(),
             "x" if self.isCapture else "->",
-            self.destination.toAN() if self.destination else "None",
+            self.destination.toAN(),
             "+" if self.isCheck else "",
             "#" if self.isCheckmate else ""
         )
