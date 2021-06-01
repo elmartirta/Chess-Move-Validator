@@ -1,9 +1,10 @@
 from __future__ import annotations
+from dataclasses import dataclass
 from typing import List, Optional
 
 
 class Vector():
-    def __init__(self, x: Optional[int], y: Optional[int]):
+    def __init__(self, x: int, y: int):
         # TODO: SMELL - MAJOR CODE SMELL - The issue with Vector being constructed using 
         # Optional[int]s,is that it casts doubt throughout the entire codebase, whether a vector 
         # you're using, actually has information. It's the source of many, many, many null checks, 
@@ -67,25 +68,31 @@ class Vector():
         return "Vector(%s, %s)" % (str(self.x), str(self.y))
 
     @classmethod
-    def fromAN(cls, text: str) -> Vector:
+    def fromANStrict(cls, text: str) -> Vector:
+        vec = cls.parseAlgebreicNotation(text)
+        if isinstance(vec, UnfinishedVector):
+            raise ValueError
+        return vec
+
+    @classmethod
+    def fromAN(cls, text: str) -> Vector | UnfinishedVector:
         return cls.parseAlgebreicNotation(text)
 
     @classmethod
-    def parseAlgebreicNotation(cls, text: str) -> Vector:
+    def parseAlgebreicNotation(cls, text: str) -> Vector | UnfinishedVector:
         toX = lambda chr : ord(chr.lower()) - 97
         toY = lambda chr : int(chr)-1
         if text is None or len(text) == 0:
-            x,y = None, None
+            return UnfinishedVector(None, None)
         elif len(text) == 1:
             if text[0].isalpha():
-                x,y = toX(text[0]), None
+                return UnfinishedVector(toX(text[0]), None)
             else:
-                x,y = None, toY(text[0])
+                return UnfinishedVector(None, toY(text[0]))
         elif len(text) == 2:
-            x,y = toX(text[0]), toY(text[1])
+            return Vector(toX(text[0]), toY(text[1]))
         else:
             raise ANParsingError(text, "Length of the text is longer than 2")
-        return cls(x,y)
 
     def toAN(self) -> str:
         return self.toAlgebreicNotation()
@@ -168,7 +175,20 @@ class Vector():
     def clone(self) -> Vector:
         return Vector(self.x, self.y)
 
-        
+
+@dataclass
+class UnfinishedVector():
+    x: Optional[int]
+    y: Optional[int]
+
+    def toAN(self) -> str:
+        return self.toAlgebreicNotation()
+
+    def toAlgebreicNotation(self) -> str:
+        sourceRank = chr(self.x+97) if not self.x is None else ""
+        sourceFile = str(self.y+1) if not self.y is None else ""
+        return sourceRank + sourceFile
+
 class ANParsingError(ValueError):
     def __init__(self, ANText: str, errorMessage: str):
         super().__init__("Error trying to parse AN \"%s\": %s" % (ANText, errorMessage))

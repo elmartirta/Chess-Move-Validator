@@ -1,13 +1,13 @@
 from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Optional
-from vector import Vector
+from vector import UnfinishedVector, Vector
 
 
 @dataclass
 class Move():
     pieceType: str
-    source: Optional[Vector]
+    source: Optional[Vector | UnfinishedVector]
     destination: Optional[Vector]
     isCapture: bool = False
     isCheck: bool = False

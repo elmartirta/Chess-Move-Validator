@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional
-from vector import Vector
+from vector import UnfinishedVector, Vector
 from board import Board
 from move import Move
 from castling_move import CastlingMove
@@ -37,15 +37,20 @@ class Position():
         return self.halfCastle(move).finishCastle(move)
     
     def halfCastle(self, move: CastlingMove) -> Position:
+        if (move.source is None or
+            isinstance(move.source, UnfinishedVector)): raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone = self.clone()
-        if move.source is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone.board.setPiece(move.midStep(), self.board.pieceAt(move.source))
         clone.board.setPiece(move.source, "-")
         return clone
     
     def finishCastle(self, move: CastlingMove) -> Position:
         clone = self.clone()
-        if move.source is None or move.destination is None or move.rookLocation is None: 
+        if (move.source is None or 
+                move.destination is None or 
+                move.rookLocation is None or
+                isinstance(move.source, UnfinishedVector) or
+                isinstance(move.destination, UnfinishedVector)): 
             raise ValueError() #TODO: SMELL - Lazy Error Writing
         clone.board.setPiece(move.destination, self.board.pieceAt(move.midStep()))
         clone.board.setPiece(move.midStep(), self.board.pieceAt(move.rookLocation))
@@ -57,7 +62,11 @@ class Position():
         return clone
     
     def next(self, move: Move) -> Position:
-        if move.source is None or move.destination is None: raise ValueError() #TODO: SMELL - Lazy Error Writing
+        if (move.source is None or 
+                move.destination is None or 
+                isinstance(move.source, UnfinishedVector) or
+                isinstance(move.destination, UnfinishedVector)): 
+            raise ValueError() #TODO: SMELL - Lazy Error Writing
         source = move.source
         destination = move.destination
         clone = self.clone()

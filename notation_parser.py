@@ -1,6 +1,6 @@
 import random
 from typing import Union
-from vector import Vector
+from vector import UnfinishedVector, Vector
 from position import CastlingRights, Position
 from castling_move import CastlingMove
 from move import Move
@@ -47,7 +47,16 @@ class NotationParser():
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
         
-        return Move(pieceType, source, destination, isCapture, isCheck, isCheckmate, promotionPiece)
+        if isinstance(destination, UnfinishedVector): raise ValueError() #TODO: SMELL - Lazy Error Writing
+
+        return Move(
+            pieceType, 
+            source, 
+            destination, 
+            isCapture, 
+            isCheck, 
+            isCheckmate, 
+            promotionPiece)
 
     @classmethod
     def parsePosition(cls, string: str) -> Position:
@@ -98,7 +107,7 @@ class NotationParser():
 
         pos.isWhiteToMove = True if activeColorField == "w" else False
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
-        pos.enPassantPawn = Vector.fromAN(enPassantField) if enPassantField != "-" else None
+        pos.enPassantPawn = Vector.fromANStrict(enPassantField) if enPassantField != "-" else None
         pos.halfClock = int(halfClockField) 
         pos.fullClock = int(fullClockField)
         return pos 
