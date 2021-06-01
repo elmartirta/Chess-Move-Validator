@@ -22,7 +22,7 @@ class MoveFilter():
 
     @staticmethod
     def checkSourcePiece(position, move):
-        if move.source.x == None or move.source.y == None:
+        if isinstance(move.source, UnfinishedVector):
             raise FilterError(
                     """Which Piece? The Source file is not instantiated, 
                     leading to ambiguity.""",
