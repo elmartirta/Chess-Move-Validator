@@ -66,17 +66,25 @@ class Vector():
     @staticmethod
     def _alphaToX(chr: str) -> int:
         return ord(chr.lower()) - 97
+    
+    @staticmethod
+    def _xToAlpha(x: int) -> str:
+        return str(x+97)
 
     @staticmethod
     def _numericToY(chr: str) -> int:
         return int(chr)-1
-        
+
+    @staticmethod
+    def _yToNumeric(y: int) -> str:
+        return chr(y + 1)
+
     def toAN(self) -> str:
         return self.toAlgebreicNotation()
 
     def toAlgebreicNotation(self) -> str:
-        sourceRank = chr(self.x+97)
-        sourceFile = str(self.y+1)
+        sourceRank = Vector._xToAlpha(self.x)
+        sourceFile = Vector._yToNumeric(self.y)
         return sourceRank + sourceFile
 
     def plus(self, x: int, y: int) -> Vector:
