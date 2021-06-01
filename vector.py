@@ -5,20 +5,6 @@ from typing import List, Optional
 
 class Vector():
     def __init__(self, x: int, y: int):
-        # TODO: SMELL - MAJOR CODE SMELL - The issue with Vector being constructed using 
-        # Optional[int]s,is that it casts doubt throughout the entire codebase, whether a vector 
-        # you're using, actually has information. It's the source of many, many, many null checks, 
-        # (especially since mypy is particularly strict about adding potential None values
-        # together). However, "Unfinished" vectors do have a place in this codebase. The move
-        # Rbd1, for instance, has the source vector "b", with no information about the other
-        # value. Therefore, a potential solution would be to this functionality into a
-        # "Finished" and "Unfinished" vector class, where the Unfinished vector class
-        # has Optional[int] values, and where the Vector class, must have filled in int values.
-        # That way, the logic of filling in values, and using them,can be separated into two 
-        # different areas. 
-        # 
-        # - Elmar, May 2021
-
         self.x = x
         self.y = y
 
