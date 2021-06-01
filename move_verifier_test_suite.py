@@ -1,8 +1,5 @@
 from notation_parser import NotationParser
 from move_verifier import MoveVerifier
-from position import Position
-from move import Move
-from castling_move import CastlingMove
 from vector import Vector
 
 

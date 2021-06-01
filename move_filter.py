@@ -1,8 +1,5 @@
-from move import Move
 from position import *
-from vector import Vector 
 from castling_move import CastlingMove
-import pdb
 
 class MoveFilter():
     @staticmethod

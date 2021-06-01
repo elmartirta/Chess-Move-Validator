@@ -1,5 +1,4 @@
 from notation_parser import NotationParser
-from move import Move
 from vector import Vector
 
 class MoveTestSuite():
