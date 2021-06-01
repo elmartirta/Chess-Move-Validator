@@ -53,13 +53,6 @@ class MoveGenerator():
         
         return moveList
     
-    
-    @staticmethod
-    def _addQueenCandidates(board: Board, destination: Vector) -> List[Vector]:
-        queenCandidates: List[Vector] = []
-        queenCandidates += MoveGenerator._addBishopCandidates(board, destination)
-        queenCandidates += MoveGenerator._addRookCandidates(board, destination)
-        return queenCandidates
 
     @staticmethod
     def _addPawnCandidates(moveList: List[Move], position: Position, move: Move) -> List[Vector]:
