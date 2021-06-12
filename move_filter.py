@@ -1,9 +1,11 @@
+from __future__ import annotations
+from typing import Callable, List
 from position import *
 from castling_move import CastlingMove
 
 class MoveFilter():
     @staticmethod
-    def getPreMoveFilters():
+    def getPreMoveFilters() -> List[Callable[[Position, Move], FilterResult]]:
         return [
             MoveFilter.checkSourcePiece,
             MoveFilter.checkIfMoveWithinLegalBounds,
@@ -13,15 +15,15 @@ class MoveFilter():
         ]
 
     @staticmethod
-    def getMidCastleFilters():
+    def getMidCastleFilters() -> List[Callable[[Position, Move], FilterResult]]:
         return [MoveFilter.checkIfCurrentKingInCheck]
 
     @staticmethod
-    def getPostMoveFilters():
+    def getPostMoveFilters() -> List[Callable[[Position, Move], FilterResult]]:
         return [MoveFilter.checkIfOppositeKingInCheck]
 
     @staticmethod
-    def checkSourcePiece(position, move):
+    def checkSourcePiece(position: Position, move: Move) -> FilterResult:
         if isinstance(move.source, UnfinishedVector):
             raise FilterError(
                     """Which Piece? The Source file is not instantiated, 
@@ -43,7 +45,7 @@ class MoveFilter():
             return FilterResult.accept(move)
 
     @staticmethod
-    def checkIfMoveWithinLegalBounds(position, move):
+    def checkIfMoveWithinLegalBounds(position: Position, move: Move) -> FilterResult:
         if not move.destination.isInsideChessboard():
             return FilterResult.fail(
                     """Out of Bounds: The move's destination is not 
@@ -53,7 +55,7 @@ class MoveFilter():
             return FilterResult.accept(move)
  
     @staticmethod
-    def checkIfDestinationIsOccupied(position, move):
+    def checkIfDestinationIsOccupied(position: Position, move: Move) -> FilterResult:
         if move.isCapture and (position.board.pieceIsWhite(move.destination) == position.isWhiteToMove):
             return FilterResult.fail(
                     """Friendly Fire: The move involves a piece trying to 
@@ -78,7 +80,7 @@ class MoveFilter():
         return FilterResult.accept(move)
     
     @staticmethod
-    def checkIfPathIsOccupied(position, move):
+    def checkIfPathIsOccupied(position: Position, move: Move) -> FilterResult:
         if move.pieceType in "N":
             return FilterResult.accept(move)
         for candidate in move.source.between(move.destination):
@@ -90,18 +92,18 @@ class MoveFilter():
         return FilterResult.accept(move)
 
     @staticmethod
-    def checkIfCurrentKingInCheck(position, move):
+    def checkIfCurrentKingInCheck(position: Position, move: Move) -> FilterResult:
         return MoveFilter._checkIfKingInCheck(position, move, position.isWhiteToMove)
 
     @staticmethod
-    def checkIfOppositeKingInCheck(position, move):
+    def checkIfOppositeKingInCheck(position: Position, move: Move) -> FilterResult:
         return MoveFilter._checkIfKingInCheck(position, move, not position.isWhiteToMove)
         
     @staticmethod
-    def _checkIfKingInCheck(position, move, kingIsWhite):
+    def _checkIfKingInCheck(position: Position, move: Move, kingIsWhite: bool) -> FilterResult:
         kingSymbol = "K" if kingIsWhite else "k"
         if len(position.board.findAll(kingSymbol)) == 0:
-            raise FilterResult.fail(
+            return FilterResult.fail(
                     """There is no king of the right color on the board""",
                 move)
         kingLocations = position.board.findAll(kingSymbol)
@@ -119,8 +121,8 @@ class MoveFilter():
                             % (king.toAN(), attackerType, candidate.toAN()),
                         move)
 
+        error = None
         for king in kingLocations:
-            error = None
             error = error or checkFor("R", king, position.board.getOrthogonalsTargeting(king))
             error = error or checkFor("B", king, position.board.getDiagonalsTargeting(king))
             error = error or checkFor("Q", king, position.board.getOrthogonalsTargeting(king) + position.board.getDiagonalsTargeting(king))
@@ -129,24 +131,24 @@ class MoveFilter():
             pawns = position.board.getBlackPawnsTargeting(king) if kingIsWhite else position.board.getWhitePawnsTargeting(king)
             error = error or  checkFor("P", king, pawns)
             
-            if error: 
-                return error
-            else:
-                return FilterResult.accept(move)  
+        if error: 
+            return error
+        else:
+            return FilterResult.accept(move)  
 
 
 class FilterResult():
-    def __init__(self, reason, move, isLegal=True):
+    def __init__(self, reason: str, move: Move, isLegal: bool=True):
         self.reason = reason
         self.move = move
         self.isLegal = isLegal
 
     @staticmethod
-    def accept(move):
+    def accept(move: Move) -> FilterResult:
         return FilterResult("", move, True)
 
     @staticmethod
-    def fail(reason, move):
+    def fail(reason: str, move: Move) -> FilterResult:
         assert(isinstance(reason, str))
         return FilterResult(
                 "The move %s fails the filtration process because: %s"
@@ -155,7 +157,7 @@ class FilterResult():
 
 
 class FilterError(ValueError):
-    def __init__(self, reason, move):
+    def __init__(self, reason: str, move: Move):
         super().__init__(
             "The move %s is unable to be properly filtered, because: %s" \
             % (move, reason))

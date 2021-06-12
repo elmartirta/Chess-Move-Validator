@@ -36,7 +36,7 @@ class Board():
     def pieceTypeIs(self, vector: Vector, pieceType: str) -> bool:
         return self.pieceAt(vector).upper() == pieceType.upper()
 
-    def findAll(self, pieceType: str) -> Iterable[Vector]:
+    def findAll(self, pieceType: str) -> List[Vector]:
         result = []
         for y, row in enumerate(self._squares):
             for x, currentPiece in enumerate(row):
