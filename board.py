@@ -81,10 +81,10 @@ class Board():
     def getWhitePawnsTargeting(self, target: Vector) -> List[Vector]:
         return [target + delta for delta in [Vector(1,-1), Vector(-1,-1)] if (target + delta).isInsideChessboard()]
     
-    def getBlackPawnsTargeting(self, target: Vector):
+    def getBlackPawnsTargeting(self, target: Vector) -> List[Vector]:
         return [target + delta for delta in [Vector(1, 1), Vector(-1, 1)] if (target + delta).isInsideChessboard()]
 
-    def getKingsTargeting(self, target:Vector):
+    def getKingsTargeting(self, target:Vector) -> List[Vector]:
         kingSquares = [target + deltaN for deltaN in [
             Vector(-1, 1), Vector(0, 1), Vector(1, 1),
             Vector(-1, 0), Vector(1, 0),
