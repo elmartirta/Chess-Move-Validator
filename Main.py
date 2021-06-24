@@ -26,15 +26,13 @@ def displaySelectionMenu():
         print("  [2] Manually notate a game of chess")
         print("  [Q] Quit")
         print(">", end="")
+        
         selection = input()
-
         if not selection:
             print("Please select an option.")
             continue
-        elif selection == "1":
-            displayFileValidationMenu()
-        elif selection == "2":
-            displayManualNotation()
+        elif selection == "1": displayFileValidationMenu()
+        elif selection == "2": displayManualNotation()
         elif selection == "q" or selection == "Q":
             break
 
