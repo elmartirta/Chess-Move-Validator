@@ -93,29 +93,29 @@ class MoveFilter():
 
     @staticmethod
     def checkIfCurrentKingInCheck(position: Position, move: Move) -> FilterResult:
-        return MoveFilter._checkIfKingInCheck(position, move, position.isWhiteToMove)
+        return MoveFilter._checkIfKingInCheck(position.board, move, position.isWhiteToMove)
 
     @staticmethod
     def checkIfOppositeKingInCheck(position: Position, move: Move) -> FilterResult:
-        return MoveFilter._checkIfKingInCheck(position, move, not position.isWhiteToMove)
+        return MoveFilter._checkIfKingInCheck(position.board, move, not position.isWhiteToMove)
         
     @staticmethod
-    def _checkIfKingInCheck(position: Position, move: Move, kingIsWhite: bool) -> FilterResult:
+    def _checkIfKingInCheck(board: Board, move: Move, kingIsWhite: bool) -> FilterResult:
         kingSymbol = "K" if kingIsWhite else "k"
-        if len(position.board.findAll(kingSymbol)) == 0:
+        if len(board.findAll(kingSymbol)) == 0:
             return FilterResult.fail(
                     """There is no king of the right color on the board""",
                 move)
-        kingLocations = position.board.findAll(kingSymbol)
+        kingLocations = board.findAll(kingSymbol)
 
         def checkFor(attackerType, kingLocation, candidates):
             for candidate in candidates:
                 if candidate != kingLocation \
-                        and position.board.pieceTypeIs(candidate, attackerType) \
-                        and position.board.pieceIsWhite(candidate) != kingIsWhite \
+                        and board.pieceTypeIs(candidate, attackerType) \
+                        and board.pieceIsWhite(candidate) != kingIsWhite \
                         and (
                             attackerType not in "RBQ" \
-                            or all(position.board.isEmptyAt(tile) for tile in king.between(candidate))):
+                            or all(board.isEmptyAt(tile) for tile in king.between(candidate))):
                     return FilterResult.fail(
                             "The king on %s is being checked by the %s on %s"
                             % (king.toAN(), attackerType, candidate.toAN()),
@@ -123,12 +123,12 @@ class MoveFilter():
 
         error = None
         for king in kingLocations:
-            error = error or checkFor("R", king, position.board.getOrthogonalsTargeting(king))
-            error = error or checkFor("B", king, position.board.getDiagonalsTargeting(king))
-            error = error or checkFor("Q", king, position.board.getOrthogonalsTargeting(king) + position.board.getDiagonalsTargeting(king))
-            error = error or checkFor("N", king, position.board.getKnightSquaresTargeting(king))
+            error = error or checkFor("R", king, board.getOrthogonalsTargeting(king))
+            error = error or checkFor("B", king, board.getDiagonalsTargeting(king))
+            error = error or checkFor("Q", king, board.getOrthogonalsTargeting(king) + board.getDiagonalsTargeting(king))
+            error = error or checkFor("N", king, board.getKnightSquaresTargeting(king))
 
-            pawns = position.board.getBlackPawnsTargeting(king) if kingIsWhite else position.board.getWhitePawnsTargeting(king)
+            pawns = board.getBlackPawnsTargeting(king) if kingIsWhite else board.getWhitePawnsTargeting(king)
             error = error or  checkFor("P", king, pawns)
             
         if error: 
@@ -136,12 +136,11 @@ class MoveFilter():
         else:
             return FilterResult.accept(move)  
 
-
+@dataclass
 class FilterResult():
-    def __init__(self, reason: str, move: Move, isLegal: bool=True):
-        self.reason = reason
-        self.move = move
-        self.isLegal = isLegal
+    reason: str
+    move: Move
+    isLegal: bool = True
 
     @staticmethod
     def accept(move: Move) -> FilterResult:
