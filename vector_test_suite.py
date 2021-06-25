@@ -10,7 +10,8 @@ class VectorTestSuite:
             {"runnable": VectorTestSuite.vecEq, "name": "Vectors can be equated"},
             {"runnable": VectorTestSuite.anValid, "name": "Algebreic Notation has correct values"},
             {"runnable": VectorTestSuite.vecAdd, "name": "Addition of Vectors"},
-            {"runnable": VectorTestSuite.vecSub, "name": "Subtraction of Vectors"}
+            {"runnable": VectorTestSuite.vecSub, "name": "Subtraction of Vectors"},
+            {"runnable": VectorTestSuite.vecToAN, "name": "Translation to Algebreic Notation"}
         ]
 
     @staticmethod
@@ -87,3 +88,14 @@ class VectorTestSuite:
         assert(Vector.fromAN("a1") - Vector.fromAN("a1") == Vector.fromAN("a1"))
         assert(Vector.fromAN("c2") - Vector.fromAN("b3") == Vector(1,-1))
         return True
+    
+    @staticmethod
+    def vecToAN():
+        assert(Vector(0,0).toAN() == "a1"), Vector(0,0).toAN()
+        assert(Vector(1,0).toAN() == "b1"), Vector(1,0).toAN()
+        assert(Vector(0,1).toAN() == "a2"), Vector(0,1).toAN()
+        assert(Vector(7,0).toAN() == "h1"), Vector(7,0).toAN()
+        assert(Vector(0,7).toAN() == "a8"), Vector(0,7).toAN()
+        assert(Vector(4,4).toAN() == "e5"), Vector(4,4).toAN()
+        return True
+        

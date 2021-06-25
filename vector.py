@@ -69,7 +69,7 @@ class Vector():
     
     @staticmethod
     def _xToAlpha(x: int) -> str:
-        return str(x+97)
+        return chr(x + 97)
 
     @staticmethod
     def _numericToY(chr: str) -> int:
@@ -77,7 +77,7 @@ class Vector():
 
     @staticmethod
     def _yToNumeric(y: int) -> str:
-        return chr(y + 1)
+        return str(y + 1)
 
     def toAN(self) -> str:
         return self.toAlgebreicNotation()
