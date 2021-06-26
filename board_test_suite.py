@@ -1,3 +1,5 @@
+from typing import List
+from vector import Vector
 from board import Board
 
 
@@ -10,6 +12,7 @@ class BoardTestSuite():
             {"runnable": cls.emptyBoardFromFen, "name": "Initialize a Board object"},
             {"runnable": cls.startingBoardFromFEN, "name": "Initialize a Board object"},
             {"runnable": cls.boardEquality, "name": "Is able to compare boards"},
+            {"runnable": cls.canSee, "name": "Checking if pieces can see others"},
         ]
     
     @staticmethod
@@ -46,3 +49,24 @@ class BoardTestSuite():
         assert(Board() == Board())
         startingPos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
         assert(Board.fromFEN(startingPos) == Board.fromFEN(startingPos))
+        return True
+
+    @staticmethod
+    def canSee():
+        starBoard = Board.fromFEN("8/3q3k/1Q1Q1Q2/8/qQ1q1Qq1/8/1Q1Q1Q1K/3q4")
+        attacker = Vector.fromAN("d4")
+
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("b2")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("d2")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("f2")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("b4")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("f4")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("b6")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("d6")))
+        assert(starBoard.pieceCanSee(attacker, Vector.fromAN("f6")))
+        
+        assert(not starBoard.pieceCanSee(attacker, Vector.fromAN("d1")))
+        assert(not starBoard.pieceCanSee(attacker, Vector.fromAN("a4")))
+        assert(not starBoard.pieceCanSee(attacker, Vector.fromAN("g4")))
+        assert(not starBoard.pieceCanSee(attacker, Vector.fromAN("d7")))
+        return True

@@ -49,6 +49,9 @@ class Board():
             raise ValueError
         return self.pieceAt(vector) == "-"
 
+    def pieceCanSee(self, attacker: Vector, target: Vector) -> bool:
+        return all([self.pieceTypeIs(s,"-") for s in attacker.between(target)])
+
     def pieceIsWhite(self, vector: Vector) -> bool:
         return self.pieceAt(vector).isupper()
 
