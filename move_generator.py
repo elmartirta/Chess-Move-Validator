@@ -9,6 +9,13 @@ from castling_move import CastlingMove
 
 class MoveGenerator():
     @classmethod
+    def generateMoveListFromStartingPosition(cls, moveAN: str) -> List[Move]:
+        return cls.generateMoveList(
+            NotationParser.fromStartingPosition(),
+            NotationParser.parseAlgebreicNotation(moveAN)
+        )
+
+    @classmethod
     def generateMoveListFromFEN(cls, positionFEN: str, moveAN: str) -> List[Move]:
         return cls.generateMoveList(
             NotationParser.parsePosition(positionFEN),

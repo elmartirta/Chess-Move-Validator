@@ -1,4 +1,4 @@
-from position import Position
+from vector import Vector
 from move_generator import MoveGenerator
 from castling_move import CastlingMove
 
@@ -6,6 +6,10 @@ class MoveGeneratorTestSuite():
     @staticmethod
     def getTests():
         return [
+            {"runnable": MoveGeneratorTestSuite.moveOneA3, "name": "Generate 1.a3"},
+            {"runnable": MoveGeneratorTestSuite.moveOneA4, "name": "Generate 1.a4"},
+            {"runnable": MoveGeneratorTestSuite.moveOneNA4, "name": "Generate 1.Na4"},
+            {"runnable": MoveGeneratorTestSuite.moveOneE4, "name": "Generate 1.e4"},
             {"runnable": MoveGeneratorTestSuite.allTob3, "name": "Generate Moves from all pieces to B3"},
             {"runnable": MoveGeneratorTestSuite.rGen, "name": "Generate lots of simple rook moves"},
             {"runnable": MoveGeneratorTestSuite.bGen, "name": "Generate lots of simple bishop moves"},
@@ -18,6 +22,42 @@ class MoveGeneratorTestSuite():
             {"runnable": MoveGeneratorTestSuite.qAmbGen, "name": "Generate ambiguous queen moves"},
             {"runnable": MoveGeneratorTestSuite.castle, "name": "Generate castling moves"}
         ]
+        
+    @staticmethod
+    def moveOneA3():
+        candidateMoves = MoveGenerator.generateMoveListFromStartingPosition("a3")
+        assert(len(candidateMoves) == 1), str(candidateMoves)
+        assert(candidateMoves[0].pieceType == "P"), candidateMoves[0]
+        assert(candidateMoves[0].source == Vector.fromAN("a2")), candidateMoves[0].source.toAN()
+        assert(candidateMoves[0].destination == Vector.fromAN("a3")), candidateMoves[0].destination.toAN()
+        return True
+    
+    @staticmethod
+    def moveOneA4():
+        candidateMoves = MoveGenerator.generateMoveListFromStartingPosition("a4")
+        assert(len(candidateMoves) == 1), str(candidateMoves)
+        assert(candidateMoves[0].pieceType == "P"), candidateMoves[0]
+        assert(candidateMoves[0].source == Vector.fromAN("a2")), candidateMoves[0].source.toAN()
+        assert(candidateMoves[0].destination == Vector.fromAN("a4")), candidateMoves[0].destination.toAN()
+        return True
+    
+    @staticmethod
+    def moveOneNA4():
+        candidateMoves = MoveGenerator.generateMoveListFromStartingPosition("Na3")
+        assert(len(candidateMoves) == 1), str(candidateMoves)
+        assert(candidateMoves[0].pieceType == "N"), candidateMoves[0]
+        assert(candidateMoves[0].source == Vector.fromAN("b1")), candidateMoves[0].source.toAN()
+        assert(candidateMoves[0].destination == Vector.fromAN("a3")), candidateMoves[0].destination.toAN()
+        return True
+
+    @staticmethod
+    def moveOneE4():
+        candidateMoves = MoveGenerator.generateMoveListFromStartingPosition("e4")
+        assert(len(candidateMoves) == 1), str(candidateMoves)
+        assert(candidateMoves[0].pieceType == "P"), candidateMoves[0]
+        assert(candidateMoves[0].source == Vector.fromAN("e2")), candidateMoves[0].source.toAN()
+        assert(candidateMoves[0].destination == Vector.fromAN("e4")), candidateMoves[0].destination.toAN()
+        return True
 
     @staticmethod
     def allTob3():
