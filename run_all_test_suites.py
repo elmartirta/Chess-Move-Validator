@@ -1,3 +1,4 @@
+from notation_parser_test_suite import NotationParserTestSuite
 from board_test_suite import BoardTestSuite
 from vector_test_suite import VectorTestSuite
 from move_test_suite import MoveTestSuite
@@ -22,6 +23,7 @@ def runTests():
         {"suite_name": "MOV", "test_list": MoveTestSuite.getTests()},
         {"suite_name": "BOD", "test_list": BoardTestSuite.getTests()},
         {"suite_name": "POS", "test_list": PositionTestSuite.getTests()},
+        {"suite_name": "NTN", "test_list": NotationParserTestSuite.getTests()},
         {"suite_name": "GEN", "test_list": MoveGeneratorTestSuite.getTests()},
         {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()}
     ]

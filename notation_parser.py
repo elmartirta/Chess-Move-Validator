@@ -1,3 +1,4 @@
+from board import Board
 import random
 from typing import Union
 from vector import UnfinishedVector, Vector
@@ -88,23 +89,7 @@ class NotationParser():
         halfClockField = fields[4]
         fullClockField = fields[5]
 
-        rows = piecePlacementField.split("/")
-        for rowIndex in range(0, len(rows)):
-            row = rows[rowIndex]
-            pieceIndex = 0
-            for char in row:
-                if pieceIndex >= 8: 
-                    break
-                if char.isdigit():
-                    pieceIndex += int(char)
-                elif char.isalpha():
-                    pos.board.setPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
-                    pieceIndex += 1
-                else:
-                    raise FENParsingError(
-                        "Invalid character \"%s\" when parsing boardstate." % char,
-                        string) 
-
+        pos.board = Board.fromFEN(piecePlacementField)
         pos.isWhiteToMove = True if activeColorField == "w" else False
         pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
         pos.enPassantPawn = Vector.fromANStrict(enPassantField) if enPassantField != "-" else None
