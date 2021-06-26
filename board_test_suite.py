@@ -11,10 +11,12 @@ class BoardTestSuite():
             {"runnable": cls.startingBoardFromFEN, "name": "Initialize a Board object"},
         ]
     
+    @staticmethod
     def initializeEmptyBoard():
         board = Board()
         return True
 
+    @staticmethod
     def boardHasSquares():
         squares = Board()._squares
         assert(squares)
@@ -22,12 +24,14 @@ class BoardTestSuite():
         assert(all([len(row) == 8 for row in squares])), squares
         assert(all([(square == '-' for square in row) for row in squares])), squares
         return True
-    
+
+    @staticmethod    
     def emptyBoardFromFen():
         emptyBoard = Board.fromFEN("8/8/8/8/8/8/8/8")
         assert(emptyBoard._squares == Board()._squares)
         return True
     
+    @staticmethod
     def startingBoardFromFEN():
         startingBoard = Board.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
         assert(startingBoard._squares[0] == [s for s in "RNBQKBNR"]), startingBoard._squares[0]
