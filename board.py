@@ -1,8 +1,9 @@
 from __future__ import annotations
+from dataclasses import dataclass
 from typing import Iterable, List
 from vector import Vector
 
-
+@dataclass
 class Board():
     def __init__(self, squares: List[List[str]] = None):
         self._squares = squares or [["-" for _ in range(8)] for _ in range(8)]

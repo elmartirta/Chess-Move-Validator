@@ -9,6 +9,7 @@ class BoardTestSuite():
             {"runnable": cls.boardHasSquares, "name": "Board() contains an 8x8 .squares matrix"},
             {"runnable": cls.emptyBoardFromFen, "name": "Initialize a Board object"},
             {"runnable": cls.startingBoardFromFEN, "name": "Initialize a Board object"},
+            {"runnable": cls.boardEquality, "name": "Is able to compare boards"},
         ]
     
     @staticmethod
@@ -40,5 +41,8 @@ class BoardTestSuite():
         assert(startingBoard._squares[7] == [s for s in "rnbqkbnr"]), startingBoard._squares[7]
         return True
     
-
-        
+    @staticmethod
+    def boardEquality():
+        assert(Board() == Board())
+        startingPos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+        assert(Board.fromFEN(startingPos) == Board.fromFEN(startingPos))
