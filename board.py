@@ -7,6 +7,27 @@ class Board():
     def __init__(self, squares: List[List[str]] = None):
         self._squares = squares or [["-" for _ in range(8)] for _ in range(8)]
 
+    @staticmethod
+    def fromFEN(fenString: str) -> Board:
+        board = Board()
+        rows = fenString.split("/")
+        for rowIndex in range(0, len(rows)):
+            row = rows[rowIndex]
+            pieceIndex = 0
+            for char in row:
+                if pieceIndex >= 8: 
+                    break
+                if char.isdigit():
+                    pieceIndex += int(char)
+                elif char.isalpha():
+                    board.setPiece(Vector(pieceIndex, 8-(rowIndex+1)),char)
+                    pieceIndex += 1
+                else:
+                    raise ValueError(
+                        "Invalid character \"%s\" when parsing boardstate. %s" 
+                    % (char, fenString))
+        return board
+
     def clone(self) -> Board:
         board = Board()
         board._squares = [[self._squares[y][x] for x in range(8)] for y in range(8)]

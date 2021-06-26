@@ -1,3 +1,4 @@
+from board_test_suite import BoardTestSuite
 from vector_test_suite import VectorTestSuite
 from move_test_suite import MoveTestSuite
 from position_test_suite import PositionTestSuite
@@ -19,6 +20,7 @@ def runTests():
     test_suites = [
         {"suite_name": "VEC", "test_list": VectorTestSuite.getTests()},
         {"suite_name": "MOV", "test_list": MoveTestSuite.getTests()},
+        {"suite_name": "BOD", "test_list": BoardTestSuite.getTests()},
         {"suite_name": "POS", "test_list": PositionTestSuite.getTests()},
         {"suite_name": "GEN", "test_list": MoveGeneratorTestSuite.getTests()},
         {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()}
