@@ -83,12 +83,10 @@ class MoveFilter():
     def checkIfPathIsOccupied(position: Position, move: Move) -> FilterResult:
         if move.pieceType in "N":
             return FilterResult.accept(move)
-        for candidate in move.source.between(move.destination):
-            if not position.board.isEmptyAt(candidate):
-                return FilterResult.fail(
-                        """Obstructed: The piece %s at %s in the way of the move."""
-                        % (position.board.pieceAt(candidate), candidate.toAN()),
-                    move)
+        if not position.board.pieceCanSee(move.source, move.destination):
+            return FilterResult.fail(
+                    """Obstructed: A piece is in the way of the move.""",
+                move)
         return FilterResult.accept(move)
 
     @staticmethod
@@ -115,7 +113,7 @@ class MoveFilter():
                         and board.pieceIsWhite(candidate) != kingIsWhite \
                         and (
                             attackerType not in "RBQ" \
-                            or all(board.isEmptyAt(tile) for tile in king.between(candidate))):
+                            or board.pieceCanSee(candidate, king)):
                     return FilterResult.fail(
                             "The king on %s is being checked by the %s on %s"
                             % (king.toAN(), attackerType, candidate.toAN()),
