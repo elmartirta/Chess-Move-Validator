@@ -32,6 +32,7 @@ def runTests():
     testsRun = 0
     summaryString = ""
     errorString = None
+    firstFailure = True
     for suite in test_suites:
         test_number = 0
         print("-- %s ---:----->" % suite["suite_name"])
@@ -78,6 +79,10 @@ def runTests():
                 if errorString: 
                     print(errorString)
                     errorString = None
+                
+                if result != True and firstFailure:
+                    firstFailure = False
+                    input("There was an Error... Type any key to continue tests..")
     print(
         "\n%s%d out of %d tests passed! %s\n (%d percent success rate)\n" 
         % (
