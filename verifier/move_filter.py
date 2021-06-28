@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Callable, List
-from position import *
-from castling_move import CastlingMove
+from .position import *
+from .castling_move import CastlingMove
 
 class MoveFilter():
     @staticmethod

@@ -1,10 +1,10 @@
-from board import Board
+from .board import Board
 import random
 from typing import Union
-from vector import UnfinishedVector, Vector
-from position import CastlingRights, Position
-from castling_move import CastlingMove
-from move import UnfinishedMove
+from .vector import UnfinishedVector, Vector
+from .position import CastlingRights, Position
+from .castling_move import CastlingMove
+from .move import UnfinishedMove
 import re
 
 

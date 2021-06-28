@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, List
-from vector import Vector
+from .vector import Vector
 
 @dataclass
 class Board():

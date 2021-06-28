@@ -1,6 +1,6 @@
 from typing import List
-from vector import Vector
-from board import Board
+from verifier.vector import Vector
+from verifier.board import Board
 
 
 class BoardTestSuite():

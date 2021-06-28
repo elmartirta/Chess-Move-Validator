@@ -1,6 +1,6 @@
-from vector import Vector
-from move_generator import MoveGenerator
-from castling_move import CastlingMove
+from verifier.vector import Vector
+from verifier.move_generator import MoveGenerator
+from verifier.castling_move import CastlingMove
 
 class MoveGeneratorTestSuite():
     @staticmethod

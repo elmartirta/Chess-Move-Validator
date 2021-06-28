@@ -1,7 +1,7 @@
-from notation_parser import NotationParser
-from position import *
-from move import *
-from vector import Vector
+from verifier.notation_parser import NotationParser
+from verifier.position import *
+from verifier.move import *
+from verifier.vector import Vector
 
 
 class PositionTestSuite():

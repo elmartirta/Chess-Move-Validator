@@ -1,5 +1,5 @@
-from notation_parser import NotationParser
-from vector import Vector
+from verifier.notation_parser import NotationParser
+from verifier.vector import Vector
 
 class MoveTestSuite():
     @staticmethod

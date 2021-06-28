@@ -1,10 +1,10 @@
 from __future__ import annotations
 from typing import List, Union
-from move_generator import MoveGenerator
-from move_filter import MoveFilter
-from position import Position
-from move import Move, UnfinishedMove
-from castling_move import CastlingMove
+from .move_generator import MoveGenerator
+from .move_filter import MoveFilter
+from .position import Position
+from .move import Move, UnfinishedMove
+from .castling_move import CastlingMove
 
 
 class MoveVerifier():

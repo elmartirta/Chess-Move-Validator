@@ -1,6 +1,6 @@
-from notation_parser import NotationParser
-from move_verifier import MoveVerifier
-from vector import Vector
+from verifier.notation_parser import NotationParser
+from verifier.move_verifier import MoveVerifier
+from verifier.vector import Vector
 
 
 class MoveVerifierTestSuite():

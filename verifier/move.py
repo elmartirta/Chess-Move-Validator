@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Optional
-from vector import UnfinishedVector, Vector
+from .vector import UnfinishedVector, Vector
 
 
 @dataclass

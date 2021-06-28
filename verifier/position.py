@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import Optional
-from vector import UnfinishedVector, Vector
-from board import Board
-from move import Move
-from castling_move import CastlingMove
+from .vector import UnfinishedVector, Vector
+from .board import Board
+from .move import Move
+from .castling_move import CastlingMove
 from dataclasses import dataclass, replace
 
 

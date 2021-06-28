@@ -1,6 +1,6 @@
 
-from board import Board
-from notation_parser import NotationParser
+from verifier.board import Board
+from verifier.notation_parser import NotationParser
 
 
 class NotationParserTestSuite():

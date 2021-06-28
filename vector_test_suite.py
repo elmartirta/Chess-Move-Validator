@@ -1,4 +1,4 @@
-from vector import Vector
+from verifier.vector import Vector
 
 
 class VectorTestSuite:

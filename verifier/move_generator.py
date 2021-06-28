@@ -1,10 +1,10 @@
-from board import Board
-from notation_parser import NotationParser
+from .board import Board
+from .notation_parser import NotationParser
 from typing import List, Union
-from position import Position
-from move import Move, UnfinishedMove
-from vector import Vector 
-from castling_move import CastlingMove
+from .position import Position
+from .move import Move, UnfinishedMove
+from .vector import Vector 
+from .castling_move import CastlingMove
 
 
 class MoveGenerator():
