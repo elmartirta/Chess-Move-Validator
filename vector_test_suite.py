@@ -7,6 +7,7 @@ class VectorTestSuite:
         return [
             {"runnable": VectorTestSuite.vecInit, "name": "Vectors can be instantiated"},
             {"runnable": VectorTestSuite.vecInitAN, "name": "Vectors can be instantiated from AN"},
+            {"runnable": VectorTestSuite.vecAcc, "name": "A Vector's x and y members can be accessed"},
             {"runnable": VectorTestSuite.vecEq, "name": "Vectors can be equated"},
             {"runnable": VectorTestSuite.anValid, "name": "Algebreic Notation has correct values"},
             {"runnable": VectorTestSuite.vecAdd, "name": "Addition of Vectors"},
@@ -33,6 +34,12 @@ class VectorTestSuite:
         assert (Vector.fromAN("b4") != None)
         return True
     
+    @staticmethod
+    def vecAcc():
+        assert(Vector(1,2).x == 1)
+        assert(Vector(1,2).y == 2)
+        return True
+
     @staticmethod
     def vecEq():
         assert(Vector(0,0) == Vector(0,0))

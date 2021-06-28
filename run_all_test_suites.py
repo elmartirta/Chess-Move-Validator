@@ -31,6 +31,7 @@ def runTests():
     testsPassed = 0 
     testsRun = 0
     summaryString = ""
+    errorString = None
     for suite in test_suites:
         test_number = 0
         print("-- %s ---:----->" % suite["suite_name"])
@@ -53,9 +54,10 @@ def runTests():
             except Exception as e:
                 allTestsPassed = False
                 summaryString += Fore.YELLOW+"x"+Style.RESET_ALL
-                print(Fore.YELLOW + "=== !!!!!! Exception !!!!!! ===")
-                traceback.print_exc()
-                print(Style.RESET_ALL)
+                errorString = ""
+                errorString += Fore.YELLOW + "=== !!!!!! Exception !!!!!! ===" + "\n"
+                errorString += traceback.format_exc()
+                errorString += Style.RESET_ALL
                 result = Exception
                 
 
@@ -73,6 +75,9 @@ def runTests():
                     test_number, 
                     test["name"])
                 )
+                if errorString: 
+                    print(errorString)
+                    errorString = None
     print(
         "\n%s%d out of %d tests passed! %s\n (%d percent success rate)\n" 
         % (
