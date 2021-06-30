@@ -12,7 +12,7 @@ class CastlingMove():
     isCapture: bool
     isCheck: bool
     isCheckmate: bool 
-    promotionPiece: Optional[Vector]
+    promotionPiece: Optional[str]
     isKingsideCastling: bool
     rookLocation: Vector
     
@@ -35,7 +35,7 @@ class UnfinishedCastlingMove():
     isCapture: bool
     isCheck: bool
     isCheckmate: bool 
-    promotionPiece: Optional[Vector]
+    promotionPiece: Optional[str]
     isKingsideCastling: bool
     rookLocation: Optional[Vector]
     
