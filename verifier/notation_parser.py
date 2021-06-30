@@ -3,14 +3,14 @@ import random
 from typing import Union
 from .vector import UnfinishedVector, Vector
 from .position import CastlingRights, Position
-from .castling_move import CastlingMove
+from .castling_move import UnfinishedCastlingMove
 from .move import UnfinishedMove
 import re
 
 
 class NotationParser():
     @classmethod
-    def parseAlgebreicNotation(cls, string: str) -> Union[UnfinishedMove,  CastlingMove]:
+    def parseAlgebreicNotation(cls, string: str) -> Union[UnfinishedMove,  UnfinishedCastlingMove]:
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None
@@ -23,7 +23,7 @@ class NotationParser():
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
 
         if castlingMatch:
-            return CastlingMove(
+            return UnfinishedCastlingMove(
                 "K", 
                 None, 
                 None, 

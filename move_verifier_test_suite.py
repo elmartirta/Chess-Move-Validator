@@ -175,9 +175,9 @@ class MoveVerifierTestSuite():
             kingsIndianAttack, 
             [NotationParser.parseAlgebreicNotation("O-O")]
         ).updatedPosition
-        assert(newPos.board.pieceTypeIs(Vector.fromAN("f1"), "R"))
-        assert(newPos.board.pieceTypeIs(Vector.fromAN("g1"), "K"))
-        assert(newPos.board.pieceTypeIs(Vector.fromAN("h1"), "-"))
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("f1"), "R")), newPos.board.printBoard()
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("g1"), "K")), newPos.board.printBoard()
+        assert(newPos.board.pieceTypeIs(Vector.fromAN("h1"), "-")), newPos.board.printBoard()
         return True
 
     @staticmethod

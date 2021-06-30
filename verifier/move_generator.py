@@ -4,7 +4,7 @@ from typing import List, Union
 from .position import Position
 from .move import Move, UnfinishedMove
 from .vector import Vector 
-from .castling_move import CastlingMove
+from .castling_move import CastlingMove, UnfinishedCastlingMove
 
 
 class MoveGenerator():
@@ -23,14 +23,14 @@ class MoveGenerator():
         )
 
     @classmethod
-    def generateMoveList(cls, position: Position, move: Union[UnfinishedMove, CastlingMove]) -> List[Move]:
+    def generateMoveList(cls, position: Position, move: Union[UnfinishedMove, UnfinishedCastlingMove]) -> List[Move]:
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
         board = position.board
     
         candidates: List[Vector] = []
-        if isinstance(move, CastlingMove): 
+        if isinstance(move, UnfinishedCastlingMove): 
             cls._addCastlingCandidates(moveList, position, move)
         else: 
             if move.destination is None:
@@ -84,7 +84,7 @@ class MoveGenerator():
         return pawnCandidates
 
     @staticmethod
-    def _addCastlingCandidates(moveList: List[Move], position: Position, move: CastlingMove) -> None:
+    def _addCastlingCandidates(moveList: List[Move], position: Position, move: UnfinishedCastlingMove) -> None:
         homeIndex = 0 if position.isWhiteToMove else 7
         homeRow_temp = [Vector(x, homeIndex) for x in range(0,8)]
         homeRow = [position.board.pieceTypeOf(tile) for tile in homeRow_temp]
@@ -104,10 +104,10 @@ class MoveGenerator():
                     break        
         output = move.clone()
         if king is None: raise ValueError() #TODO - Lazy Error Writing
-        output.source = king
-        output.destination = king + (Vector(2,0) if move.isKingsideCastling else Vector(-2, 0))
-        output.rookLocation = rook
-        moveList.append(output)
+        source = king
+        destination = king + (Vector(2,0) if move.isKingsideCastling else Vector(-2, 0))
+        rookLocation = rook
+        moveList.append(output.complete(source, destination, rookLocation))
 
 
 class MoveGenerationError(ValueError):

@@ -7,14 +7,14 @@ from .vector import Vector
 @dataclass
 class CastlingMove():
     pieceType: str
-    source: Optional[Vector]
-    destination: Optional[Vector]
+    source: Vector
+    destination: Vector
     isCapture: bool
     isCheck: bool
     isCheckmate: bool 
     promotionPiece: Optional[Vector]
     isKingsideCastling: bool
-    rookLocation: Optional[Vector]
+    rookLocation: Vector
     
     def clone(self):
         return replace(self)
