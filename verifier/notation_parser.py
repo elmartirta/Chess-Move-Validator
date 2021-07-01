@@ -9,17 +9,10 @@ import re
 
 class NotationParser():
     @classmethod
-    def parseAlgebreicNotation(cls, string: str) -> UnfinishedMove:
-        pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
-        source = None
-        destination = None
-        isCapture = "x" in string
-        isCheck = "+" in string
-        isCheckmate = "#" in string
-        promotionPiece = None
-        
+    def parseAlgebreicNotation(cls, string: str) -> UnfinishedMove:        
         basicMatch = re.fullmatch("^([RNBKQP])([a-h]?[1-8]?)x?([a-h][1-8])[+#]?$", string)
         castlingMatch = re.fullmatch("O-O(-O)?[+#]?", string)
+        pawnMatch = re.fullmatch("(?:([a-h])x)?([a-h][1-8])(?:=([RNBQ]))?[+#]?", string)
 
         if castlingMatch:
             return UnfinishedCastlingMove(
@@ -33,28 +26,26 @@ class NotationParser():
                 False if castlingMatch.group(1) else True, 
                 None)
         elif basicMatch:
-            pieceType = basicMatch.group(1)
-            source = Vector.fromAN(basicMatch.group(2))
-            destination = Vector.fromAN(basicMatch.group(3))
-        else: 
-            pawnMatch = re.fullmatch("(?:([a-h])x)?([a-h][1-8])(?:=([RNBQ]))?[+#]?", string)
-            if pawnMatch:
-                source = Vector.fromAN(pawnMatch.group(1))
-                destination = Vector.fromAN(pawnMatch.group(2))
-                promotionPiece = pawnMatch.group(3)
-            else:
-                raise MoveParsingError(string, "Move does not match any valid regex expression")
+            return UnfinishedMove(
+                basicMatch.group(1), 
+                Vector.fromAN(basicMatch.group(2)), 
+                Vector.fromANStrict(basicMatch.group(3)), 
+                "x" in string, 
+                "+" in string, 
+                "#" in string, 
+                None)
+        elif pawnMatch: 
+            return UnfinishedMove(
+                "P", 
+                Vector.fromAN(pawnMatch.group(1)), 
+                Vector.fromANStrict(pawnMatch.group(2)), 
+                "x" in string, 
+                "+" in string, 
+                "#" in string, 
+                pawnMatch.group(3))
+        else:
+            raise MoveParsingError(string, "Move does not match any valid regex expression")
         
-        if isinstance(destination, UnfinishedVector): raise ValueError() #TODO: SMELL - Lazy Error Writing
-
-        return UnfinishedMove(
-            pieceType, 
-            source, 
-            destination, 
-            isCapture, 
-            isCheck, 
-            isCheckmate, 
-            promotionPiece)
 
     @classmethod
     def parsePosition(cls, string: str) -> Position:
