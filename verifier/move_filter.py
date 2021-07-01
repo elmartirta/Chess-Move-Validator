@@ -121,10 +121,10 @@ class MoveFilter():
 
         error = None
         for king in kingLocations:
-            error = error or checkFor("R", king, board.getOrthogonalsTargeting(king))
-            error = error or checkFor("B", king, board.getDiagonalsTargeting(king))
-            error = error or checkFor("Q", king, board.getOrthogonalsTargeting(king) + board.getDiagonalsTargeting(king))
-            error = error or checkFor("N", king, board.getKnightSquaresTargeting(king))
+            error = error or checkFor("R", king, board.getRooksAttacking(king))
+            error = error or checkFor("B", king, board.getBishopsAttacking(king))
+            error = error or checkFor("Q", king, board.getQueensAttacking(king))
+            error = error or checkFor("N", king, board.getKnightsAttacking(king))
 
             pawns = board.getBlackPawnsTargeting(king) if kingIsWhite else board.getWhitePawnsTargeting(king)
             error = error or  checkFor("P", king, pawns)
