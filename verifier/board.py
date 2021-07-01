@@ -136,3 +136,11 @@ class Board():
         return list(filter(
             lambda v: self.pieceTypeIs(v, "N"), 
             self.getKnightSquaresTargeting(target)))
+    
+    def getPawnsAttacking(self, target:Vector):
+        whites = list(filter(lambda p: self.pieceIsWhite(p), self.getWhitePawnsTargeting(target)))
+        blacks = list(filter(lambda p: not self.pieceIsWhite(p), self.getBlackPawnsTargeting(target)))
+        return list(filter(
+            lambda v: self.pieceTypeIs(v, "P"),
+            whites + blacks
+        ))
