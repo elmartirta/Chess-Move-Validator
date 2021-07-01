@@ -9,10 +9,10 @@ class Move():
     pieceType: str
     source: Vector
     destination: Vector
-    isCapture: bool = False
-    isCheck: bool = False
-    isCheckmate: bool = False
-    promotionPiece: Optional[str] = None
+    isCapture: bool
+    isCheck: bool
+    isCheckmate: bool
+    promotionPiece: Optional[str]
 
     def clone(self):
         return replace(self)
@@ -36,10 +36,10 @@ class UnfinishedMove():
     pieceType: str
     source: Optional[Vector | UnfinishedVector]
     destination: Vector
-    isCapture: bool = False
-    isCheck: bool = False
-    isCheckmate: bool = False
-    promotionPiece: Optional[str] = None
+    isCapture: bool
+    isCheck: bool
+    isCheckmate: bool
+    promotionPiece: Optional[str]
 
     def clone(self):
         return replace(self)
