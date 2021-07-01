@@ -27,28 +27,21 @@ class MoveGenerator():
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
-        board = position.board
     
-        candidates: List[Vector] = []
         if isinstance(move, UnfinishedCastlingMove): 
             cls._addCastlingCandidates(moveList, position, move)
         else: 
+            board = position.board
+            candidates: List[Vector] = []
             if move.destination is None:
                 raise ValueError(f"There is no destination for the move: {move}")
             destination = move.destination
-            if (move.pieceType in "rR"): 
-                candidates = board.getOrthogonalsTargeting(destination)
-            elif (move.pieceType in "bB"): 
-                candidates = board.getDiagonalsTargeting(destination)
-            elif (move.pieceType in "qQ"): 
-                candidates =  board.getOrthogonalsTargeting(destination)
-                candidates += board.getDiagonalsTargeting(destination)
-            elif (move.pieceType in "nN"): 
-                candidates = board.getKnightSquaresTargeting(destination)
-            elif (move.pieceType in "kK"): 
-                candidates = board.getKingsTargeting(destination)
-            elif (move.pieceType in "pP"): 
-                candidates = cls._addPawnCandidates(moveList, position, move)
+            if   (move.pieceType in "rR"): candidates = board.getRooksAttacking(destination)
+            elif (move.pieceType in "bB"): candidates = board.getBishopsAttacking(destination)
+            elif (move.pieceType in "qQ"): candidates = board.getQueensAttacking(destination)
+            elif (move.pieceType in "nN"): candidates = board.getKnightsAttacking(destination)
+            elif (move.pieceType in "kK"): candidates = board.getKingsTargeting(destination)
+            elif (move.pieceType in "pP"): candidates = cls._addPawnCandidates(moveList, position, move)
             else:
                 raise MoveGenerationError(position, move, f"Unsupported Piece type: {move.pieceType}")
 
