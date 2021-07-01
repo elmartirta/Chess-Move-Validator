@@ -1,6 +1,5 @@
 from .board import Board
 import random
-from typing import Union
 from .vector import UnfinishedVector, Vector
 from .position import CastlingRights, Position
 from .castling_move import UnfinishedCastlingMove
@@ -10,7 +9,7 @@ import re
 
 class NotationParser():
     @classmethod
-    def parseAlgebreicNotation(cls, string: str) -> Union[UnfinishedMove,  UnfinishedCastlingMove]:
+    def parseAlgebreicNotation(cls, string: str) -> UnfinishedMove:
         pieceType = string[0] if len(string) >= 1 and (string[0] in "RNBQKP") else "P"
         source = None
         destination = None

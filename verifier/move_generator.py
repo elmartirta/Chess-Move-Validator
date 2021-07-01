@@ -23,7 +23,7 @@ class MoveGenerator():
         )
 
     @classmethod
-    def generateMoveList(cls, position: Position, move: Union[UnfinishedMove, UnfinishedCastlingMove]) -> List[Move]:
+    def generateMoveList(cls, position: Position, move: UnfinishedMove) -> List[Move]:
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
