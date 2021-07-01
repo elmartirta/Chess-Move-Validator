@@ -1,6 +1,6 @@
 from .board import Board
 from .notation_parser import NotationParser
-from typing import List, Union
+from typing import List
 from .position import Position
 from .move import Move, UnfinishedMove
 from .vector import Vector 
@@ -23,7 +23,7 @@ class MoveGenerator():
         )
 
     @classmethod
-    def generateMoveList(cls, position: Position, move: Union[UnfinishedMove, UnfinishedCastlingMove]) -> List[Move]:
+    def generateMoveList(cls, position: Position, move: UnfinishedMove) -> List[Move]:
         moveList: List[Move] = []
         if move.pieceType == None: 
             raise MoveGenerationError(position, move, "PieceType is None")
