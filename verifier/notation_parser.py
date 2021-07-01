@@ -87,16 +87,14 @@ class NotationParser():
         if seed: random.seed(seed)
         shuffled_pieces = "".join(random.sample("rnbkqbnr", k=8))
         return cls.parsePosition(
-            "%s/pppppppp/8/8/8/8/PPPPPPPP/%s w KQkq - 0 1" %
-            (shuffled_pieces, shuffled_pieces.upper())
+            f"{shuffled_pieces}/pppppppp/8/8/8/8/PPPPPPPP/{shuffled_pieces.upper()} w KQkq - 0 1"
         )
 
 class MoveParsingError(ValueError):
     def __init__(self, moveString: str, message: str):
-        super().__init__("The move %s cannot be parsed:\n\t%s" %(moveString, message))
+        super().__init__(f"The move {moveString} cannot be parsed:\n\t{message}")
 
 class FENParsingError(ValueError):
     def __init__(self, reason: str, FENString: str):
         super().__init__(
-            "\n\nError: The FEN string %s cannot be parsed:\n\t%s" 
-            %(FENString, reason))
+            f"\n\nError: The FEN string {FENString} cannot be parsed:\n\t{reason}")

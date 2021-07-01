@@ -32,7 +32,7 @@ class Vector():
         return self.x == other.x and self.y == other.y
 
     def __repr__(self) -> str:
-        return "Vector(%s, %s)" % (str(self.x), str(self.y))
+        return f"Vector({self.x}, {self.y})"
 
     @classmethod
     def fromANStrict(cls, text: str) -> Vector:

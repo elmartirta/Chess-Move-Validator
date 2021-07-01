@@ -34,7 +34,7 @@ class MoveGenerator():
             cls._addCastlingCandidates(moveList, position, move)
         else: 
             if move.destination is None:
-                raise ValueError("There is no destination for the move: " + str(move))
+                raise ValueError(f"There is no destination for the move: {move}")
             destination = move.destination
             if (move.pieceType in "rR"): 
                 candidates = board.getOrthogonalsTargeting(destination)
@@ -50,7 +50,7 @@ class MoveGenerator():
             elif (move.pieceType in "pP"): 
                 candidates = cls._addPawnCandidates(moveList, position, move)
             else:
-                raise MoveGenerationError(position, move, "Unsupported Piece type: " + move.pieceType)
+                raise MoveGenerationError(position, move, f"Unsupported Piece type: {move.pieceType}")
 
             for candidate in candidates:
                 if candidate == move.destination: 
@@ -113,5 +113,4 @@ class MoveGenerator():
 class MoveGenerationError(ValueError):
     def __init__(self, positionFEN, moveAN, errorMessage):
         super().__init__(
-            "Error trying to parse position \"%s\" and move %s. %s" 
-            % (positionFEN, moveAN, errorMessage))
+            f"Error trying to parse position \"{positionFEN}\" and move {moveAN}. {errorMessage}")

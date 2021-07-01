@@ -148,13 +148,11 @@ class FilterResult():
     def fail(reason: str, move: Move) -> FilterResult:
         assert(isinstance(reason, str))
         return FilterResult(
-                "The move %s fails the filtration process because: %s"
-                % (move, reason),
+                f"The move {move} fails the filtration process because: {reason}",
             move, False)
 
 
 class FilterError(ValueError):
     def __init__(self, reason: str, move: Move):
         super().__init__(
-            "The move %s is unable to be properly filtered, because: %s" \
-            % (move, reason))
+            f"The move {move} is unable to be properly filtered, because: {reason}")
