@@ -106,28 +106,28 @@ class MoveFilter():
                 move)
         kingLocations = board.findAll(kingSymbol)
 
-        def checkFor(attackerType, kingLocation, candidates):
+        def checkFor(kingLocation, candidates):
             for candidate in candidates:
                 if candidate != kingLocation \
-                        and board.pieceTypeIs(candidate, attackerType) \
                         and board.pieceIsWhite(candidate) != kingIsWhite \
                         and (
-                            attackerType not in "RBQ" \
+                            board.pieceTypeOf(candidate) not in "RBQ" \
                             or board.pieceCanSee(candidate, king)):
                     return FilterResult.fail(
-                            "The king on %s is being checked by the %s on %s"
-                            % (king.toAN(), attackerType, candidate.toAN()),
+                            "The king on %s is being checked by the piece on %s"
+                            % (king.toAN(), candidate.toAN()),
                         move)
 
         error = None
         for king in kingLocations:
-            error = error or checkFor("R", king, board.getRooksAttacking(king))
-            error = error or checkFor("B", king, board.getBishopsAttacking(king))
-            error = error or checkFor("Q", king, board.getQueensAttacking(king))
-            error = error or checkFor("N", king, board.getKnightsAttacking(king))
+            error = error or checkFor(king, board.getRooksAttacking(king))
+            error = error or checkFor(king, board.getBishopsAttacking(king))
+            error = error or checkFor(king, board.getQueensAttacking(king))
+            error = error or checkFor(king, board.getKnightsAttacking(king))
 
-            pawns = board.getBlackPawnsTargeting(king) if kingIsWhite else board.getWhitePawnsTargeting(king)
-            error = error or  checkFor("P", king, pawns)
+            pawns = board.getBlackPawnsTargeting(king) + board.getWhitePawnsTargeting(king)
+            pawns = list(filter(lambda p: board.pieceTypeIs(p, "P"), pawns))
+            error = error or  checkFor(king, pawns)
             
         if error: 
             return error
