@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Optional
-from verifier.move import Move
+from verifier.move import Move, UnfinishedMove
 from .vector import Vector
 
 
@@ -29,7 +29,7 @@ class CastlingMove(Move):
 
 
 @dataclass
-class UnfinishedCastlingMove():
+class UnfinishedCastlingMove(UnfinishedMove):
     pieceType: str
     source: Optional[Vector]
     destination: Optional[Vector]
@@ -50,7 +50,9 @@ class UnfinishedCastlingMove():
         if self.source is None: raise ValueError
         return self.source + (Vector(1,0) if self.isKingsideCastling else Vector(-1,0))
     
-    def complete(self, source: Vector, destination: Vector, rookLocation: Vector) -> CastlingMove:
+    def complete(self, source: Vector, destination: Vector, rookLocation: Optional[Vector]=None) -> CastlingMove:
+        if rookLocation is None:
+            raise ValueError()
         return CastlingMove(
             self.pieceType,
             source,
