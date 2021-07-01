@@ -80,20 +80,12 @@ class NotationParser():
                 string) 
         
         pos = Position()
-        
-        piecePlacementField = fields[0] 
-        activeColorField = fields[1]
-        castlingRightsField = fields[2]
-        enPassantField = fields[3]
-        halfClockField = fields[4]
-        fullClockField = fields[5]
-
-        pos.board = Board.fromFEN(piecePlacementField)
-        pos.isWhiteToMove = True if activeColorField == "w" else False
-        pos.castlingRights = CastlingRights.fromFEN(castlingRightsField)
-        pos.enPassantPawn = Vector.fromANStrict(enPassantField) if enPassantField != "-" else None
-        pos.halfClock = int(halfClockField) 
-        pos.fullClock = int(fullClockField)
+        pos.board = Board.fromFEN(fields[0])
+        pos.isWhiteToMove = fields[1] == "w"
+        pos.castlingRights = CastlingRights.fromFEN(fields[2])
+        pos.enPassantPawn = Vector.fromANStrict(fields[3]) if fields[3] != "-" else None
+        pos.halfClock = int(fields[4]) 
+        pos.fullClock = int(fields[5])
         return pos 
     
     @classmethod
