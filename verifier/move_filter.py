@@ -124,10 +124,7 @@ class MoveFilter():
             error = error or checkFor(king, board.getBishopsAttacking(king))
             error = error or checkFor(king, board.getQueensAttacking(king))
             error = error or checkFor(king, board.getKnightsAttacking(king))
-
-            pawns = board.getBlackPawnsTargeting(king) + board.getWhitePawnsTargeting(king)
-            pawns = list(filter(lambda p: board.pieceTypeIs(p, "P"), pawns))
-            error = error or  checkFor(king, pawns)
+            error = error or checkFor(king, board.getPawnsAttacking(king))
             
         if error: 
             return error
