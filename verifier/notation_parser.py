@@ -18,8 +18,8 @@ class NotationParser():
         isCheckmate = "#" in string
         promotionPiece = None
         
-        basicMatch = re.fullmatch("^([RNBKQP])([a-h]?\d?)(x)?([a-h]\d)[+#]?$", string)
-        castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
+        basicMatch = re.fullmatch("^([RNBKQP])([a-h]?\d?)x?([a-h]\d)[+#]?$", string)
+        castlingMatch = re.fullmatch("O-O(-O)?[+#]?", string)
 
         if castlingMatch:
             return UnfinishedCastlingMove(
@@ -35,13 +35,13 @@ class NotationParser():
         elif basicMatch:
             pieceType = basicMatch.group(1)
             source = Vector.fromAN(basicMatch.group(2))
-            destination = Vector.fromAN(basicMatch.group(4))
+            destination = Vector.fromAN(basicMatch.group(3))
         else: 
-            pawnMatch = re.fullmatch("(([a-w])(x))?([a-w]\d)(=([RNBQ]))?[+#]?", string)
+            pawnMatch = re.fullmatch("(?:([a-w])x)?([a-w]\d)(?:=([RNBQ]))?[+#]?", string)
             if pawnMatch:
-                source = Vector.fromAN(pawnMatch.group(2))
-                destination = Vector.fromAN(pawnMatch.group(4))
-                promotionPiece = pawnMatch.group(6)
+                source = Vector.fromAN(pawnMatch.group(1))
+                destination = Vector.fromAN(pawnMatch.group(2))
+                promotionPiece = pawnMatch.group(3)
             else:
                 raise MoveParsingError(string, "Move does not match any valid regex expression")
         
