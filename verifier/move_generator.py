@@ -56,7 +56,7 @@ class MoveGenerator():
                 if candidate == move.destination: 
                     continue
                 if board.pieceTypeIs(candidate, move.pieceType):
-                    moveList.append(move.complete(candidate))
+                    moveList.append(move.complete(candidate, destination))
         
         return moveList
     

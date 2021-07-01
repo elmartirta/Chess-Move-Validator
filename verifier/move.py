@@ -35,7 +35,7 @@ class Move():
 class UnfinishedMove():
     pieceType: str
     source: Optional[Vector | UnfinishedVector]
-    destination: Vector
+    destination: Optional[Vector]
     isCapture: bool
     isCheck: bool
     isCheckmate: bool
@@ -58,11 +58,11 @@ class UnfinishedMove():
         self.source = vector
         return self
 
-    def complete(self, source: Vector) -> Move:
+    def complete(self, source: Vector, destination: Vector) -> Move:\
         return Move(
             self.pieceType,
             source,
-            self.destination,
+            destination,
             self.isCapture,
             self.isCheck,
             self.isCheckmate,
