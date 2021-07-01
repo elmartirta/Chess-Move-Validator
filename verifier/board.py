@@ -116,3 +116,23 @@ class Board():
             Vector(-1,-1), Vector(0,-1), Vector(1,-1)
         ] if (target + deltaN).isInsideChessboard()]
         return kingSquares
+    
+    def getRooksAttacking(self, target: Vector): 
+        return list(filter(
+            lambda v: self.pieceTypeIs(v, "R"), 
+            self.getOrthogonalsTargeting(target)))
+
+    def getBishopsAttacking(self, target: Vector): 
+        return list(filter(
+            lambda v: self.pieceTypeIs(v, "B"), 
+            self.getDiagonalsTargeting(target)))
+
+    def getQueensAttacking(self, target: Vector): 
+        return list(filter(
+            lambda v: self.pieceTypeIs(v, "Q"), 
+            self.getOrthogonalsTargeting(target) + self.getDiagonalsTargeting(target)))
+    
+    def getKnightsAttacking(self, target: Vector):
+        return list(filter(
+            lambda v: self.pieceTypeIs(v, "N"), 
+            self.getKnightSquaresTargeting(target)))

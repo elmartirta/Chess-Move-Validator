@@ -12,7 +12,8 @@ class VectorTestSuite:
             {"runnable": VectorTestSuite.anValid, "name": "Algebreic Notation has correct values"},
             {"runnable": VectorTestSuite.vecAdd, "name": "Addition of Vectors"},
             {"runnable": VectorTestSuite.vecSub, "name": "Subtraction of Vectors"},
-            {"runnable": VectorTestSuite.vecToAN, "name": "Translation to Algebreic Notation"}
+            {"runnable": VectorTestSuite.vecToAN, "name": "Translation to Algebreic Notation"},
+            {"runnable": VectorTestSuite.vecIn, "name": "Vector in List"},
         ]
 
     @staticmethod
@@ -106,3 +107,9 @@ class VectorTestSuite:
         assert(Vector(4,4).toAN() == "e5"), Vector(4,4).toAN()
         return True
         
+    @staticmethod
+    def vecIn():
+        assert(Vector(0,0) in [Vector(0,0)])
+        assert(Vector(0,0) in [Vector.fromAN("a1")])
+        assert(Vector(0,0) in [Vector(1,0), Vector(0,1), Vector(0,0)])
+        return True

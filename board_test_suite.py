@@ -1,3 +1,4 @@
+from typing import List
 from verifier.vector import Vector
 from verifier.board import Board
 
@@ -12,6 +13,10 @@ class BoardTestSuite():
             {"runnable": cls.startingBoardFromFEN, "name": "Initialize a Board object"},
             {"runnable": cls.boardEquality, "name": "Is able to compare boards"},
             {"runnable": cls.canSee, "name": "Checking if pieces can see others"},
+            {"runnable": cls.rooksAttacking, "name": "Find all rooks targeting a square"},
+            {"runnable": cls.bishopsAttacking, "name": "Find all bishops targeting a square"},
+            {"runnable": cls.queensAttacking, "name": "Find all queens targeting a square"},
+            {"runnable": cls.knightsAttacking, "name": "Find all knights targeting a square"},
         ]
     
     @staticmethod
@@ -69,3 +74,71 @@ class BoardTestSuite():
         assert(not starBoard.pieceCanSee(attacker, Vector.fromAN("g4")))
         assert(not starBoard.pieceCanSee(attacker, Vector.fromAN("d7")))
         return True
+    
+    @staticmethod
+    def rooksAttacking():
+        board = Board.fromFEN("3R4/8/3P4/8/R2K1R1R/8/8/R2r4")
+        target = Vector.fromAN("d4")
+        attackers: List[Vector] = board.getRooksAttacking(target)
+        
+        assert(Vector.fromAN("a4") in attackers), attackers
+        assert(Vector.fromAN("d8") in attackers), attackers
+        assert(Vector.fromAN("f4") in attackers), attackers
+        assert(Vector.fromAN("h4") in attackers), attackers
+        assert(Vector.fromAN("d1") in attackers), attackers
+        assert(Vector.fromAN("a1") not in attackers), attackers
+        assert(len(attackers) == 5), attackers
+        return True
+    
+    @staticmethod
+    def bishopsAttacking():
+        board = Board.fromFEN("8/B5B1/8/4B3/3k4/4P3/8/b2B2B1")
+        target = Vector.fromAN("d4")
+        attackers: List[Vector] = board.getBishopsAttacking(target)
+        
+        assert(Vector.fromAN("a7") in attackers), attackers
+        assert(Vector.fromAN("e5") in attackers), attackers
+        assert(Vector.fromAN("g7") in attackers), attackers
+        assert(Vector.fromAN("g1") in attackers), attackers
+        assert(Vector.fromAN("a1") in attackers), attackers
+        assert(Vector.fromAN("d1") not in attackers), attackers
+        assert(len(attackers) == 5), attackers
+        return True
+    
+    @staticmethod
+    def queensAttacking():
+        board = Board.fromFEN("8/Q2Q2Q1/8/3QQ3/Q2KP1Q1/4P3/8/q2q2Q1")
+        target = Vector.fromAN("d4")
+        attackers: List[Vector] = board.getQueensAttacking(target)
+
+        assert(Vector.fromAN("a4") in attackers), attackers
+        assert(Vector.fromAN("a7") in attackers), attackers
+        assert(Vector.fromAN("d5") in attackers), attackers
+        assert(Vector.fromAN("d7") in attackers), attackers
+        assert(Vector.fromAN("e5") in attackers), attackers
+        assert(Vector.fromAN("g7") in attackers), attackers
+        assert(Vector.fromAN("g4") in attackers), attackers
+        assert(Vector.fromAN("d1") in attackers), attackers
+        assert(Vector.fromAN("a1") in attackers), attackers
+        assert(len(attackers) == 10), attackers
+        return True
+    
+    @staticmethod
+    def knightsAttacking():
+        board = Board.fromFEN("8/8/2n1N3/1N3n1N/3K3N/1n3N1N/2N1n3/8")
+        target = Vector.fromAN("d4")
+        attackers: List[Vector] = board.getKnightsAttacking(target)
+
+        assert(Vector.fromAN("b5") in attackers), attackers
+        assert(Vector.fromAN("c6") in attackers), attackers
+        assert(Vector.fromAN("e6") in attackers), attackers
+        assert(Vector.fromAN("f5") in attackers), attackers
+        assert(Vector.fromAN("f3") in attackers), attackers
+        assert(Vector.fromAN("e2") in attackers), attackers
+        assert(Vector.fromAN("c2") in attackers), attackers
+        assert(Vector.fromAN("b3") in attackers), attackers
+        assert(Vector.fromAN("h5") not in attackers), attackers
+        assert(Vector.fromAN("h6") not in attackers), attackers
+        assert(Vector.fromAN("h7") not in attackers), attackers
+        assert(len(attackers) == 8), attackers
+        return True 
