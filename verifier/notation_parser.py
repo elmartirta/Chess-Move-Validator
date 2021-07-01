@@ -18,7 +18,7 @@ class NotationParser():
         isCheckmate = "#" in string
         promotionPiece = None
         
-        basicMatch = re.fullmatch("^([RNBKQP])([a-w])?(\d)?(x)?([a-w]\d)[+#]?$", string)
+        basicMatch = re.fullmatch("^([RNBKQP])([a-h]?\d?)(x)?([a-h]\d)[+#]?$", string)
         castlingMatch = re.fullmatch("O-O(-O)?([+#])?", string)
 
         if castlingMatch:
@@ -34,10 +34,8 @@ class NotationParser():
                 None)
         elif basicMatch:
             pieceType = basicMatch.group(1)
-            sourceFile = basicMatch.group(2) if basicMatch.group(2) else ""
-            sourceRank = basicMatch.group(3) if basicMatch.group(3) else ""
-            source = Vector.fromAN(sourceFile + sourceRank)
-            destination = Vector.fromAN(basicMatch.group(5))
+            source = Vector.fromAN(basicMatch.group(2))
+            destination = Vector.fromAN(basicMatch.group(4))
         else: 
             pawnMatch = re.fullmatch("(([a-w])(x))?([a-w]\d)(=([RNBQ]))?[+#]?", string)
             if pawnMatch:
