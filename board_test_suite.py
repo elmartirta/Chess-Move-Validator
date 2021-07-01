@@ -1,4 +1,3 @@
-from typing import List
 from verifier.vector import Vector
 from verifier.board import Board
 

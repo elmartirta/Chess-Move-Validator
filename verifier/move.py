@@ -58,7 +58,7 @@ class UnfinishedMove():
         self.source = vector
         return self
 
-    def complete(self, source: Vector, destination: Vector) -> Move:\
+    def complete(self, source: Vector, destination: Vector) -> Move:
         return Move(
             self.pieceType,
             source,

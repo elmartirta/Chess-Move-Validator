@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from typing import List
-from verifier.castling_move import CastlingMove, UnfinishedCastlingMove
 from .move import Move, UnfinishedMove
 from .position import Position
 from .notation_parser import NotationParser
