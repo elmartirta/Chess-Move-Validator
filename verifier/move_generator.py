@@ -57,23 +57,11 @@ class MoveGenerator():
     @staticmethod
     def _addPawnCandidates(moveList: List[Move], position: Position, move: UnfinishedMove) -> List[Vector]:
         if move.destination is None: raise ValueError() #TODO: Lazy Error Writing
-        destination = move.destination
-      
-        deltas = []
-        dy = -1 if position.isWhiteToMove else 1
         if move.isCapture:
-            deltas.append(Vector(-1,dy))
-            deltas.append(Vector( 1,dy))
+            pawnCandidates = position.board.getPawnsAttacking(move.destination)
         else:
-            deltas.append(Vector(0,dy))
-            if (destination.y == 3 and position.isWhiteToMove) or \
-                    (destination.y == 4 and not position.isWhiteToMove):
-                deltas.append(Vector(0,2*dy))
+            pawnCandidates = position.board.getPawnsWalkingTo(move.destination)
 
-        pawnCandidates: List[Vector] = []
-        for delta in deltas:
-            candidate = move.destination + delta
-            pawnCandidates += [candidate]
         return pawnCandidates
 
     @staticmethod
