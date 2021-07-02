@@ -42,7 +42,11 @@ class MoveGenerator():
             elif (move.pieceType in "qQ"): candidates = board.getQueensAttacking(destination)
             elif (move.pieceType in "nN"): candidates = board.getKnightsAttacking(destination)
             elif (move.pieceType in "kK"): candidates = board.getKingsTargeting(destination)
-            elif (move.pieceType in "pP"): candidates = cls._addPawnCandidates(position.board, move)
+            elif (move.pieceType in "pP"): 
+                if move.isCapture:
+                    candidates = board.getPawnsAttacking(destination)
+                else:
+                    candidates = board.getPawnsWalkingTo(destination)
             else:
                 raise MoveGenerationError(position, move, f"Unsupported Piece type: {move.pieceType}")
 
@@ -51,18 +55,6 @@ class MoveGenerator():
                     moveList.append(move.complete(candidate, destination))
         
         return moveList
-    
-
-    @staticmethod
-    def _addPawnCandidates(board: Board, move: UnfinishedMove) -> List[Vector]:
-        if move.destination is None:
-            raise ValueError("Pawn moves must have a destination in their notation")
-        if move.isCapture:
-            pawnCandidates = board.getPawnsAttacking(move.destination)
-        else:
-            pawnCandidates = board.getPawnsWalkingTo(move.destination)
-
-        return pawnCandidates
 
     @staticmethod
     def _addCastlingCandidates(moveList: List[Move], position: Position, move: UnfinishedCastlingMove) -> None:
