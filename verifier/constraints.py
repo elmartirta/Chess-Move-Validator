@@ -9,6 +9,7 @@ class Constraints():
         return [
             Constraints.sourcePieceExists,
             Constraints.sourceTypeMatchesNotation,
+            Constraints.sourceTypeMatchesColor,
             Constraints.moveWithinLegalBounds,
             Constraints.destinationUnoccupied,
             Constraints.pathUnoccupied,
@@ -40,7 +41,12 @@ class Constraints():
                     (%s) does not match type of move piece (%s)."""
                     % (position.board.pieceTypeOf(move.source), move.pieceType),
                 move)
-        elif position.board.pieceIsWhite(move.source) != position.isWhiteToMove:
+        else: 
+            return ConstraintResult.accept(move)
+    
+    @staticmethod
+    def sourceTypeMatchesColor(position: Position, move: Move):
+        if position.board.pieceIsWhite(move.source) != position.isWhiteToMove:
             return ConstraintResult.fail(
                     """Wrong Color: The color of the move's 
                     source piece does not match the color that
