@@ -25,10 +25,7 @@ class MoveGenerator():
 
     @classmethod
     def generateMoveList(cls, position: Position, move: UnfinishedMove) -> List[Move]:
-        moveList: List[Move] = []
-        if move.pieceType == None: 
-            raise MoveGenerationError(position, move, "PieceType is None")
-    
+        moveList: List[Move] = []    
         if isinstance(move, UnfinishedCastlingMove): 
             cls._addCastlingCandidates(moveList, position, move)
         else: 
