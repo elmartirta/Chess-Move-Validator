@@ -39,7 +39,7 @@ class MoveVerifier():
         elif len(legalMoves) > 1:
             return ConstraintResult.fail(
                     "Ambiguous Move: The move %s leads to multiple valid moves [%s]"
-                    % (move, legalMoves),
+                    % (move, list(map(lambda m: m.move, legalMoves))),
                 position, move)
         elif len(legalMoves) == 1:
             validMove = legalMoves[0] #TODO: SMELL - Mysterious Name
@@ -49,17 +49,17 @@ class MoveVerifier():
     
     @staticmethod
     def verifyCandidate(position: Position, move: Move) -> ConstraintResult:
-        def checkConstraints(constraints, position, move):
-            for constraint in constraints:
-                result = constraint(position, move)
-                if not result.isLegal:
-                    return ConstraintResult.fail(result.reason, position, move)
-
-        checkConstraints(Constraints.getPreMoveConstraints(), position, move)
+        for constraint in Constraints.getPreMoveConstraints():
+            result = constraint(position, move)
+            if not result.isLegal:
+                return ConstraintResult.fail(result.reason, position, move)
 
         if isinstance(move, CastlingMove):
             halfPosition = position.halfCastle(move)
-            checkConstraints(Constraints.getMidCastleConstraints(), position, move)
+            for constraint in Constraints.getMidCastleConstraints():
+                result = constraint(position, move)
+                if not result.isLegal:
+                    return ConstraintResult.fail(result.reason, position, move)
             newPosition = halfPosition.finishCastle(move)
         else:
             newPosition = position.next(move)
@@ -68,7 +68,6 @@ class MoveVerifier():
             result = constraint(newPosition, move)
             if not result.isLegal:
                 return ConstraintResult.fail(result.reason, newPosition, move)
-
         return ConstraintResult.accept(newPosition, move)
 
 

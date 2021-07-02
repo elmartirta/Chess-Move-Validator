@@ -9,6 +9,8 @@ class MoveVerifierTestSuite():
         Suite = MoveVerifierTestSuite
         return [
             {"runnable": Suite.e4, "name": "Just. 1. e4."},
+            {"runnable": Suite.notE5, "name": "Not. 1. e5."},
+            {"runnable": Suite.e4d5, "name": "Just. 1. e4 d5"},
             {"runnable": Suite.e4e5, "name": "Just. 1. e4 e5"},
             {"runnable": Suite.bong, "name": "JUST DOUBLE BONGCLOUD (Carleson vs Nakamura 2021)"},
             {"runnable": Suite.rchecks, "name": "King Check Checks : Rook Moves"},
@@ -28,7 +30,6 @@ class MoveVerifierTestSuite():
         if res.isLegal: 
             return res
         else:
-            print(res.reason)
             return False
 
     @staticmethod
@@ -91,6 +92,18 @@ class MoveVerifierTestSuite():
     def e4():
         return all([MoveVerifierTestSuite.verifyGame(NotationParser.fromStartingPosition(), [
             NotationParser.parseAlgebreicNotation("e4")
+        ])])    
+    
+    @staticmethod
+    def notE5():
+        return not all([MoveVerifierTestSuite.verifyGame(NotationParser.fromStartingPosition(), [
+            NotationParser.parseAlgebreicNotation("e5")
+        ])])
+    @staticmethod
+    def e4d5():
+        return all([MoveVerifierTestSuite.verifyGame(NotationParser.fromStartingPosition(), [
+            NotationParser.parseAlgebreicNotation("e4"),
+            NotationParser.parseAlgebreicNotation("d5"),
         ])])
 
     @staticmethod
