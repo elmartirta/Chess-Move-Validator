@@ -47,8 +47,6 @@ class MoveGenerator():
                 raise MoveGenerationError(position, move, f"Unsupported Piece type: {move.pieceType}")
 
             for candidate in candidates:
-                if candidate == move.destination: 
-                    continue
                 if board.pieceTypeIs(candidate, move.pieceType):
                     moveList.append(move.complete(candidate, destination))
         
