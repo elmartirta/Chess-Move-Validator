@@ -144,3 +144,15 @@ class Board():
             lambda v: self.pieceTypeIs(v, "P"),
             whites + blacks
         ))
+    
+    def getPawnsWalkingTo(self, target:Vector):
+        whites = [target.plus(0,-1), target.plus(0, -2)] if target.y == 3 else [target.plus(0,-1)]
+        blacks = [target.plus(0, 1), target.plus(0,  2)] if target.y == 4 else [target.plus(0, 1)]
+        whites = list(filter(lambda p: p.isInsideChessboard(), whites))
+        blacks = list(filter(lambda p: p.isInsideChessboard(), blacks))
+        whites = list(filter(lambda p: self.pieceIsWhite(p), whites))
+        blacks = list(filter(lambda p: not self.pieceIsWhite(p), blacks))
+        return list(filter(
+            lambda v: self.pieceTypeIs(v, "P"),
+            whites + blacks
+        ))

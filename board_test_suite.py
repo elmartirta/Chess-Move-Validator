@@ -18,6 +18,7 @@ class BoardTestSuite():
             {"runnable": cls.queensAttacking, "name": "Find all queens targeting a square"},
             {"runnable": cls.knightsAttacking, "name": "Find all knights targeting a square"},
             {"runnable": cls.pawnsAttacking, "name": "Find all pawns targeting a square"},
+            {"runnable": cls.pawnsWalkingTo, "name": "Find all pawns walking to a square"},
         ]
     
     @staticmethod
@@ -167,4 +168,32 @@ class BoardTestSuite():
         assert(Vector.fromAN("f3") not in invalidAttackers), invalidAttackers
         assert(Vector.fromAN("g3") not in invalidAttackers), invalidAttackers
         assert(len(invalidAttackers) == 0), invalidAttackers
+        return True
+
+    @staticmethod
+    def pawnsWalkingTo():
+        board = Board.fromFEN("3k4/3P1pp1/4p1p1/3PKKKK/kkkk3p/P1P5/1PP4p/7K")
+        aFile = board.getPawnsWalkingTo(Vector.fromAN("a4"))
+        bFile = board.getPawnsWalkingTo(Vector.fromAN("b4"))
+        cFile = board.getPawnsWalkingTo(Vector.fromAN("c4"))
+        dFile = board.getPawnsWalkingTo(Vector.fromAN("d4"))
+        dFile2 = board.getPawnsWalkingTo(Vector.fromAN("d8"))
+        eFile = board.getPawnsWalkingTo(Vector.fromAN("e5"))
+        fFile = board.getPawnsWalkingTo(Vector.fromAN("f5"))
+        gFile = board.getPawnsWalkingTo(Vector.fromAN("g5"))
+        hFile = board.getPawnsWalkingTo(Vector.fromAN("h5"))
+        hFile2 = board.getPawnsWalkingTo(Vector.fromAN("h1"))
+
+        assert(Vector.fromAN("a3") in aFile and len(aFile) == 1), aFile
+        assert(Vector.fromAN("b2") in bFile and len(bFile) == 1), bFile
+        assert(Vector.fromAN("c2") in cFile and len(cFile) == 2), cFile
+        assert(Vector.fromAN("c3") in cFile and len(cFile) == 2), cFile
+        assert(Vector.fromAN("d5") not in dFile and len(dFile) == 0), dFile
+        assert(Vector.fromAN("d7") in dFile2 and len(dFile2) == 1), dFile2
+        assert(Vector.fromAN("e6") in eFile and len(eFile) == 1), eFile
+        assert(Vector.fromAN("f7") in fFile and len(fFile) == 1), fFile
+        assert(Vector.fromAN("g6") in gFile and len(gFile) == 2), gFile
+        assert(Vector.fromAN("g7") in gFile and len(gFile) == 2), gFile
+        assert(Vector.fromAN("h4") not in hFile and len(hFile) == 0), hFile2
+        assert(Vector.fromAN("h2") in hFile2 and len(hFile2) == 1), hFile2
         return True
