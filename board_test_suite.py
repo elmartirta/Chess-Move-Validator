@@ -19,6 +19,8 @@ class BoardTestSuite():
             {"runnable": cls.knightsAttacking, "name": "Find all knights targeting a square"},
             {"runnable": cls.pawnsAttacking, "name": "Find all pawns targeting a square"},
             {"runnable": cls.pawnsWalkingTo, "name": "Find all pawns walking to a square"},
+            {"runnable": cls.dangerousPawnAttacks, "name": "Handle pawns targeting dangerous squares"},
+            {"runnable": cls.dangerousPawnWalks, "name": "Handle pawns walking to dangerous squares"},
         ]
     
     @staticmethod
@@ -186,6 +188,7 @@ class BoardTestSuite():
 
         assert(Vector.fromAN("a3") in aFile and len(aFile) == 1), aFile
         assert(Vector.fromAN("b2") in bFile and len(bFile) == 1), bFile
+        assert(Vector.fromAN("b3") not in bFile and len(bFile) == 1), bFile
         assert(Vector.fromAN("c2") in cFile and len(cFile) == 2), cFile
         assert(Vector.fromAN("c3") in cFile and len(cFile) == 2), cFile
         assert(Vector.fromAN("d5") not in dFile and len(dFile) == 0), dFile
@@ -196,4 +199,40 @@ class BoardTestSuite():
         assert(Vector.fromAN("g7") in gFile and len(gFile) == 2), gFile
         assert(Vector.fromAN("h4") not in hFile and len(hFile) == 0), hFile2
         assert(Vector.fromAN("h2") in hFile2 and len(hFile2) == 1), hFile2
+        return True
+    
+    def dangerousPawnAttacks():
+        whiteCorners = Board.fromFEN("P6P/8/8/8/8/8/8/P6P w - - 0 1")
+        whiteCorners.getPawnsAttacking(Vector.fromAN("a1"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("a8"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("h1"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("h8"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("b2"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("b7"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("g2"))
+        whiteCorners.getPawnsAttacking(Vector.fromAN("g7"))
+
+        blackCorners = Board.fromFEN("p6p/8/8/8/8/8/8/p6p w - - 0 1")
+        blackCorners.getPawnsAttacking(Vector.fromAN("a1"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("a8"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("h1"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("h8"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("b2"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("b7"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("g2"))
+        blackCorners.getPawnsAttacking(Vector.fromAN("g7"))
+        return True
+    
+    def dangerousPawnWalks():
+        whiteCorners = Board.fromFEN("P6P/8/8/8/8/8/8/P6P w - - 0 1")
+        whiteCorners.getPawnsWalkingTo(Vector.fromAN("a1"))
+        whiteCorners.getPawnsWalkingTo(Vector.fromAN("a8"))
+        whiteCorners.getPawnsWalkingTo(Vector.fromAN("h1"))
+        whiteCorners.getPawnsWalkingTo(Vector.fromAN("h8"))
+
+        blackCorners = Board.fromFEN("p6p/8/8/8/8/8/8/p6p w - - 0 1")
+        blackCorners.getPawnsWalkingTo(Vector.fromAN("a1"))
+        blackCorners.getPawnsWalkingTo(Vector.fromAN("a8"))
+        blackCorners.getPawnsWalkingTo(Vector.fromAN("h1"))
+        blackCorners.getPawnsWalkingTo(Vector.fromAN("h8"))
         return True
