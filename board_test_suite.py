@@ -201,6 +201,7 @@ class BoardTestSuite():
         assert(Vector.fromAN("h2") in hFile2 and len(hFile2) == 1), hFile2
         return True
     
+    @staticmethod
     def dangerousPawnAttacks():
         whiteCorners = Board.fromFEN("P6P/8/8/8/8/8/8/P6P w - - 0 1")
         whiteCorners.getPawnsAttacking(Vector.fromAN("a1"))
@@ -223,6 +224,7 @@ class BoardTestSuite():
         blackCorners.getPawnsAttacking(Vector.fromAN("g7"))
         return True
     
+    @staticmethod
     def dangerousPawnWalks():
         whiteCorners = Board.fromFEN("P6P/8/8/8/8/8/8/P6P w - - 0 1")
         whiteCorners.getPawnsWalkingTo(Vector.fromAN("a1"))
