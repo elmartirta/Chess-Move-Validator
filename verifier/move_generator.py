@@ -1,4 +1,5 @@
 
+from verifier.board import Board
 from .notation_parser import NotationParser
 from typing import List
 from .position import Position
@@ -41,7 +42,7 @@ class MoveGenerator():
             elif (move.pieceType in "qQ"): candidates = board.getQueensAttacking(destination)
             elif (move.pieceType in "nN"): candidates = board.getKnightsAttacking(destination)
             elif (move.pieceType in "kK"): candidates = board.getKingsTargeting(destination)
-            elif (move.pieceType in "pP"): candidates = cls._addPawnCandidates(moveList, position, move)
+            elif (move.pieceType in "pP"): candidates = cls._addPawnCandidates(position.board, move)
             else:
                 raise MoveGenerationError(position, move, f"Unsupported Piece type: {move.pieceType}")
 
@@ -55,13 +56,13 @@ class MoveGenerator():
     
 
     @staticmethod
-    def _addPawnCandidates(moveList: List[Move], position: Position, move: UnfinishedMove) -> List[Vector]:
+    def _addPawnCandidates(board: Board, move: UnfinishedMove) -> List[Vector]:
         if move.destination is None:
             raise ValueError("Pawn moves must have a destination in their notation")
         if move.isCapture:
-            pawnCandidates = position.board.getPawnsAttacking(move.destination)
+            pawnCandidates = board.getPawnsAttacking(move.destination)
         else:
-            pawnCandidates = position.board.getPawnsWalkingTo(move.destination)
+            pawnCandidates = board.getPawnsWalkingTo(move.destination)
 
         return pawnCandidates
 
