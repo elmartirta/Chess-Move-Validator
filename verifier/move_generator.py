@@ -56,7 +56,8 @@ class MoveGenerator():
 
     @staticmethod
     def _addPawnCandidates(moveList: List[Move], position: Position, move: UnfinishedMove) -> List[Vector]:
-        if move.destination is None: raise ValueError() #TODO: Lazy Error Writing
+        if move.destination is None:
+            raise ValueError("Pawn moves must have a destination in their notation")
         if move.isCapture:
             pawnCandidates = position.board.getPawnsAttacking(move.destination)
         else:
