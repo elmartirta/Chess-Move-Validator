@@ -8,21 +8,14 @@ from .castling_move import CastlingMove
 from dataclasses import dataclass, replace
 
 
+@dataclass
 class Position():
-    def __init__(
-            self,
-            board: Board = None,
-            isWhiteToMove: bool = None, 
-            castlingRights: CastlingRights = None, 
-            enPassantPawn: Optional[Vector] = None, 
-            halfClock: int = None,
-            fullClock: int = None):
-        self.board = board or Board()
-        self.isWhiteToMove = isWhiteToMove or True
-        self.castlingRights = castlingRights or CastlingRights()
-        self.enPassantPawn = enPassantPawn or None
-        self.halfClock = halfClock or 0
-        self.fullClock = fullClock or 1
+    board: Board = Board()
+    isWhiteToMove: bool = True
+    castlingRights: CastlingRights = CastlingRights()
+    enPassantPawn: Optional[Vector] = None
+    halfClock: int = 0
+    fullClock: int = 1
     
     def clone(self) -> Position:
         return Position(
