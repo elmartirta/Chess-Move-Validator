@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Optional
-from .vector import UnfinishedVector, Vector
+from verifier.castling_rights import CastlingRights
+from .vector import Vector
 from .board import Board
 from .move import Move
 from .castling_move import CastlingMove
@@ -64,20 +65,3 @@ class Position():
         clone.halfClock = (self.halfClock + 1) if not move.isCapture else 0
         clone.fullClock = self.fullClock + (0 if self.isWhiteToMove else 1)
         return clone
-
-
-@dataclass
-class CastlingRights():
-    whiteKingSide: bool = True
-    whiteQueenSide: bool = True
-    blackKingSide: bool = True
-    blackQueenSide: bool = True
-    
-    @classmethod
-    def fromFEN(cls, string: str) -> CastlingRights:
-        return cls(
-            "K" in string,
-            "Q" in string,
-            "k" in string,
-            "q" in string
-        )

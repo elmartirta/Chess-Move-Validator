@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Callable, List
+from verifier.vector import UnfinishedVector
 from .position import *
 from .castling_move import CastlingMove
 
