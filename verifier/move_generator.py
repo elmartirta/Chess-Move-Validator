@@ -53,18 +53,18 @@ class MoveGenerator():
 
     @staticmethod
     def _addCastlingCandidates(moveList: List[Move], position: Position, move: UnfinishedCastlingMove) -> None:
-        homeIndex = 0 if position.isWhiteToMove else 7
-        homeRow_temp = [Vector(x, homeIndex) for x in range(0,8)]
+        kingY = 0 if position.isWhiteToMove else 7
+        homeRow_temp = [Vector(x, kingY) for x in range(0,8)]
         homeRow = [position.board.pieceTypeOf(tile) for tile in homeRow_temp]
         kingSymbol = "K" if position.isWhiteToMove else "k"
         king = None
         if not kingSymbol in homeRow:
-            king = None
+            raise ValueError()
         else:
             rook = None
-            kingPos = homeRow.index(kingSymbol)
-            king = Vector(kingPos, homeIndex)
-            edge = Vector(7, homeIndex) if move.isKingsideCastling else Vector(0, homeIndex)
+            kingX = homeRow.index(kingSymbol)
+            king = Vector(kingX, kingY)
+            edge = Vector(7, kingY) if move.isKingsideCastling else Vector(0, kingY)
             for rookCandidate in king.between(edge) + [edge]:
                 if position.board.pieceTypeOf(rookCandidate) == "R" \
                         and position.board.pieceIsWhite(rookCandidate) == (position.isWhiteToMove):
@@ -72,10 +72,8 @@ class MoveGenerator():
                     break        
         output = move.clone()
         if king is None: raise ValueError() #TODO - Lazy Error Writing
-        source = king
         destination = king + (Vector(2,0) if move.isKingsideCastling else Vector(-2, 0))
-        rookLocation = rook
-        moveList.append(output.complete(source, destination, rookLocation))
+        moveList.append(output.complete(king, destination, rook))
 
 
 class MoveGenerationError(ValueError):
