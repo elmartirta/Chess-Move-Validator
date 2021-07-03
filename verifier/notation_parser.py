@@ -1,6 +1,6 @@
 from .board import Board
 import random
-from .vector import UnfinishedVector, Vector
+from .vector import Vector
 from .position import CastlingRights, Position
 from .castling_move import UnfinishedCastlingMove
 from .move import UnfinishedMove

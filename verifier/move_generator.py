@@ -1,5 +1,3 @@
-
-from verifier.board import Board
 from .notation_parser import NotationParser
 from typing import List
 from .position import Position
