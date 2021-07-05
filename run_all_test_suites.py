@@ -7,11 +7,12 @@ from move_test_suite import MoveTestSuite
 from position_test_suite import PositionTestSuite
 from move_generator_test_suite import MoveGeneratorTestSuite
 from move_verifier_test_suite import MoveVerifierTestSuite
-from colorama import Fore, Style # type: ignore
+from colorama import init, Fore, Style # type: ignore
 import traceback
 
 
 def main():
+    init(convert=True)
     print("")
     print("=== Running Tests ... ===")
     runTests()
