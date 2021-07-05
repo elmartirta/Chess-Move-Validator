@@ -1,3 +1,4 @@
+from file_parser_test_suite import FileParserTestSuite
 from game_test_suite import GameTestSuite
 from notation_parser_test_suite import NotationParserTestSuite
 from board_test_suite import BoardTestSuite
@@ -27,7 +28,8 @@ def runTests():
         {"suite_name": "GAM", "test_list": GameTestSuite.getTests()},
         {"suite_name": "NTN", "test_list": NotationParserTestSuite.getTests()},
         {"suite_name": "GEN", "test_list": MoveGeneratorTestSuite.getTests()},
-        {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()}
+        {"suite_name": "VER", "test_list": MoveVerifierTestSuite.getTests()},
+        {"suite_name": "FIL", "test_list": FileParserTestSuite.getTests()},
     ]
     allTestsPassed = True
     testsPassed = 0 
