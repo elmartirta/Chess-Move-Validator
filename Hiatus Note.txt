@@ -1,0 +1,33 @@
+This project is put on hiatus, but for my
+future self, willing to pick up this project
+once more, here are some of the details:
+
+------------- July 22 2021 ----------------
+
+The Chess Move Verifier is a program that takes
+a file, written in .PGN notation, and confirms
+whether or not the entire file is valid.
+
+Right now, you can run tests on the project using
+test.sh. Currently, the most advanced
+test takes a set of hard-coded moves, compiled into
+a game object tree, and verifies that these moves
+result in a valid, legal game. (Without taking into
+consideration the 50 move rule, or complex issues involving
+more than one position at a time.)
+
+The current issues that prevent it from full functionality are these:
+- Converting a .pgn file to a Game Object 
+    instantiated in Python is unimplemented, 
+    but through some REGEX magic and perhaps 
+    some parsing trees, it should work.
+    See the design drawings for more information.
+- When the user types in python verifier.py, without any
+    command line arguments, there should be a command line
+    application that walks the user through either: verifying
+    a file, or creating a new .pgn file from a step by step
+    process. However, it may be more useful to defer this to
+    another project.
+
+To you from the future, picking this up, Good luck, and take
+care. Drink water, and have fun :D
